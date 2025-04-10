@@ -3,7 +3,9 @@ The PacK Head package manager.
 
 **Currently W.I.P.**
 
-# Bootstrap [NELD](https://github.com/Stilic/linux-os)
+# Bootstraping [NELD](https://github.com/Stilic/linux-os)
+
+You will need basic build tooling, [Lua](https://www.lua.org) (5.1 or newer), [LuaRocks](https://luarocks.org) and [Squashfs-tools](https://github.com/plougher/squashfs-tools).
 
 ```
 # Compile the base packages and create a rootfs

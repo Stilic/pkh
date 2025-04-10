@@ -6,9 +6,10 @@ local function add(name)
     if not lfs.attributes("pkgs/" .. name .. "/.build/" .. require("pkgs." .. name).version .. ".sqsh") then
         pkh.build(name)
     end
-    pkh.unpack(name, "root")
+    pkh.unpack(name, "neld")
 end
 
-os.execute("rm -rf root")
-lfs.mkdir("root")
+os.execute("rm -rf neld")
+lfs.mkdir("neld")
+
 add("busybox")

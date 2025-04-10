@@ -5,7 +5,7 @@ local self = {}
 
 -- TODO: wrap sensible calls
 function self.build(name)
-    local package = require("pkgs." .. name)
+    local og_path, package = lfs.currentdir(), require("pkgs." .. name)
 
     lfs.chdir("pkgs/" .. name)
 
@@ -36,6 +36,8 @@ function self.build(name)
     local file = package.version .. ".sqsh"
     os.execute("rm -f " .. file)
     os.execute("mksquashfs filesystem " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
+
+    lfs.chdir(og_path)
 end
 
 function self.unpack(name, path)
