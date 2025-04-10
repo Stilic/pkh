@@ -1,35 +1,46 @@
 require "luarocks.loader"
 local lfs = require "lfs"
-local packages = { busybox = require "pkgs.busybox" }
 
-print(math.floor(tonumber(io.popen('nproc', 'r'):read('*l')) / 1.5))
+local self = {}
 
-local function rmdirf(dir)
-    for file in lfs.dir(dir) do
-        local file_path = dir .. '/' .. file
-        if file ~= "." and file ~= ".." then
-            if lfs.attributes(file_path, 'mode') == 'file' then
-                os.remove(file_path)
-            elseif lfs.attributes(file_path, 'mode') == 'directory' then
-                rmdirf(file_path)
-            end
-        end
+-- TODO: wrap sensible calls
+function self.build(name)
+    local package = require("pkgs." .. name)
+
+    lfs.chdir("pkgs/" .. name)
+
+    os.execute("rm -rf .build")
+    lfs.mkdir(".build")
+    lfs.chdir(".build")
+    local build_path = lfs.currentdir()
+
+    -- compile
+    for _, source in ipairs(package.sources) do
+        local path = source[1]
+        os.execute("curl -o _" .. path .. " " .. source[2])
+        lfs.mkdir(path)
+        os.execute("tar -xf _" .. path .. " --strip-components=1 -C " .. path)
     end
-    lfs.rmdir(dir)
+
+    package.build()
+    lfs.chdir(build_path)
+
+    -- create the filesystem
+    os.execute("rm -rf filesystem")
+    lfs.mkdir("filesystem")
+    print(lfs.currentdir())
+    package.pack()
+    lfs.chdir(build_path)
+
+    -- make the archive
+    local file = package.version .. ".sqsh"
+    os.execute("rm -f " .. file)
+    os.execute("mksquashfs filesystem " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
 end
 
-local function build_package(name)
-    local package = packages[name]
-
-    rmdirf("temp")
-    lfs.mkdir("temp")
-    lfs.chdir("temp")
-
-    if type(package.source) == "string" then
-        os.execute("curl -o archive " .. package.source)
-        lfs.mkdir("source")
-        os.execute("tar -xf archive --strip-components=1 -C source")
-    end
+function self.unpack(name, path)
+    return os.execute("unsquashfs -d " ..
+        path .. " -f pkgs/" .. name .. "/.build/" .. require("pkgs." .. name).version .. ".sqsh")
 end
 
--- build_package("busybox")
+return self
