@@ -10,6 +10,13 @@ You will need basic build tooling, [Lua](https://www.lua.org) (5.1 or newer), [L
 ```
 # Install Lua dependencies
 luarocks install luafilesystem
-# Compile the base packages and create a rootfs
+# Initialize the base packages, the root filesystem and the ramdisk
 lua bootstrap_neld.lua
+# Go inside the `neld` folder
+# Build the ramdisk
+./build_ramdisk.sh
+# Build the disk
+sudo ./build_disk.sh
+# Run the result in a virtual machine
+./run.sh
 ```
