@@ -23,7 +23,7 @@ end
 
 function self.out.static.build()
     build_start()
-    os.execute("sed -i 's/^CONFIG_STATIC=.*/CONFIG_STATIC=n/' .config")
+    os.execute("sed -i 's/^CONFIG_STATIC=.*/CONFIG_STATIC=y/' .config")
     build_end()
 end
 
@@ -33,7 +33,7 @@ function self.build()
 end
 
 function self.pack()
-    os.execute("cp -ra source/_install/bin filesystem")
+    os.execute("cp -ra source/_install/bin/* filesystem")
 end
 
 return self
