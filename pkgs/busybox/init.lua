@@ -12,7 +12,7 @@ self.sources = {
 function self.build()
     lfs.chdir("source")
     os.execute("cp ../../config .config")
-    os.execute("KCONFIG_NOTIMESTAMP=1 make -j" .. system.buildCores)
+    os.execute('KCONFIG_NOTIMESTAMP=1 CFLAGS="-O2" make -j' .. system.buildCores)
     os.execute("make install")
 end
 

@@ -12,4 +12,5 @@ end
 os.execute("rm -rf neld")
 lfs.mkdir("neld")
 
+add("musl")
 add("busybox")
