@@ -1,0 +1,11 @@
+#!/bin/sh
+case "$2" in
+ start)
+  service=$(basename "$1")
+  "/etc/init.d/$service" > "/var/log/init/$service.log" 2>&1
+  echo "[OK] $service"
+  ;;
+ *)
+  echo "Usage: service service_name (start)"
+  ;;
+esac

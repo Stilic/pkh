@@ -39,5 +39,11 @@ luac.out
 *.x86_64
 *.hex
 
+# NELD
+root
+ram_root
+disk
+ramdisk
+ramdisk.cpio.gz
+
 .build
-neld
