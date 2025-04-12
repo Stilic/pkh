@@ -41,30 +41,23 @@ local function pack(package, build_path, variant)
     os.remove(file)
     os.execute("mksquashfs filesystem " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
 end
-function self.build(name, keep_build)
+function self.build(name)
     local og_path, package = lfs.currentdir(), require("pkgs." .. name)
     package.name = name
 
     lfs.chdir("pkgs/" .. name)
-    if not lfs.attributes(".build") then
-        keep_build = false
-    end
 
-    if not keep_build then
-        os.execute("rm -rf .build")
-        lfs.mkdir(".build")
-    end
+    os.execute("rm -rf .build")
+    lfs.mkdir(".build")
     lfs.chdir(".build")
     local build_path = lfs.currentdir()
 
     -- compile
-    if not keep_build then
-        for _, source in ipairs(package.sources) do
-            local path = source[1]
-            os.execute("curl -o _" .. path .. " " .. source[2])
-            lfs.mkdir(path)
-            os.execute("tar -xf _" .. path .. " --strip-components=1 -C " .. path)
-        end
+    for _, source in ipairs(package.sources) do
+        local path = source[1]
+        os.execute("curl -o _" .. path .. " " .. source[2])
+        lfs.mkdir(path)
+        os.execute("tar xf _" .. path .. " --strip-components=1 -C " .. path)
     end
 
     -- main

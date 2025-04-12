@@ -3,4 +3,4 @@ for file in /etc/init.d/boot.d/*
 do
   /sbin/service $file start &
 done
-exec busybox setsid cttyhack sh
+exec setsid cttyhack sh
