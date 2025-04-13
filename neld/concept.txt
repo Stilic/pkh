@@ -3,5 +3,3 @@
 - Atomic / immutable (whole system except the home directory is read-only, rebuilding is done in a separate environement to keep the current one as it is until it's done)
 - Always reproductible setup, inspired by NixOS (not possible to install packages temporarily unless if it's done in a wrapped environement, like `nix-shell` but there's not `nix-env` equivalent)
 - FHS compatible (allows you to use abitrary binaries without any additional configuration)
-
-https://news.ycombinator.com/item?id=42830863
