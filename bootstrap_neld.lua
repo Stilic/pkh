@@ -3,18 +3,30 @@ local lfs = require "lfs"
 local pkh = require "main"
 
 local function add(name)
-    if not lfs.attributes("pkgs/" .. name .. "/.build/" .. pkh.get_file(name, require("pkgs." .. name).version)) then
-        pkh.build(name)
-    end
+    pkh.build(name)
     pkh.unpack("neld/root", name)
 end
 
 os.execute("rm -rf neld/root")
 lfs.mkdir("neld/root")
 
+-- base
 add("linux")
 add("musl")
 add("busybox")
+
+-- curl
+add("libunistring")
+add("libidn2")
+add("libpsl")
+add("openssl")
+add("nghttp2")
+add("zlib")
+add("zstd")
+add("brotli")
+add("curl")
+
+-- package manager
 add("lua")
 add("luarocks")
 

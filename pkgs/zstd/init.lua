@@ -1,0 +1,26 @@
+local lfs = require "lfs"
+local system = require "system"
+
+local self = {}
+
+self.version = "1.5.7"
+
+self.sources = {
+    { "source", "https://github.com/facebook/zstd/releases/download/v" .. self.version .. "/zstd-" .. self.version .. ".tar.zst" }
+}
+
+-- TODO: figure out why we cannot use --prefix
+function self.build()
+    lfs.chdir("source")
+    os.execute('./configure CFLAGS="-O2"')
+    os.execute("make -j" .. system.buildCores)
+    lfs.mkdir("_install")
+    os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
+end
+
+function self.pack()
+    lfs.mkdir("filesystem/usr")
+    os.execute("cp -ra source/_install/usr/local/lib source/_install/usr/local/bin filesystem/usr")
+end
+
+return self
