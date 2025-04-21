@@ -14,6 +14,7 @@ lfs.mkdir("neld/root")
 add("linux")
 add("musl")
 add("busybox")
+add("gcc")
 
 -- curl
 add("libunistring")
@@ -30,14 +31,10 @@ add("curl")
 add("lua")
 add("luarocks")
 
-os.remove("neld/disk")
-os.execute("truncate -s 1GB neld/disk")
-
 os.execute("rm -rf neld/ram_root")
 lfs.mkdir("neld/ram_root")
 
 pkh.unpack("neld/ram_root", "busybox", "static")
 
 os.remove("neld/vmlinuz")
-os.execute("ln -s " ..
-    lfs.currentdir() .. "/neld/root/usr/lib/modules/" .. require("pkgs.linux").version .. "/vmlinuz neld")
+os.execute("ln -s root/usr/lib/modules/" .. require("pkgs.linux").version .. "/vmlinuz neld")

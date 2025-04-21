@@ -1,5 +1,3 @@
-Fix networking in QEMU
-
 Define PATH environment variable everywhere
 
 https://news.ycombinator.com/item?id=42830863
