@@ -18,7 +18,7 @@ function self.build()
 end
 
 function self.pack()
-    os.execute("cp -ra source/_install/lib filesystem")
+    os.execute("cp -ra source/_install/* filesystem")
 end
 
 return self

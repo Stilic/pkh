@@ -20,7 +20,7 @@ end
 
 function self.pack()
     lfs.mkdir("filesystem/usr")
-    os.execute("cp -ra source/_install/usr/local/lib source/_install/usr/local/bin filesystem/usr")
+    os.execute("cp -ra source/_install/usr/local/* filesystem/usr")
 end
 
 return self
