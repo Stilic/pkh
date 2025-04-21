@@ -1,3 +1,3 @@
-Define PATH environment variable everywhere
+Define PATH environment variable everywhere: `export PATH=/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin`
 
 https://news.ycombinator.com/item?id=42830863

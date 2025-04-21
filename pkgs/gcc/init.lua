@@ -10,19 +10,20 @@ self.sources = {
 }
 
 function self.build()
-    local build_dir = lfs.currentdir()
-    lfs.chdir("source")
     lfs.mkdir("obj")
     lfs.chdir("obj")
-    os.execute('../configure CFLAGS="-O2" --prefix= --disable-multilib')
+    os.execute(
+        '../source/configure CFLAGS="-O2" --prefix= --disable-multilib --disable-nls --with-system-zlib --enable-languages=c,c++')
     os.execute("make -j" .. system.buildCores)
     lfs.mkdir("_install")
-    os.execute('make install-strip DESTDIR="' .. build_dir .. '/_install"')
+    os.execute('make install-strip DESTDIR="' .. lfs.currentdir() .. '/_install"')
 end
 
 function self.pack()
     os.execute(
-        "cp -ra source/_install/lib source/_install/libexec source/_install/include source/_install/share source/_install/bin filesystem")
+        "cp -ra obj/_install/lib obj/_install/libexec obj/_install/include obj/_install/share obj/_install/bin filesystem")
+    os.execute(
+        "cp -ra obj/_install/lib64/* filesystem/lib")
 end
 
 return self

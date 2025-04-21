@@ -10,7 +10,7 @@ You will need basic build tooling, [Lua](https://www.lua.org) (5.1 or newer), [L
 ```
 # Install Lua dependencies
 luarocks install luafilesystem
-# Initialize the base packages, the root filesystem and the ramdisk
+# Build the core packages
 lua bootstrap_neld.lua
 
 # Go inside the `neld` folder

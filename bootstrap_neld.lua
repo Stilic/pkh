@@ -14,6 +14,12 @@ lfs.mkdir("neld/root")
 add("linux")
 add("musl")
 add("busybox")
+
+-- gcc
+add("gmp")
+add("mpfr")
+add("mpc")
+add("binutils")
 add("gcc")
 
 -- curl
@@ -37,4 +43,4 @@ lfs.mkdir("neld/ram_root")
 pkh.unpack("neld/ram_root", "busybox", "static")
 
 os.remove("neld/vmlinuz")
-os.execute("ln -s root/usr/lib/modules/" .. require("pkgs.linux").version .. "/vmlinuz neld")
+os.execute("ln -s root/lib/modules/" .. require("pkgs.linux").version .. "/vmlinuz neld")

@@ -3,10 +3,10 @@ local system = require "system"
 
 local self = {}
 
-self.version = "1.2.5"
+self.version = "6.3.0"
 
 self.sources = {
-    { "source", "https://musl.libc.org/releases/musl-" .. self.version .. ".tar.gz" }
+    { "source", "https://gmplib.org/download/gmp/gmp-" .. self.version .. ".tar.xz" }
 }
 
 function self.build()
@@ -18,7 +18,7 @@ function self.build()
 end
 
 function self.pack()
-    os.execute("cp -ra source/_install/lib source/_install/include filesystem")
+    os.execute("cp -ra source/_install/lib filesystem")
 end
 
 return self

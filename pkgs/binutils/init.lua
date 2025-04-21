@@ -3,22 +3,22 @@ local system = require "system"
 
 local self = {}
 
-self.version = "1.2.5"
+self.version = "2.44"
 
 self.sources = {
-    { "source", "https://musl.libc.org/releases/musl-" .. self.version .. ".tar.gz" }
+    { "source", "https://ftp.gnu.org/gnu/binutils/binutils-" .. self.version .. ".tar.xz" }
 }
 
 function self.build()
     lfs.chdir("source")
-    os.execute('./configure CFLAGS="-O2" --prefix=')
+    os.execute('./configure CFLAGS="-O2" --prefix= --disable-nls')
     os.execute("make -j" .. system.buildCores)
     lfs.mkdir("_install")
     os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
 end
 
 function self.pack()
-    os.execute("cp -ra source/_install/lib source/_install/include filesystem")
+    os.execute("cp -ra source/_install/lib source/_install/include source/_install/share source/_install/bin filesystem")
 end
 
 return self
