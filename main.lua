@@ -85,7 +85,7 @@ function self.build(name)
             variant.name = index
 
             -- TODO: separate main package and variants environments?
-            if not lfs.attributes(".build/" .. self.get_file(name, package.version, index)) then
+            if not lfs.attributes(self.get_file(name, package.version, index)) then
                 if variant.build then
                     variant.build()
                 elseif pbuild then
