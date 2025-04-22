@@ -11,6 +11,14 @@ function self.capture(cmd)
     return s
 end
 
-self.buildCores = math.floor(tonumber(self.capture("nproc")) / 1.5)
+self.build_cores = math.max(math.floor(tonumber(self.capture("nproc")) / 1.5), 1)
+
+function self.get_make_jobs()
+    if self.build_cores == 1 then
+        return ""
+    else
+        return " -j" .. self.build_cores
+    end
+end
 
 return self

@@ -13,7 +13,7 @@ function self.build()
     lfs.chdir("source")
     os.execute("make configure")
     os.execute('./configure CFLAGS="-O2" --prefix=/usr')
-    os.execute("make all doc info -j" .. system.buildCores)
+    os.execute("make all doc info" .. system.get_make_jobs())
     lfs.mkdir("_install")
     os.execute('make install install-doc install-html install-info DESTDIR="' .. lfs.currentdir() .. '/_install"')
 end

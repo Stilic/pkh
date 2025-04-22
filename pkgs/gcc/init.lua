@@ -14,7 +14,7 @@ function self.build()
     lfs.chdir("obj")
     os.execute(
         '../source/configure CFLAGS="-O2" --prefix= --disable-multilib --disable-nls --with-system-zlib --enable-languages=c,c++')
-    os.execute("make -j" .. system.buildCores)
+    os.execute("make" .. system.get_make_jobs())
     lfs.mkdir("_install")
     os.execute('make install-strip DESTDIR="' .. lfs.currentdir() .. '/_install"')
 end

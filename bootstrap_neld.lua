@@ -15,6 +15,8 @@ add("linux")
 add("musl")
 add("busybox")
 
+add("xz")
+
 add("gmp")
 add("mpfr")
 add("mpc")

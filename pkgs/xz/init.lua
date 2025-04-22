@@ -3,15 +3,15 @@ local system = require "system"
 
 local self = {}
 
-self.version = "2.10"
+self.version = "5.8.1"
 
 self.sources = {
-    { "source", "https://www.oberhumer.com/opensource/lzo/download/lzo-" .. self.version .. ".tar.gz" }
+    { "source", "https://github.com/tukaani-project/xz/releases/download/v" .. self.version .. "/xz-" .. self.version .. ".tar.xz" }
 }
 
 function self.build()
     lfs.chdir("source")
-    os.execute("./configure --prefix=/usr --enable-shared")
+    os.execute('./configure CFLAGS="-O2" --prefix=')
     os.execute("make" .. system.get_make_jobs())
     lfs.mkdir("_install")
     os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')

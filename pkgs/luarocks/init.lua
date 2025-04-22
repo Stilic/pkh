@@ -12,7 +12,7 @@ self.sources = {
 function self.build()
     lfs.chdir("source")
     os.execute("./configure --prefix=/usr")
-    os.execute("make -j" .. system.buildCores)
+    os.execute("make" .. system.get_make_jobs())
 end
 
 function self.pack()

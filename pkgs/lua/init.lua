@@ -11,7 +11,7 @@ self.sources = {
 
 function self.build()
     lfs.chdir("source")
-    os.execute("make -j" .. system.buildCores)
+    os.execute("make" .. system.get_make_jobs())
     os.execute("make local")
 end
 
