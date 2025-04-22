@@ -11,15 +11,14 @@ self.sources = {
 
 function self.build()
     lfs.chdir("source")
-    os.execute("./configure --prefix=")
+    os.execute("./configure --prefix=/usr")
     os.execute("make -j" .. system.buildCores)
     lfs.mkdir("_install")
     os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
 end
 
 function self.pack()
-    lfs.mkdir("filesystem/usr")
-    os.execute("cp -ra source/_install/* filesystem/usr")
+    os.execute("cp -ra source/_install/* filesystem")
 end
 
 return self

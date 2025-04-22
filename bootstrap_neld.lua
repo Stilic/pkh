@@ -34,6 +34,7 @@ add("brotli")
 add("curl")
 
 -- package manager
+add("git")
 add("lua")
 add("luarocks")
 

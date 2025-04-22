@@ -20,10 +20,9 @@ function self.build()
 end
 
 function self.pack()
-    os.execute(
-        "cp -ra obj/_install/lib obj/_install/libexec obj/_install/include obj/_install/share obj/_install/bin filesystem")
-    os.execute(
-        "cp -ra obj/_install/lib64/* filesystem/lib")
+    os.execute("cp -ra obj/_install/* filesystem")
+    os.execute("mv filesystem/lib64/* filesystem/lib")
+    os.execute("rm -r filesystem/lib64")
 end
 
 return self
