@@ -42,7 +42,7 @@ local function pack(package, build_path, variant)
     os.execute("mksquashfs filesystem " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
 end
 function self.build(name)
-    local compile, og_path, package = false, lfs.currentdir(), require("pkgs." .. name)
+    local compile, pkg_path, package = false, lfs.currentdir(), require("pkgs." .. name)
     package.name = name
 
     lfs.chdir("pkgs/" .. name)
@@ -60,6 +60,15 @@ function self.build(name)
             os.execute("rm -rf " .. path)
             lfs.mkdir(path)
             os.execute("tar xf _" .. path .. " --strip-components=1 -C " .. path)
+
+            local patch_dir = "../" .. path
+            if lfs.attributes(patch_dir) then
+                for file in lfs.dir(patch_dir) do
+                    if file ~= "." and file ~= ".." then
+                        os.execute("patch -d " .. path .. " -Np1 -i ../" .. patch_dir .. "/" .. file)
+                    end
+                end
+            end
         end
 
         if pbuild then
@@ -87,7 +96,7 @@ function self.build(name)
         end
     end
 
-    lfs.chdir(og_path)
+    lfs.chdir(pkg_path)
 end
 
 function self.unpack(path, name, variant)
