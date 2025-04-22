@@ -33,8 +33,12 @@ add("zstd")
 add("brotli")
 add("curl")
 
--- package manager
+-- git
+add("expat")
+add("libiconv")
 add("git")
+
+-- package manager
 add("lua")
 add("luarocks")
 
