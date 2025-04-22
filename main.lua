@@ -42,18 +42,19 @@ local function pack(package, build_path, variant)
     os.execute("mksquashfs filesystem " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
 end
 function self.build(name)
-    local compile, pkg_path, package = false, lfs.currentdir(), require("pkgs." .. name)
+    local needed, pkg_path, package = true, lfs.currentdir(), require("pkgs." .. name)
     package.name = name
 
     lfs.chdir("pkgs/" .. name)
     if not lfs.attributes(".build") then
         lfs.mkdir(".build")
-        compile = true
+    elseif lfs.attributes(".build/" .. self.get_file(name, package.version)) then
+        needed = false
     end
     lfs.chdir(".build")
 
     local build_path, pbuild = lfs.currentdir(), package.build
-    if compile then
+    if needed then
         for _, source in ipairs(package.sources) do
             local path = source[1]
             os.execute("curl -Lo _" .. path .. " " .. source[2])
@@ -75,24 +76,25 @@ function self.build(name)
             pbuild()
             lfs.chdir(build_path)
         end
-    end
 
-    pack(package, build_path)
+        pack(package, build_path)
+    end
 
     if package.out then
         for index, variant in pairs(package.out) do
             variant.name = index
 
-            if compile then
+            -- TODO: separate main package and variants environments?
+            if not lfs.attributes(".build/" .. self.get_file(name, package.version, index)) then
                 if variant.build then
                     variant.build()
                 elseif pbuild then
                     pbuild()
                 end
-            end
 
-            lfs.chdir(build_path)
-            pack(package, build_path, variant)
+                lfs.chdir(build_path)
+                pack(package, build_path, variant)
+            end
         end
     end
 

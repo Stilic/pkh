@@ -15,12 +15,13 @@ add("linux")
 add("musl")
 add("busybox")
 
--- gcc
 add("gmp")
 add("mpfr")
 add("mpc")
 add("binutils")
 add("gcc")
+
+add("make")
 
 -- curl
 add("libunistring")
@@ -39,6 +40,8 @@ add("libiconv")
 add("git")
 
 -- package manager
+add("lzo")
+add("squashfs-tools")
 add("lua")
 add("luarocks")
 
