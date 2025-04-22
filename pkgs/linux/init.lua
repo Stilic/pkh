@@ -15,7 +15,7 @@ function self.build()
     lfs.chdir("source")
     -- TODO: add config for other architectures than x86_64
     os.execute("cp ../../config .config")
-    os.execute('KCONFIG_NOTIMESTAMP=1 CFLAGS="-O2" make -j' .. system.buildCores)
+    os.execute('KCONFIG_NOTIMESTAMP=1 CFLAGS="-O2" make' .. system.get_make_jobs())
 end
 
 function self.pack()

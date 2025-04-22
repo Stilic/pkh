@@ -17,7 +17,7 @@ local function start_build()
 end
 
 local function end_build()
-    os.execute('KCONFIG_NOTIMESTAMP=1 CFLAGS="-O2" make -j' .. system.buildCores)
+    os.execute('KCONFIG_NOTIMESTAMP=1 CFLAGS="-O2" make' .. system.get_make_jobs())
     os.execute("make install")
 end
 
