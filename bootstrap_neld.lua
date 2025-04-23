@@ -57,6 +57,8 @@ add("elfutils")
 add("dosfstools")
 
 -- package manager
+add("unzip")
+add("zip")
 add("lzo")
 add("squashfs-tools")
 add("lua")

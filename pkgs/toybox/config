@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # ToyBox version: KCONFIG_VERSION
-# Wed Apr 23 15:49:46 2025
+# Wed Apr 23 17:06:21 2025
 #
 # CONFIG_TOYBOX_ON_ANDROID is not set
 CONFIG_TOYBOX_FORK=y
@@ -319,28 +319,28 @@ CONFIG_TUNCTL=y
 # Linux Standard Base commands
 #
 # CONFIG_DMESG is not set
-# CONFIG_GZIP is not set
-# CONFIG_GUNZIP is not set
-# CONFIG_ZCAT is not set
-# CONFIG_HOSTNAME is not set
-# CONFIG_DNSDOMAINNAME is not set
-# CONFIG_KILLALL is not set
-# CONFIG_MD5SUM is not set
-# CONFIG_SHA1SUM is not set
-# CONFIG_SHA224SUM is not set
-# CONFIG_SHA256SUM is not set
-# CONFIG_SHA384SUM is not set
-# CONFIG_SHA512SUM is not set
-# CONFIG_MKNOD is not set
+CONFIG_GZIP=y
+CONFIG_GUNZIP=y
+CONFIG_ZCAT=y
+CONFIG_HOSTNAME=y
+CONFIG_DNSDOMAINNAME=y
+CONFIG_KILLALL=y
+CONFIG_MD5SUM=y
+CONFIG_SHA1SUM=y
+CONFIG_SHA224SUM=y
+CONFIG_SHA256SUM=y
+CONFIG_SHA384SUM=y
+CONFIG_SHA512SUM=y
+CONFIG_MKNOD=y
 # CONFIG_MKNOD_Z is not set
-# CONFIG_MKTEMP is not set
-# CONFIG_MOUNT is not set
-# CONFIG_PASSWD is not set
-# CONFIG_PASSWD_SAD is not set
-# CONFIG_PIDOF is not set
-# CONFIG_SEQ is not set
+CONFIG_MKTEMP=y
+CONFIG_MOUNT=y
+CONFIG_PASSWD=y
+CONFIG_PASSWD_SAD=y
+CONFIG_PIDOF=y
+CONFIG_SEQ=y
 # CONFIG_SU is not set
-# CONFIG_SYNC is not set
+CONFIG_SYNC=y
 # CONFIG_UMOUNT is not set
 
 #
@@ -368,7 +368,7 @@ CONFIG_TUNCTL=y
 # CONFIG_SETENFORCE is not set
 
 #
-#
+# 
 #
 
 #
