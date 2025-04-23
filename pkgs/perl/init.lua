@@ -11,10 +11,9 @@ self.sources = {
 
 function self.build()
     lfs.chdir("source")
-    os.execute("./Configure -des -Dccflags='-Wno-implicit-function-declaration' -Dprefix='" ..
-        lfs.currentdir() .. "/_install/usr'")
+    os.execute("./Configure -des -Dprefix=/usr -Dccflags='-Wno-implicit-function-declaration'")
     os.execute("make" .. system.get_make_jobs())
-    os.execute("make install")
+    os.execute("make install DESTDIR='" .. lfs.currentdir() .. "/_install'")
 end
 
 function self.pack()
