@@ -12,8 +12,8 @@ self.sources = {
 function self.build()
     lfs.chdir("source")
     os.execute("make" .. system.get_make_jobs() ..
-        ' -f unix/Makefile CF="-O2 -I. -DWILD_STOP_AT_DIR -DLARGE_FILE_SUPPORT -DUNICODE_SUPPORT -DUNICODE_WCHAR -DUTF8_MAYBE_NATIVE -DNO_LCHMOD -DDATE_FORMAT=DF_YMD -DUSE_BZIP2 -DNATIVE" prefix=/usr unzips')
-    os.execute('make -f unix/Makefile install DESTDIR="' .. lfs.currentdir() .. '/_install"')
+        ' -f unix/Makefile CF="-O2 -I. -DWILD_STOP_AT_DIR -DLARGE_FILE_SUPPORT -DUNICODE_SUPPORT -DUNICODE_WCHAR -DUTF8_MAYBE_NATIVE -DNO_LCHMOD -DDATE_FORMAT=DF_YMD -DNATIVE" unzips')
+    os.execute('make -f unix/Makefile prefix="' .. lfs.currentdir() .. "/_install/usr" .. '" install')
 end
 
 function self.pack()

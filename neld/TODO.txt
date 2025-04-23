@@ -1,3 +1,5 @@
 Define PATH environment variable everywhere: `export PATH=/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin`
 
+Use lfs.link for symlinks: https://lunarmodules.github.io/luafilesystem/manual.html#reference
+
 https://news.ycombinator.com/item?id=42830863
