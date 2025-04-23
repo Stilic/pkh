@@ -17,6 +17,7 @@ add("readline")
 add("perl")
 
 add("toybox")
+add("rsync")
 add("diffutils")
 add("gawk")
 add("util-linux")
