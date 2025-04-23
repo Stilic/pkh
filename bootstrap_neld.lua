@@ -41,6 +41,13 @@ add("expat")
 add("libiconv")
 add("git")
 
+-- linux build dependencies
+add("bzip2")
+add("flex")
+add("bison")
+add("elfutils")
+add("dosfstools")
+
 -- package manager
 add("lzo")
 add("squashfs-tools")
