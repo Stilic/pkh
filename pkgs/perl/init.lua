@@ -10,16 +10,15 @@ self.sources = {
 }
 
 function self.build()
-    lfs.chdir("source")
-    os.execute('./Configure -des -Dprefix="' ..
-        lfs.currentdir() .. '/_install/usr"')
-    os.execute('make CFLAGS="-DNO_POSIX_2008_LOCALE -D_GNU_SOURCE" LDFLAGS="-Wl,-z,stack-size=2097152"' ..
-    system.get_make_jobs())
+    lfs.mkdir("obj")
+    lfs.chdir("obj")
+    os.execute('../source/Configure -des -Dprefix="' .. lfs.currentdir() .. '/_install/usr"')
+    os.execute("make" .. system.get_make_jobs())
     os.execute("make install")
 end
 
 function self.pack()
-    os.execute("cp -ra source/_install/* filesystem")
+    os.execute("cp -ra obj/_install/* filesystem")
 end
 
 return self
