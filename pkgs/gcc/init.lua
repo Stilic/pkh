@@ -23,6 +23,7 @@ function self.pack()
     os.execute("cp -ra obj/_install/* filesystem")
     os.execute("mv filesystem/lib64/* filesystem/lib")
     os.execute("rm -r filesystem/lib64")
+    lfs.link("gcc", "filesystem/bin/cc", true)
 end
 
 return self
