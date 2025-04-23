@@ -16,6 +16,7 @@ add("musl")
 add("readline")
 
 add("toybox")
+add("diffutils")
 add("gawk")
 add("util-linux")
 

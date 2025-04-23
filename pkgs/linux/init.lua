@@ -26,6 +26,10 @@ function self.pack()
     os.execute(
         "ZSTD_CLEVEL=19 make INSTALL_MOD_PATH=../filesystem INSTALL_MOD_STRIP=1 DEPMOD=/doesnt/exist modules_install")
     os.remove(path .. "/build")
+
+    -- TODO: put headers in a different package
+    os.execute('make headers_install ARCH="' .. system.capture("arch") .. '"')
+    os.execute("cp -ra usr/include ../filesystem")
 end
 
 return self

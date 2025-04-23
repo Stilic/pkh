@@ -22,6 +22,8 @@ cd neld
 # Build the disk
 sudo ./build_disk.sh
 
-# Run the result in a virtual machine
+# Run the result in a VM
 ./run.sh
 ```
+
+Then, inside the VM, run `./build_neld.sh` to bootstrap NELD inside itself.
