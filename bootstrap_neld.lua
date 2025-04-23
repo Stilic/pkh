@@ -13,8 +13,12 @@ lfs.mkdir("neld/root")
 -- base
 add("linux")
 add("musl")
+add("readline")
+
 add("toybox")
+add("gawk")
 add("util-linux")
+
 add("libmd")
 add("dhcpcd")
 add("ifupdown-ng")
@@ -48,6 +52,9 @@ add("curl")
 add("expat")
 add("libiconv")
 add("git")
+
+add("gettext")
+add("m4")
 
 -- linux build dependencies
 add("bzip2")

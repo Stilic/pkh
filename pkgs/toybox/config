@@ -105,7 +105,7 @@ CONFIG_XARGS=y
 #
 CONFIG_ARP=y
 CONFIG_ARPING=y
-CONFIG_AWK=y
+# CONFIG_AWK is not set
 # CONFIG_BC is not set
 # CONFIG_BOOTCHARTD is not set
 # CONFIG_BRCTL is not set
@@ -119,10 +119,10 @@ CONFIG_CHSH=y
 # CONFIG_DEBUG_DHCP is not set
 CONFIG_DIFF=y
 # CONFIG_DUMPLEASES is not set
-# CONFIG_EXPR is not set
+CONFIG_EXPR=y
 # CONFIG_FDISK is not set
 # CONFIG_FSCK is not set
-# CONFIG_GETFATTR is not set
+CONFIG_GETFATTR=y
 # CONFIG_GETTY is not set
 # CONFIG_GITCOMPAT is not set
 # CONFIG_GITCLONE is not set
@@ -132,8 +132,8 @@ CONFIG_DIFF=y
 # CONFIG_GITCHECKOUT is not set
 # CONFIG_GROUPADD is not set
 # CONFIG_GROUPDEL is not set
-# CONFIG_HEXDUMP is not set
-# CONFIG_HD is not set
+CONFIG_HEXDUMP=y
+CONFIG_HD=y
 # CONFIG_INIT is not set
 CONFIG_IP=y
 CONFIG_IPCRM=y
@@ -173,7 +173,7 @@ CONFIG_TELNET=y
 # CONFIG_TELNETD is not set
 CONFIG_TFTP=y
 # CONFIG_TFTPD is not set
-# CONFIG_TR is not set
+CONFIG_TR=y
 CONFIG_TRACEROUTE=y
 # CONFIG_USERADD is not set
 # CONFIG_USERDEL is not set
@@ -368,7 +368,7 @@ CONFIG_SYNC=y
 # CONFIG_SETENFORCE is not set
 
 #
-# 
+#
 #
 
 #
