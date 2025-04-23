@@ -1,4 +1,2 @@
 #!/bin/sh
-ip link set lo up
-ifdown -fv eth0
-ifup -fv eth0
+ifup -a

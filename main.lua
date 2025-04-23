@@ -57,16 +57,18 @@ function self.build(name)
     if needed then
         for _, source in ipairs(package.sources) do
             local path = source[1]
-            os.execute("curl -Lo _" .. path .. " " .. source[2])
-            os.execute("rm -rf " .. path)
-            lfs.mkdir(path)
-            os.execute("tar xf _" .. path .. " --strip-components=1 -C " .. path)
+            if not lfs.attributes(path) then
+                os.execute("curl -Lo _" .. path .. " " .. source[2])
+                os.execute("rm -rf " .. path)
+                lfs.mkdir(path)
+                os.execute("tar xf _" .. path .. " --strip-components=1 -C " .. path)
 
-            local patch_dir = "../" .. path
-            if lfs.attributes(patch_dir) then
-                for file in lfs.dir(patch_dir) do
-                    if file ~= "." and file ~= ".." then
-                        os.execute("patch -d " .. path .. " -Np1 -i ../" .. patch_dir .. "/" .. file)
+                local patch_dir = "../" .. path
+                if lfs.attributes(patch_dir) then
+                    for file in lfs.dir(patch_dir) do
+                        if file ~= "." and file ~= ".." then
+                            os.execute("patch -d " .. path .. " -Np1 -i ../" .. patch_dir .. "/" .. file)
+                        end
                     end
                 end
             end
@@ -76,25 +78,23 @@ function self.build(name)
             pbuild()
             lfs.chdir(build_path)
         end
-
-        pack(package, build_path)
     end
+
+    pack(package, build_path)
 
     if package.out then
         for index, variant in pairs(package.out) do
             variant.name = index
 
-            -- TODO: separate main package and variants environments?
-            if not lfs.attributes(self.get_file(name, package.version, index)) then
-                if variant.build then
-                    variant.build()
-                elseif pbuild then
-                    pbuild()
-                end
-
-                lfs.chdir(build_path)
-                pack(package, build_path, variant)
+            -- TODO: separate main package and variants environments
+            if variant.build then
+                variant.build()
+            elseif pbuild then
+                pbuild()
             end
+
+            lfs.chdir(build_path)
+            pack(package, build_path, variant)
         end
     end
 

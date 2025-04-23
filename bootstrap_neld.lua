@@ -13,7 +13,15 @@ lfs.mkdir("neld/root")
 -- base
 add("linux")
 add("musl")
-add("busybox")
+add("toybox")
+add("util-linux")
+add("libmd")
+add("dhcpcd")
+add("ifupdown-ng")
+
+add("ncurses")
+add("libxcrypt")
+add("bash")
 
 add("xz")
 
@@ -57,7 +65,8 @@ add("luarocks")
 os.execute("rm -rf neld/ram_root")
 lfs.mkdir("neld/ram_root")
 
-pkh.unpack("neld/ram_root", "busybox", "static")
+pkh.build("busybox-static")
+pkh.unpack("neld/ram_root", "busybox-static")
 
 os.remove("neld/vmlinuz")
 os.execute("ln -s root/lib/modules/" .. require("pkgs.linux").version .. "/vmlinuz neld")
