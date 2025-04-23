@@ -14,6 +14,7 @@ lfs.mkdir("neld/root")
 add("linux")
 add("musl")
 add("readline")
+add("perl")
 
 add("toybox")
 add("diffutils")
