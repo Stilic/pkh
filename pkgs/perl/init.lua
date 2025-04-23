@@ -11,8 +11,8 @@ self.sources = {
 
 function self.build()
     lfs.chdir("source")
-    os.execute('./Configure -des -Dprefix="' ..
-        lfs.currentdir() .. '/_install/usr" -Dccflags="-DNO_POSIX_2008_LOCALE -D_GNU_SOURCE"')
+    os.execute("./Configure -des -Dccflags='-Wno-implicit-function-declaration' -Dprefix='" ..
+        lfs.currentdir() .. "/_install/usr'")
     os.execute("make" .. system.get_make_jobs())
     os.execute("make install")
 end
