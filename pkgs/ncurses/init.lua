@@ -20,6 +20,15 @@ end
 
 function self.pack()
     os.execute("cp -ra source/_install/* filesystem")
+    lfs.chdir("filesystem/lib")
+
+    -- create symlinks for widec
+    for file in lfs.dir(".") do
+        if file:match("%.so") or file:match("%.a$") then
+            os.execute(string.format("ln -s %s %s", file,
+                file:gsub("(%.[soa]+%.*[%d%.]*)$", "w%1")))
+        end
+    end
 end
 
 return self

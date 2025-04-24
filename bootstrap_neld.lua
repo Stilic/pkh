@@ -30,11 +30,16 @@ add("sqlite3")
 --
 
 add("toybox")
+add("file")
 add("rsync")
 add("diffutils")
 add("gawk")
 add("util-linux")
 add("perl")
+
+-- nano
+add("libseccomp")
+add("nano")
 
 add("libmd")
 add("dhcpcd")
