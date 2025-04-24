@@ -3,10 +3,10 @@ local system = require "system"
 
 local self = {}
 
-self.version = "2.41"
+self.version = "0.29.2"
 
 self.sources = {
-    { "source", "https://www.kernel.org/pub/linux/utils/util-linux/v" .. self.version .. "/util-linux-" .. self.version .. ".tar.xz" }
+    { "source", "https://pkgconfig.freedesktop.org/releases/pkg-config-" .. self.version .. ".tar.gz" }
 }
 
 function self.build()

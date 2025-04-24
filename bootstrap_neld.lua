@@ -15,9 +15,16 @@ add("linux")
 
 add("musl")
 add("readline")
+
+-- rsync deps
 add("attr")
 add("acl")
 add("popt")
+--
+
+-- util-linux deps
+add("sqlite3")
+--
 
 add("toybox")
 add("rsync")
@@ -43,6 +50,7 @@ add("binutils")
 add("gcc")
 
 add("make")
+add("pkg-config")
 
 -- curl
 add("libunistring")
