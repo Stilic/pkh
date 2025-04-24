@@ -50,7 +50,7 @@ add("binutils")
 add("gcc")
 
 add("make")
-add("pkg-config")
+add("pkgconf")
 
 -- curl
 add("libunistring")
