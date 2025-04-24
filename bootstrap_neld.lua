@@ -14,7 +14,8 @@ lfs.mkdir("neld/root")
 add("linux")
 
 add("musl")
-add("fts")
+add("musl-fts")
+add("musl-obstack")
 add("argp")
 add("readline")
 
