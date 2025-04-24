@@ -11,7 +11,7 @@ self.sources = {
 
 function self.build()
     lfs.chdir("source")
-    os.execute("./configure --prefix=/usr")
+    os.execute("./configure --prefix=")
     os.execute("make" .. system.get_make_jobs())
     lfs.mkdir("_install")
     os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
