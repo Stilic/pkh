@@ -38,6 +38,7 @@ add("util-linux")
 add("perl")
 
 -- nano
+add("gperf")
 add("libseccomp")
 add("nano")
 
