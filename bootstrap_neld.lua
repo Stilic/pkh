@@ -42,7 +42,7 @@ add("python")
 -- nano
 add("gperf")
 add("libseccomp")
-add("nano")
+-- add("nano")
 
 add("libmd")
 add("dhcpcd")
