@@ -12,7 +12,7 @@ self.sources = {
 function self.build()
     lfs.chdir("source")
     os.execute("make configure")
-    os.execute('./configure CFLAGS="-O2" --prefix=/usr')
+    os.execute('./configure CFLAGS="-O2" --prefix=/usr NO_PYTHON=YesPlease NO_TCLTK=YesPlease')
     -- TODO: add asciidoc
     os.execute("make all" .. system.get_make_jobs())
     lfs.mkdir("_install")
