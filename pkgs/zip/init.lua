@@ -11,8 +11,8 @@ self.sources = {
 
 function self.build()
     lfs.chdir("source")
-    os.execute("make" .. system.get_make_jobs() .. ' -f unix/Makefile LOCAL_ZIP="-O2" prefix=/usr generic')
-    os.execute('make -f unix/Makefile install DESTDIR="' .. lfs.currentdir() .. '/_install"')
+    os.execute("make" .. system.get_make_jobs() .. ' -f unix/Makefile LOCAL_ZIP="-O2" generic')
+    os.execute('make -f unix/Makefile prefix="' .. lfs.currentdir() .. "/_install/usr" .. '" install')
 end
 
 function self.pack()
