@@ -26,4 +26,5 @@ sudo ./build_disk.sh
 ./run.sh
 ```
 
-Then, inside the VM, run `./build_neld.sh` to bootstrap NELD inside itself.
+Then, inside the VM, run `./init_dev.sh` to initialize the environment.
+You can now repeat the steps if you want to build NELD inside itself.

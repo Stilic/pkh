@@ -2,6 +2,4 @@ Define PATH environment variable everywhere
 
 Use lfs.link for symlinks: https://lunarmodules.github.io/luafilesystem/manual.html#reference
 
-Fix Perl manpages location
-
 https://news.ycombinator.com/item?id=42830863
