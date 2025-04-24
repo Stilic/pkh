@@ -75,6 +75,7 @@ add("curl")
 -- git
 add("expat")
 add("libiconv")
+add("libxml2")
 add("git")
 
 add("gettext")
