@@ -18,9 +18,9 @@ end
 
 function self.pack()
     os.execute("cp -ra source/_install/* filesystem")
-    -- TODO: check if it fixes compat everywhere
+    -- TODO: check if this fixes compat everywhere
+    os.remove("filesystem/usr/include/ncurses.h")
     lfs.chdir("filesystem/usr/lib")
-    os.remove("ncurses.h")
     lfs.link("libterminfo.so", "libtinfo.so", true)
     lfs.link("libterminfo.so", "libtinfow.so", true)
     for file in lfs.dir(".") do
