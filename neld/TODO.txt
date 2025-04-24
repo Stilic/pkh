@@ -1,5 +1,7 @@
 Define PATH environment variable everywhere
 
+Make tests run in a separate function (once we're out of the POC state)
+
 Use lfs.link for symlinks: https://lunarmodules.github.io/luafilesystem/manual.html#reference
 
 https://news.ycombinator.com/item?id=42830863
