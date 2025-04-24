@@ -12,7 +12,7 @@ self.sources = {
 function self.build()
     lfs.chdir("source")
     os.execute(
-        './configure CFLAGS="-lcurses" --prefix=/usr --enable-shared --with-system-expat')
+        './configure CFLAGS="-lterminfo" --prefix=/usr --enable-shared --with-system-expat')
     os.execute("make" .. system.get_make_jobs())
     lfs.mkdir("_install")
     os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
