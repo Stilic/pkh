@@ -12,15 +12,19 @@ lfs.mkdir("neld/root")
 
 -- base
 add("linux")
+
 add("musl")
 add("readline")
-add("perl")
+add("attr")
+add("acl")
+add("popt")
 
 add("toybox")
 add("rsync")
 add("diffutils")
 add("gawk")
 add("util-linux")
+add("perl")
 
 add("libmd")
 add("dhcpcd")
