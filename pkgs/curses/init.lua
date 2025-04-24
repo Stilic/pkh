@@ -12,14 +12,14 @@ self.sources = {
 function self.build()
     lfs.chdir("source")
     lfs.mkdir("_install")
-    os.execute('make CFLAGS="-O2" PREFIX= DESTDIR="' ..
+    os.execute('make CFLAGS="-O2" PREFIX=/usr DESTDIR="' ..
         lfs.currentdir() .. '/_install"' .. system.get_make_jobs() .. ' all install')
 end
 
 function self.pack()
     os.execute("cp -ra source/_install/* filesystem")
     -- TODO: check if it fixes compat everywhere
-    lfs.chdir("filesystem/lib")
+    lfs.chdir("filesystem/usr/lib")
     lfs.link("libterminfo.so", "libtinfo.so", true)
     lfs.link("libterminfo.so", "libtinfow.so", true)
     for file in lfs.dir(".") do
