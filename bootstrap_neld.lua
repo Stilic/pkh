@@ -36,6 +36,7 @@ add("diffutils")
 add("gawk")
 add("util-linux")
 add("perl")
+add("python")
 
 -- nano
 add("gperf")
