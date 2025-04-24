@@ -18,6 +18,7 @@ add("musl-fts")
 add("musl-obstack")
 add("argp")
 add("readline")
+add("curses")
 
 -- rsync deps
 add("attr")
@@ -47,7 +48,6 @@ add("libmd")
 add("dhcpcd")
 add("ifupdown-ng")
 
-add("ncurses")
 add("libxcrypt")
 add("bash")
 
