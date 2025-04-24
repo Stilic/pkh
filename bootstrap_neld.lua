@@ -14,6 +14,7 @@ lfs.mkdir("neld/root")
 add("linux")
 
 add("musl")
+add("argp")
 add("readline")
 
 -- rsync deps
@@ -48,6 +49,12 @@ add("mpfr")
 add("mpc")
 add("binutils")
 add("gcc")
+
+-- autotools
+add("libtool")
+add("automake")
+add("autoconf")
+--
 
 add("make")
 add("pkgconf")
