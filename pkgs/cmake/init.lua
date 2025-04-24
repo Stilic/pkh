@@ -3,15 +3,19 @@ local system = require "system"
 
 local self = {}
 
-self.version = "3.49.1"
+self.version = "4.0.1"
 
 self.sources = {
-    { "source", "https://sqlite.org/2025/sqlite-autoconf-3490100.tar.gz" }
+    { "source", "https://github.com/Kitware/CMake/releases/download/v" .. self.version .. "/cmake-" .. self.version .. ".tar.gz" }
 }
 
 function self.build()
     lfs.chdir("source")
-    os.execute('./configure CFLAGS="-O2" --prefix=/usr')
+    local bootstrap_cmd = './bootstrap CFLAGS="-O2" --prefix=/usr'
+    if system.build_cores ~= 1 then
+        bootstrap_cmd = bootstrap_cmd .. " --parallel=" .. system.build_cores
+    end
+    os.execute(bootstrap_cmd)
     os.execute("make" .. system.get_make_jobs())
     lfs.mkdir("_install")
     os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')

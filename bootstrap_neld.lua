@@ -67,6 +67,8 @@ add("autoconf")
 add("make")
 add("pkgconf")
 
+add("cmake")
+
 -- curl
 add("libunistring")
 add("libidn2")
