@@ -65,11 +65,9 @@ function self.build(name)
                 os.execute("tar xf _" .. path .. " --strip-components=1 -C " .. path)
 
                 local patch_dir = pkg_path .. "/" .. path
-                print(patch_dir)
                 if lfs.attributes(patch_dir) then
                     for file in lfs.dir(patch_dir) do
                         if file ~= "." and file ~= ".." then
-                            print(lfs.currentdir())
                             os.execute("patch -d " .. path .. " -p1 -i " .. patch_dir .. "/" .. file)
                         end
                     end

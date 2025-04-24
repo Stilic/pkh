@@ -12,7 +12,7 @@ self.sources = {
 function self.build()
     lfs.chdir("source")
     os.execute("autoreconf -vif")
-    os.execute('./configure CFLAGS="-O2" --prefix= --build=$CBUILD ')
+    os.execute('./configure CFLAGS="-O2" --prefix=')
     os.execute("make" .. system.get_make_jobs())
 end
 
