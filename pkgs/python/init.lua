@@ -12,7 +12,7 @@ self.sources = {
 function self.build()
     lfs.chdir("source")
     os.execute(
-        './configure CPPFLAGS="-I/usr/include/term" --prefix=/usr --enable-shared --with-system-expat --without-ensurepip')
+        './configure CFLAGS="-I/usr/include/term" --prefix=/usr --enable-shared --with-system-expat --without-ensurepip')
     os.execute("make" .. system.get_make_jobs())
     lfs.mkdir("_install")
     os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
