@@ -8,6 +8,7 @@ self.sources = {
     { "source", "https://github.com/google/brotli/archive/refs/tags/v" .. self.version .. ".tar.gz" }
 }
 
+-- TODO: add cflags
 function self.build()
     lfs.chdir("source")
     lfs.mkdir("out")

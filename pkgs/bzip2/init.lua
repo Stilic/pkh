@@ -1,18 +1,18 @@
 local lfs = require "lfs"
 local system = require "system"
+local tools = require "tools"
 
 local self = {}
 
 self.version = "1.0.8"
-
 self.sources = {
     { "source", "https://sourceware.org/pub/bzip2/bzip2-" .. self.version .. ".tar.gz" }
 }
 
 function self.build()
     lfs.chdir("source")
-    local cflags = ' CFLAGS="-O2 -fPIC" '
-    os.execute("make" .. cflags .. system.get_make_jobs())
+    local cflags = ' CFLAGS="' .. tools.default_cflags .. '" '
+    os.execute("make libbz2.a bzip2 bzip2recover" .. cflags .. system.get_make_jobs())
     os.execute("make" .. cflags .. "-f Makefile-libbz2_so" .. system.get_make_jobs())
     lfs.mkdir("_install")
     os.execute('make install PREFIX="' .. lfs.currentdir() .. '/_install/usr"')

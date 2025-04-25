@@ -1,10 +1,9 @@
 local lfs = require "lfs"
-local system = require "system"
+local tools = require "tools"
 
 local self = {}
 
 self.version = "2.49.0"
-
 self.sources = {
     { "source", "https://www.kernel.org/pub/software/scm/git/git-" .. self.version .. ".tar.xz" }
 }
@@ -12,15 +11,9 @@ self.sources = {
 function self.build()
     lfs.chdir("source")
     os.execute("make configure")
-    os.execute('./configure CFLAGS="-O2" --prefix=/usr NO_PYTHON=YesPlease NO_TCLTK=YesPlease')
-    -- TODO: add asciidoc
-    os.execute("make all" .. system.get_make_jobs())
-    lfs.mkdir("_install")
-    os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
+    tools.build_gnu_configure(nil, "NO_PYTHON=YesPlease NO_TCLTK=YesPlease", "")()
 end
 
-function self.pack()
-    os.execute("cp -ra source/_install/* filesystem")
-end
+self.pack = tools.pack_default()
 
 return self

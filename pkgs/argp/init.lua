@@ -1,5 +1,6 @@
 local lfs = require "lfs"
 local system = require "system"
+local tools = require "tools"
 
 local self = {}
 
@@ -12,8 +13,7 @@ self.sources = {
 function self.build()
     lfs.chdir("source")
     os.execute("autoreconf -vif")
-    os.execute('./configure CFLAGS="-O2" --prefix=')
-    os.execute("make" .. system.get_make_jobs())
+    tools.make("")
 end
 
 function self.pack()

@@ -4,7 +4,6 @@ local system = require "system"
 local self = {}
 
 self.version = "14.2.0"
-
 self.sources = {
     { "source", "https://ftp.gnu.org/gnu/gcc/gcc-" .. self.version .. "/gcc-" .. self.version .. ".tar.xz" }
 }

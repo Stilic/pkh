@@ -1,24 +1,15 @@
-local lfs = require "lfs"
-local system = require "system"
+local tools = require "tools"
 
 local self = {}
 
 self.version = "0.24"
-
 self.sources = {
     { "source", "https://ftp.gnu.org/pub/gnu/gettext/gettext-" .. self.version .. ".tar.gz" }
 }
 
-function self.build()
-    lfs.chdir("source")
-    os.execute('./configure CFLAGS="-O2" --prefix=')
-    os.execute("make" .. system.get_make_jobs())
-    lfs.mkdir("_install")
-    os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
-end
-
+self.build = tools.build_gnu_configure("")
 function self.pack()
-    os.execute("cp -ra source/_install/* filesystem")
+    tools.pack_default()()
     os.remove("filesystem/lib/GNU.Gettext.dll")
 end
 
