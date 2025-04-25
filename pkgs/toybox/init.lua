@@ -12,6 +12,6 @@ function self.build()
     os.execute("make install")
 end
 
-self.pack = tools.pack_default()
+self.pack = tools.pack_default("source/install")
 
 return self
