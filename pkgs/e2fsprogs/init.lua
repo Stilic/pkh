@@ -12,7 +12,7 @@ self.sources = {
 
 function self.build()
     lfs.chdir("source")
-    os.execute('./configure CFLAGS="-O2" --prefix=/usr')
+    os.execute('./configure CFLAGS="-O2 -Wno-implicit-function-declaration" --prefix=/usr')
     os.execute("make" .. system.get_make_jobs())
     lfs.mkdir("_install")
     os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
