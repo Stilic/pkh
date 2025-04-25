@@ -11,7 +11,8 @@ self.sources = {
 
 function self.build()
     lfs.chdir("source")
-    os.execute("make" .. system.get_make_jobs() .. tools.get_flags())
+    -- TODO: see if we can add cflags there
+    os.execute("make" .. system.get_make_jobs())
     lfs.mkdir("_install")
     os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
 end

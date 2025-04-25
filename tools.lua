@@ -57,7 +57,7 @@ function self.build_kconfig(source, cflags, cppflags)
         end
 
         os.execute("cp ../../config .config")
-        os.execute("make" .. system.get_make_jobs() .. "KCONFIG_NOTIMESTAMP=1" .. self.get_flags(cflags, cppflags))
+        os.execute("make" .. system.get_make_jobs() .. " KCONFIG_NOTIMESTAMP=1" .. self.get_flags(cflags, cppflags))
     end
 end
 
