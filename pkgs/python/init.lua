@@ -18,7 +18,7 @@ function self.build()
     local destdir = ' DESTDIR="' .. lfs.currentdir() .. '/_install"'
     os.execute("make install" .. destdir)
     -- force installing files and manpages in case of an error
-    os.execute("make inclinstall installman" .. destdir)
+    os.execute("make inclinstall maninstall" .. destdir)
 end
 
 function self.pack()
