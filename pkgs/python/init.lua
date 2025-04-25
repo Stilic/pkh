@@ -15,7 +15,10 @@ function self.build()
         './configure --prefix=/usr --enable-shared --with-system-expat --without-ensurepip')
     os.execute("make" .. system.get_make_jobs())
     lfs.mkdir("_install")
-    os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
+    local destdir = ' DESTDIR="' .. lfs.currentdir() .. '/_install"'
+    os.execute("make install" .. destdir)
+    -- force installing files and manpages in case of an error
+    os.execute("make inclinstall installman" .. destdir)
 end
 
 function self.pack()
