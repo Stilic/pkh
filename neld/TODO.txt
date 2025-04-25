@@ -1,6 +1,8 @@
 Define PATH environment variable everywhere
 
-Make tests run in a separate function (once we're out of the POC state)
+Make tests run in a separate function + isolate builds to fix Python compilation (once we're out of the POC state)
+
+Fix build issue with musl-obstack
 
 Use lfs.link for symlinks: https://lunarmodules.github.io/luafilesystem/manual.html#reference
 
