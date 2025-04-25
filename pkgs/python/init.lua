@@ -12,7 +12,7 @@ self.sources = {
 function self.build()
     lfs.chdir("source")
     os.execute(
-        './configure --prefix=/usr --disable-test-modules --enable-shared --with-system-expat')
+        './configure --prefix=/usr --enable-shared --with-system-expat --without-ensurepip')
     os.execute("make" .. system.get_make_jobs())
     lfs.mkdir("_install")
     os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
