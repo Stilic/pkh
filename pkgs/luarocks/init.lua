@@ -1,22 +1,20 @@
 local lfs = require "lfs"
-local system = require "system"
+local tools = require "tools"
 
 local self = {}
 
 self.version = "3.11.1"
-
 self.sources = {
     { "source", "https://luarocks.github.io/luarocks/releases/luarocks-" .. self.version .. ".tar.gz" }
 }
 
 function self.build()
     lfs.chdir("source")
-    os.execute("./configure --prefix=/usr")
-    os.execute("make" .. system.get_make_jobs())
+    tools.make()
 end
 
 function self.pack()
-    -- TODO: get lua version
+    -- TODO: rework this
     os.execute("mkdir -p filesystem/etc/luarocks filesystem/usr/bin filesystem/usr/share/lua/5.4")
     os.execute("cp -ra source/build/config*.lua filesystem/etc/luarocks")
     os.execute("chmod +x source/build/luarocks*")

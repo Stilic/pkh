@@ -1,10 +1,10 @@
 local lfs = require "lfs"
 local system = require "system"
+local tools = require "tools"
 
 local self = {}
 
 self.version = "4.6.1"
-
 self.sources = {
     { "source", "https://github.com/plougher/squashfs-tools/archive/refs/tags/" .. self.version .. ".tar.gz" }
 }
@@ -18,8 +18,6 @@ function self.build()
     os.execute('make install INSTALL_PREFIX="' .. source_dir .. '/_install/usr"')
 end
 
-function self.pack()
-    os.execute("cp -ra source/_install/* filesystem")
-end
+self.pack = tools.pack_default()
 
 return self

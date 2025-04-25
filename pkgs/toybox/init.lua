@@ -1,5 +1,3 @@
-local lfs = require "lfs"
-local system = require "system"
 local tools = require "tools"
 
 local self = {}
@@ -10,9 +8,7 @@ self.sources = {
 }
 
 function self.build()
-    lfs.chdir("source")
-    os.execute("cp ../../config .config")
-    os.execute('KCONFIG_NOTIMESTAMP=1 CFLAGS="-O2" make' .. system.get_make_jobs())
+    tools.build_kconfig()()
     os.execute("make install")
 end
 

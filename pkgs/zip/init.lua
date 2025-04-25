@@ -1,22 +1,20 @@
 local lfs = require "lfs"
 local system = require "system"
+local tools = require "tools"
 
 local self = {}
 
 self.version = "3.0"
-
 self.sources = {
     { "source", "https://downloads.sourceforge.net/infozip/zip" .. self.version:gsub("%.", "") .. ".tar.gz" }
 }
 
 function self.build()
     lfs.chdir("source")
-    os.execute("make" .. system.get_make_jobs() .. ' -f unix/Makefile LOCAL_ZIP="-O2" generic')
+    os.execute("make" .. system.get_make_jobs() .. ' -f unix/Makefile LOCAL_ZIP="' .. tools.default_cflags .. '" generic')
     os.execute('make -f unix/Makefile prefix="' .. lfs.currentdir() .. "/_install/usr" .. '" install')
 end
 
-function self.pack()
-    os.execute("cp -ra source/_install/* filesystem")
-end
+self.pack = tools.pack_default()
 
 return self

@@ -1,24 +1,13 @@
-local lfs = require "lfs"
-local system = require "system"
+local tools = require "tools"
 
 local self = {}
 
 self.version = "2.10"
-
 self.sources = {
     { "source", "https://www.oberhumer.com/opensource/lzo/download/lzo-" .. self.version .. ".tar.gz" }
 }
 
-function self.build()
-    lfs.chdir("source")
-    os.execute("./configure --prefix=/usr --enable-shared")
-    os.execute("make" .. system.get_make_jobs())
-    lfs.mkdir("_install")
-    os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
-end
-
-function self.pack()
-    os.execute("cp -ra source/_install/* filesystem")
-end
+self.build = tools.build_gnu_configure(nil, "--enable-shared")
+self.pack = tools.pack_default()
 
 return self

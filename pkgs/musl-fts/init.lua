@@ -1,10 +1,9 @@
 local lfs = require "lfs"
-local system = require "system"
+local tools = require "tools"
 
 local self = {}
 
 self.version = "1.2.7"
-
 self.sources = {
     { "source", "https://github.com/void-linux/musl-fts/archive/refs/tags/v" .. self.version .. ".tar.gz" }
 }
@@ -12,14 +11,9 @@ self.sources = {
 function self.build()
     lfs.chdir("source")
     os.execute("./bootstrap.sh")
-    os.execute('./configure CFLAGS="-O2" --prefix=')
-    os.execute("make" .. system.get_make_jobs())
-    lfs.mkdir("_install")
-    os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
+    tools.build_gnu_configure("", nil, "")()
 end
 
-function self.pack()
-    os.execute("cp -ra source/_install/* filesystem")
-end
+self.pack = tools.pack_default()
 
 return self
