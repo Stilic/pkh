@@ -21,6 +21,8 @@ function self.pack()
     -- TODO: check if this fixes compat everywhere
     os.remove("filesystem/usr/include/ncurses.h")
     lfs.chdir("filesystem/usr/lib")
+    os.remove("pkgconfig/ncurses.pc")
+    os.remove("pkgconfig/ncursesw.pc")
     lfs.link("libterminfo.so", "libtinfo.so", true)
     lfs.link("libterminfo.so", "libtinfow.so", true)
     for file in lfs.dir(".") do
