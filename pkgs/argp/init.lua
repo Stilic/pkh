@@ -5,7 +5,6 @@ local tools = require "tools"
 local self = {}
 
 self.version = "1.5.0"
-
 self.sources = {
     { "source", "https://github.com/argp-standalone/argp-standalone/archive/refs/tags/" .. self.version .. ".tar.gz" }
 }
