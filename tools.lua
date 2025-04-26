@@ -7,10 +7,10 @@ self.default_cflags = "-O2"
 self.default_cppflags = self.default_cflags
 
 function self.get_flags(cflags, cppflags)
-    return ' CFLAGS="' ..
+    return 'CFLAGS="' ..
         self.default_cflags ..
         (cflags and (" " .. cflags) or "") ..
-        '" CPPFLAGS="' .. self.default_cppflags .. (cppflags and (" " .. cppflags) or "") .. '" '
+        '" CPPFLAGS="' .. self.default_cppflags .. (cppflags and (" " .. cppflags) or "") .. '"'
 end
 
 function self.make(prefix, options, cflags, cppflags)
@@ -23,7 +23,7 @@ function self.make(prefix, options, cflags, cppflags)
         options = ""
     end
 
-    os.execute("./configure" .. self.get_flags(cflags, cppflags) .. options .. "--prefix=" .. prefix)
+    os.execute(self.get_flags(cflags, cppflags) .. " ./configure" .. options .. "--prefix=" .. prefix)
     os.execute("make" .. system.get_make_jobs())
 end
 
@@ -57,7 +57,7 @@ function self.build_kconfig(source, cflags, cppflags)
         end
 
         os.execute("cp ../../config .config")
-        os.execute("KCONFIG_NOTIMESTAMP=1" .. self.get_flags(cflags, cppflags) .. "make" .. system.get_make_jobs())
+        os.execute("KCONFIG_NOTIMESTAMP=1 " .. self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs())
     end
 end
 
