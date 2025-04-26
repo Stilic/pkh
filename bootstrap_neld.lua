@@ -36,12 +36,14 @@ add("rsync")
 add("diffutils")
 add("gawk")
 add("sed")
-add("grep")
 add("cpio")
 add("e2fsprogs")
 add("util-linux")
 add("perl")
 add("python")
+
+add("pcre2")
+add("grep")
 
 -- nano
 add("gperf")
