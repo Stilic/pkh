@@ -18,12 +18,12 @@ function self.make(prefix, options, cflags, cppflags)
         prefix = "/usr"
     end
     if options then
-        options = options .. " "
+        options = " " .. options
     else
-        options = " "
+        options = ""
     end
 
-    os.execute(self.get_flags(cflags, cppflags) .. " ./configure" .. options .. "--prefix=" .. prefix)
+    os.execute(self.get_flags(cflags, cppflags) .. " ./configure" .. options .. " --prefix=" .. prefix)
     os.execute("make" .. system.get_make_jobs())
 end
 
