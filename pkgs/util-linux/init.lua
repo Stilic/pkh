@@ -7,7 +7,7 @@ self.sources = {
     { "source", "https://www.kernel.org/pub/linux/utils/util-linux/v" .. self.version .. "/util-linux-" .. self.version .. ".tar.xz" }
 }
 
-self.build = tools.build_gnu_configure("", "--without-ncursesw")
+self.build = tools.build_gnu_configure("", "--disable-more")
 self.pack = tools.pack_default()
 
 return self
