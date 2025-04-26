@@ -13,7 +13,7 @@ function self.get_flags(cflags, cppflags)
         '" CPPFLAGS="' .. self.default_cppflags .. (cppflags and (" " .. cppflags) or "") .. '"'
 end
 
-function self.make(prefix, options, cflags, cppflags)
+function self.make(prefix, options, cflags, cppflags, configure)
     if not prefix then
         prefix = "/usr"
     end
@@ -22,14 +22,17 @@ function self.make(prefix, options, cflags, cppflags)
     else
         options = ""
     end
+    if not configure then
+        configure = "configure"
+    end
 
-    os.execute(self.get_flags(cflags, cppflags) .. " ./configure" .. options .. " --prefix=" .. prefix)
+    os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. options .. " --prefix=" .. prefix)
     os.execute("make" .. system.get_make_jobs())
 end
 
 -- build templates
 
-function self.build_gnu_configure(prefix, options, source, cflags, cppflags)
+function self.build_gnu_configure(prefix, options, source, cflags, cppflags, configure)
     if not source then
         source = "source"
     end
@@ -39,7 +42,7 @@ function self.build_gnu_configure(prefix, options, source, cflags, cppflags)
             lfs.chdir(source)
         end
 
-        self.make(prefix, options, cflags, cppflags)
+        self.make(prefix, options, cflags, cppflags, configure)
 
         lfs.mkdir("_install")
         os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')

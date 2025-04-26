@@ -8,12 +8,7 @@ self.sources = {
     { "source", "https://github.com/openssl/openssl/releases/download/openssl-" .. self.version .. "/openssl-" .. self.version .. ".tar.gz" }
 }
 
-function self.build()
-    lfs.chdir("source")
-    os.rename("Configure", "configure")
-    tools.build_gnu_configure(nil, nil, "")()
-end
-
+self.build = tools.build_gnu_configure(nil, nil, nil, nil, nil, "Configure")
 function self.pack()
     tools.pack_default()()
     os.rename("filesystem/usr/lib64", "filesystem/usr/lib")
