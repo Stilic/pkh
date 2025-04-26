@@ -5,7 +5,7 @@ The PacK Head package manager.
 
 This is currently a **Proof Of Concept**. The goal is to demonstrate the viability of a self-hosting distribution built with a package manager written in Lua.
 
-## Bootstraping [NELD](https://github.com/Stilic/linux-os)
+## Bootstraping Pickle Linux
 
 You will need basic build tooling, [Lua](https://www.lua.org) (5.1 or newer), [LuaRocks](https://luarocks.org) and [Squashfs-tools](https://github.com/plougher/squashfs-tools).
 
