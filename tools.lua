@@ -46,6 +46,21 @@ function self.build_gnu_configure(prefix, options, source, cflags, cppflags)
     end
 end
 
+function self.build_autotools(prefix, options, source, cflags, cppflags)
+    if not source then
+        source = "source"
+    end
+
+    return function()
+        if source ~= "" then
+            lfs.chdir(source)
+        end
+
+        os.execute("autoreconf -vif")
+        self.build_gnu_configure(prefix, options, "", cflags, cppflags)()
+    end
+end
+
 function self.build_kconfig(source, cflags, cppflags)
     if not source then
         source = "source"
