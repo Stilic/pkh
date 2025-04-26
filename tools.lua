@@ -20,7 +20,7 @@ function self.make(prefix, options, cflags, cppflags)
     if options then
         options = options .. " "
     else
-        options = ""
+        options = " "
     end
 
     os.execute(self.get_flags(cflags, cppflags) .. " ./configure" .. options .. "--prefix=" .. prefix)
