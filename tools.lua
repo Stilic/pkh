@@ -3,14 +3,14 @@ local system = require "system"
 
 local self = {}
 
-self.default_cflags = "-O2"
-self.default_cppflags = self.default_cflags
+self.DEFAULT_CFLAGS = "-O2"
+self.DEFAULT_CPPFLAGS = self.DEFAULT_CFLAGS
 
 function self.get_flags(cflags, cppflags)
     return 'CFLAGS="' ..
-        self.default_cflags ..
+        self.DEFAULT_CFLAGS ..
         (cflags and (" " .. cflags) or "") ..
-        '" CPPFLAGS="' .. self.default_cppflags .. (cppflags and (" " .. cppflags) or "") .. '"'
+        '" CPPFLAGS="' .. self.DEFAULT_CPPFLAGS .. (cppflags and (" " .. cppflags) or "") .. '"'
 end
 
 function self.make(prefix, options, cflags, cppflags, configure)

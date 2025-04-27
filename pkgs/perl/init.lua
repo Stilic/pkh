@@ -13,7 +13,7 @@ function self.build()
     lfs.chdir("source")
     os.execute(
         './Configure -des -Dprefix=/usr -Dman1ext=1p -Dman3ext=3p -Dman1dir=/usr/share/man/man1 -Dman3dir=/usr/share/man/man3 -Dccflags="' ..
-        tools.default_cflags .. ' -Wno-implicit-function-declaration"')
+        tools.DEFAULT_CFLAGS .. ' -Wno-implicit-function-declaration"')
     os.execute("make" .. system.get_make_jobs())
     os.execute("make install DESTDIR='" .. lfs.currentdir() .. "/_install'")
 end

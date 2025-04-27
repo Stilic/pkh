@@ -48,3 +48,4 @@ ramdisk
 ramdisk.cpio.gz
 
 .build
+.cache

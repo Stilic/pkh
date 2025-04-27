@@ -13,7 +13,7 @@ function self.build()
     lfs.chdir("source")
     os.execute("make" .. system.get_make_jobs() ..
         ' -f unix/Makefile CF="' ..
-        tools.default_cflags ..
+        tools.DEFAULT_CFLAGS ..
         ' -I. -DWILD_STOP_AT_DIR -DLARGE_FILE_SUPPORT -DUNICODE_SUPPORT -DUNICODE_WCHAR -DUTF8_MAYBE_NATIVE -DNO_LCHMOD -DDATE_FORMAT=DF_YMD -DNATIVE" unzips')
     os.execute('make -f unix/Makefile prefix="' .. lfs.currentdir() .. "/_install/usr" .. '" install')
 end

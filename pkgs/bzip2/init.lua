@@ -11,7 +11,7 @@ self.sources = {
 
 function self.build()
     lfs.chdir("source")
-    local cflags = ' CFLAGS="' .. tools.default_cflags .. '" '
+    local cflags = ' CFLAGS="' .. tools.DEFAULT_CFLAGS .. '" '
     os.execute("make libbz2.a bzip2 bzip2recover" .. cflags .. system.get_make_jobs())
     os.execute("make" .. cflags .. "-f Makefile-libbz2_so" .. system.get_make_jobs())
     lfs.mkdir("_install")

@@ -11,7 +11,7 @@ self.sources = {
 
 function self.build()
     lfs.chdir("source")
-    local bootstrap_cmd = './bootstrap CFLAGS="' .. tools.default_cflags .. '" --prefix=/usr'
+    local bootstrap_cmd = './bootstrap CFLAGS="' .. tools.DEFAULT_CFLAGS .. '" --prefix=/usr'
     if system.build_cores ~= 1 then
         bootstrap_cmd = bootstrap_cmd .. " --parallel=" .. system.build_cores
     end

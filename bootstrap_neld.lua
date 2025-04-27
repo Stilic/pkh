@@ -1,14 +1,18 @@
 require "luarocks.loader"
 local lfs = require "lfs"
 local pkh = require "main"
+local system = require "system"
 
-local function add(name)
+local BINARY_HOST = "https://pickle.stilic.net/packages"
+
+local function compile(name)
     pkh.build(name)
     pkh.unpack("neld/root", name)
 end
 
-os.execute("rm -rf neld/root")
-lfs.mkdir("neld/root")
+local function download(name)
+
+end
 
 local base_overlay = {
     -- base
@@ -113,15 +117,35 @@ local base_overlay = {
     "luarocks",
 }
 
-for _, pkg in ipairs(base_overlay) do
-    add(pkg)
-end
+-- os.execute("rm -rf neld/root")
+-- lfs.mkdir("neld/root")
 
-os.execute("rm -rf neld/ram_root")
-lfs.mkdir("neld/ram_root")
+-- build from source
+-- for _, pkg in ipairs(base_overlay) do
+--     compile(pkg)
+-- end
 
-pkh.build("busybox-static")
-pkh.unpack("neld/ram_root", "busybox-static")
+-- build from binhost
+local og_path = lfs.currentdir()
 
-os.remove("neld/vmlinuz")
-os.execute("ln -s root/lib/modules/" .. require("pkgs.linux").version .. "/vmlinuz neld")
+os.execute("rm -rf neld/.cache")
+lfs.mkdir("neld/.cache")
+lfs.chdir("neld/.cache")
+
+local available_packages = system.capture("curl -L " .. BINARY_HOST .. "/available.txt")
+
+-- for _, pkg in ipairs(base_overlay) do
+--     download(pkg)
+-- end
+
+-- lfs.chdir(og_path)
+--
+
+-- os.execute("rm -rf neld/ram_root")
+-- lfs.mkdir("neld/ram_root")
+
+-- pkh.build("busybox-static")
+-- pkh.unpack("neld/ram_root", "busybox-static")
+
+-- os.remove("neld/vmlinuz")
+-- os.execute("ln -s root/lib/modules/" .. require("pkgs.linux").version .. "/vmlinuz neld")
