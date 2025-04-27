@@ -10,106 +10,112 @@ end
 os.execute("rm -rf neld/root")
 lfs.mkdir("neld/root")
 
--- base
-add("linux")
+local base_overlay = {
+    -- base
+    "linux",
 
-add("musl")
-add("musl-fts")
-add("musl-obstack")
-add("argp")
-add("readline")
-add("curses")
+    "musl",
+    "musl-fts",
+    "musl-obstack",
+    "argp",
+    "readline",
+    "curses",
 
--- rsync deps
-add("attr")
-add("acl")
-add("popt")
---
+    -- rsync deps
+    "attr",
+    "acl",
+    "popt",
+    --
 
--- util-linux deps
-add("sqlite3")
---
+    -- util-linux deps
+    "sqlite3",
+    --
 
-add("toybox")
-add("file")
-add("rsync")
-add("diffutils")
-add("gawk")
-add("sed")
-add("cpio")
-add("e2fsprogs")
-add("util-linux")
-add("perl")
-add("python")
+    "toybox",
+    "file",
+    "rsync",
+    "diffutils",
+    "gawk",
+    "sed",
+    "cpio",
+    "e2fsprogs",
+    "util-linux",
+    "perl",
+    "python",
 
-add("pcre2")
-add("grep")
+    "pcre2",
+    "grep",
 
--- nano
-add("gperf")
-add("libseccomp")
-add("nano")
+    -- nano
+    "gperf",
+    "libseccomp",
+    "nano",
 
-add("libmd")
-add("dhcpcd")
-add("ifupdown-ng")
+    "libmd",
+    "dhcpcd",
+    "ifupdown-ng",
 
-add("libxcrypt")
-add("bash")
+    "libxcrypt",
+    "bash",
 
-add("xz")
+    "xz",
 
-add("gmp")
-add("mpfr")
-add("mpc")
-add("binutils")
-add("gcc")
+    "gmp",
+    "mpfr",
+    "mpc",
+    "binutils",
+    "gcc",
 
--- autotools
-add("libtool")
-add("automake")
-add("autoconf")
---
+    -- autotools
+    "libtool",
+    "automake",
+    "autoconf",
+    --
 
-add("make")
-add("pkgconf")
+    "make",
+    "pkgconf",
 
-add("cmake")
+    "cmake",
 
--- curl
-add("libunistring")
-add("libidn2")
-add("libpsl")
-add("openssl")
-add("nghttp2")
-add("zlib")
-add("zstd")
-add("brotli")
-add("curl")
+    -- curl
+    "libunistring",
+    "libidn2",
+    "libpsl",
+    "openssl",
+    "nghttp2",
+    "zlib",
+    "zstd",
+    "brotli",
+    "curl",
 
--- git
-add("expat")
-add("libiconv")
-add("libxml2")
-add("git")
+    -- git
+    "expat",
+    "libiconv",
+    "libxml2",
+    "git",
 
-add("gettext")
-add("m4")
+    "gettext",
+    "m4",
 
--- linux build dependencies
-add("bzip2")
-add("flex")
-add("bison")
-add("elfutils")
-add("dosfstools")
+    -- linux build dependencies
+    "bzip2",
+    "flex",
+    "bison",
+    "elfutils",
+    "dosfstools",
 
--- package manager
-add("unzip")
-add("zip")
-add("lzo")
-add("squashfs-tools")
-add("lua")
-add("luarocks")
+    -- package manager
+    "unzip",
+    "zip",
+    "lzo",
+    "squashfs-tools",
+    "lua",
+    "luarocks",
+}
+
+for _, pkg in ipairs(base_overlay) do
+    add(pkg)
+end
 
 os.execute("rm -rf neld/ram_root")
 lfs.mkdir("neld/ram_root")
