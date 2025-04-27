@@ -134,6 +134,8 @@ lfs.chdir("neld/.cache")
 
 local available_packages = system.capture("curl -L " .. BINARY_HOST .. "/available.txt")
 
+lfs.chdir(og_path)
+
 -- for _, pkg in ipairs(base_overlay) do
 --     download(pkg)
 -- end
