@@ -140,6 +140,7 @@ lfs.chdir(og_path)
 --     download(pkg)
 -- end
 
+-- build from source (PART 2)
 -- lfs.chdir(og_path)
 --
 
