@@ -156,11 +156,9 @@ for _, name in ipairs(base_overlay) do
     download(name, "../root")
 end
 
-os.execute("rm -rf neld/ram_root")
-lfs.mkdir("neld/ram_root")
+os.execute("rm -rf ../ram_root")
+lfs.mkdir("../ram_root")
 download("busybox-static", "../ram_root")
 
-lfs.chdir(og_path)
-
-os.remove("neld/vmlinuz")
-os.execute("ln -s root/lib/modules/" .. require("pkgs.linux").version .. "/vmlinuz neld")
+os.remove("../vmlinuz")
+os.execute("ln -s root/lib/modules/" .. available_packages["linux"][1] .. "/vmlinuz ..")
