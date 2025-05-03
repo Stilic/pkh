@@ -29,6 +29,11 @@ local function pack(package, build_path, variant)
             ppack()
         end
     end
+
+    if not ppack then
+        return false
+    end
+
     lfs.chdir(build_path)
 
     -- make the archive
@@ -40,8 +45,12 @@ local function pack(package, build_path, variant)
     local file = self.get_file(package.name, package.version, vname)
     os.remove(file)
     os.execute("mksquashfs filesystem " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
+
+    return true
 end
 function self.build(name)
+    local archived = true
+
     local needed, og_path, package = true, lfs.currentdir(), require("pkgs." .. name)
     package.name = name
 
@@ -81,7 +90,7 @@ function self.build(name)
         end
     end
 
-    pack(package, build_path)
+    archived = pack(package, build_path)
 
     if package.out then
         for index, variant in pairs(package.out) do
@@ -95,11 +104,13 @@ function self.build(name)
             end
 
             lfs.chdir(build_path)
-            pack(package, build_path, variant)
+            archived = pack(package, build_path, variant)
         end
     end
 
     lfs.chdir(og_path)
+
+    return archived
 end
 
 function self.unpack(path, name, variant)
