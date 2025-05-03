@@ -4,16 +4,6 @@ local pkh = require "main"
 local system = require "system"
 
 local BINARY_HOST = "https://pickle.stilic.net/packages"
-
-local function compile(name)
-    pkh.build(name)
-    pkh.unpack("neld/root", name)
-end
-
-local function download(name)
-
-end
-
 local base_overlay = {
     -- base
     "linux",
@@ -117,38 +107,60 @@ local base_overlay = {
     "luarocks",
 }
 
--- os.execute("rm -rf neld/root")
--- lfs.mkdir("neld/root")
+os.execute("rm -rf neld/root")
+lfs.mkdir("neld/root")
 
--- build from source
--- for _, pkg in ipairs(base_overlay) do
---     compile(pkg)
--- end
-
--- build from binhost
 local og_path = lfs.currentdir()
 
-os.execute("rm -rf neld/.cache")
 lfs.mkdir("neld/.cache")
 lfs.chdir("neld/.cache")
 
-local available_packages = system.capture("curl -L " .. BINARY_HOST .. "/available.txt")
+local available_packages = {}
+for line in system.capture("curl -L " .. BINARY_HOST .. "/available.txt"):gmatch("[^\r\n]+") do
+    local i, name, version = 1
+
+    for part in line:gmatch("([^,]+)") do
+        if i == 3 then
+            break
+        end
+        if i == 1 then
+            name = part
+        else
+            version = part
+        end
+        i = i + 1
+    end
+
+    local available_versions = available_packages[name]
+    if not available_versions then
+        available_versions = {}
+        available_packages[name] = available_versions
+    end
+    table.insert(available_versions, version)
+end
+
+local function download(name, directory)
+    local versions = available_packages[name]
+    if versions then
+        local file_name = pkh.get_file(name, versions[1])
+        if not lfs.attributes(file_name) then
+            os.execute("curl -LOJ " .. BINARY_HOST .. "/" .. file_name)
+        end
+        os.execute("unsquashfs -d " .. directory .. " -f " .. file_name)
+    else
+        print("Package `" .. name .. "` isn't available!")
+    end
+end
+
+for _, name in ipairs(base_overlay) do
+    download(name, "../root")
+end
+
+os.execute("rm -rf neld/ram_root")
+lfs.mkdir("neld/ram_root")
+download("busybox-static", "../ram_root")
 
 lfs.chdir(og_path)
 
--- for _, pkg in ipairs(base_overlay) do
---     download(pkg)
--- end
-
--- build from source (PART 2)
--- lfs.chdir(og_path)
---
-
--- os.execute("rm -rf neld/ram_root")
--- lfs.mkdir("neld/ram_root")
-
--- pkh.build("busybox-static")
--- pkh.unpack("neld/ram_root", "busybox-static")
-
--- os.remove("neld/vmlinuz")
--- os.execute("ln -s root/lib/modules/" .. require("pkgs.linux").version .. "/vmlinuz neld")
+os.remove("neld/vmlinuz")
+os.execute("ln -s root/lib/modules/" .. require("pkgs.linux").version .. "/vmlinuz neld")

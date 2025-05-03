@@ -7,7 +7,6 @@ function self.capture(cmd)
     f:close()
     s = s:gsub("^%s+", "")
         :gsub("%s+$", "")
-        :gsub("[\n\r]+", " ")
     return s
 end
 
