@@ -11,7 +11,7 @@ self.sources = {
 self.build = tools.build_gnu_configure(nil, "--with-curses bash_cv_termcap_lib=libcurses")
 function self.pack()
     tools.pack_default()()
-    lfs.rmdir("filesystem/bin")
+    lfs.rmdir("filesystem/usr/bin")
 end
 
 return self

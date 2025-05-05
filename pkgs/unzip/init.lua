@@ -15,7 +15,7 @@ function self.build()
         ' -f unix/Makefile CF="' ..
         tools.DEFAULT_CFLAGS ..
         ' -I. -DWILD_STOP_AT_DIR -DLARGE_FILE_SUPPORT -DUNICODE_SUPPORT -DUNICODE_WCHAR -DUTF8_MAYBE_NATIVE -DNO_LCHMOD -DDATE_FORMAT=DF_YMD -DNATIVE" unzips')
-    os.execute('make -f unix/Makefile prefix="' .. lfs.currentdir() .. "/_install/usr" .. '" install')
+    os.execute('make -f unix/Makefile prefix="' .. lfs.currentdir() .. "/_install" .. '" install')
 end
 
 self.pack = tools.pack_default()

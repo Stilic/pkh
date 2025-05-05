@@ -4,7 +4,7 @@ local pkh = require "main"
 local system = require "system"
 
 local BINARY_HOST = "https://pickle.stilic.net/packages"
-local base_overlay = {
+local base_layer = {
     -- base
     "linux",
 
@@ -13,16 +13,6 @@ local base_overlay = {
     "musl-obstack",
     "argp",
 
-    -- TODO: separate these from the base layer
-    "readline",
-    "curses",
-
-    -- rsync deps
-    "attr",
-    "acl",
-    "popt",
-    --
-
     -- util-linux deps
     "sqlite3",
     --
@@ -30,23 +20,12 @@ local base_overlay = {
     "libxcrypt",
     "toybox",
     "file",
-    "rsync",
     "diffutils",
     "gawk",
     "sed",
-    "cpio",
-    "e2fsprogs",
     "util-linux",
-    "perl",
-    "python",
 
-    "pcre2",
     "grep",
-
-    -- nano
-    "gperf",
-    "libseccomp",
-    "nano",
 
     "libmd",
     "dhcpcd",
@@ -55,6 +34,37 @@ local base_overlay = {
     "bash",
 
     "xz",
+    "zlib",
+    "gettext",
+
+    "unzip",
+    "zip",
+
+    -- TODO: package pkh itself
+    "lzo",
+    "squashfs-tools",
+    "lua",
+    "luarocks",
+}
+local build_layer = {
+    "readline",
+    "curses",
+
+    "attr",
+    "acl",
+    "popt",
+    "rsync",
+
+    "cpio",
+
+    "perl",
+    "python",
+
+    "pcre2",
+
+    "make",
+    "pkgconf",
+    "m4",
 
     "gmp",
     "mpfr",
@@ -68,9 +78,13 @@ local base_overlay = {
     "autoconf",
     --
 
-    "make",
-    "pkgconf",
+    -- TODO: make these optional
+    "e2fsprogs",
+    "gperf",
+    "libseccomp",
+    "nano",
 
+    -- for brotli
     "cmake",
 
     -- curl
@@ -79,7 +93,6 @@ local base_overlay = {
     "libpsl",
     "openssl",
     "nghttp2",
-    "zlib",
     "zstd",
     "brotli",
     "curl",
@@ -90,23 +103,12 @@ local base_overlay = {
     "libxml2",
     "git",
 
-    "gettext",
-    "m4",
-
     -- linux build dependencies
     "bzip2",
     "flex",
     "bison",
     "elfutils",
     "dosfstools",
-
-    -- package manager
-    "unzip",
-    "zip",
-    "lzo",
-    "squashfs-tools",
-    "lua",
-    "luarocks",
 }
 
 os.execute("rm -rf neld/root")
@@ -152,7 +154,10 @@ local function download(name, directory)
     end
 end
 
-for _, name in ipairs(base_overlay) do
+for _, name in ipairs(base_layer) do
+    download(name, "../root")
+end
+for _, name in ipairs(build_layer) do
     download(name, "../root")
 end
 

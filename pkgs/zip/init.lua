@@ -12,7 +12,7 @@ self.sources = {
 function self.build()
     lfs.chdir("source")
     os.execute("make" .. system.get_make_jobs() .. ' -f unix/Makefile LOCAL_ZIP="' .. tools.DEFAULT_CFLAGS .. '" generic')
-    os.execute('make -f unix/Makefile prefix="' .. lfs.currentdir() .. "/_install/usr" .. '" install')
+    os.execute('make -f unix/Makefile prefix="' .. lfs.currentdir() .. "/_install" .. '" install')
 end
 
 self.pack = tools.pack_default()
