@@ -12,6 +12,8 @@ local base_overlay = {
     "musl-fts",
     "musl-obstack",
     "argp",
+
+    -- TODO: separate these from the base layer
     "readline",
     "curses",
 
@@ -49,7 +51,8 @@ local base_overlay = {
     "dhcpcd",
     "ifupdown-ng",
 
-    "libxcrypt",
+    -- TODO: check if bash does need this
+    -- "libxcrypt",
     "bash",
 
     "xz",
@@ -109,8 +112,6 @@ local base_overlay = {
 
 os.execute("rm -rf neld/root")
 lfs.mkdir("neld/root")
-
-local og_path = lfs.currentdir()
 
 lfs.mkdir("neld/.cache")
 lfs.chdir("neld/.cache")

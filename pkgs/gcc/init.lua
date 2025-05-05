@@ -12,7 +12,7 @@ function self.build()
     lfs.mkdir("obj")
     lfs.chdir("obj")
     os.execute(
-        '../source/configure CFLAGS="-O2" --prefix= --disable-multilib --disable-nls --with-system-zlib --with-native-system-header-dir=/include --enable-languages=c,c++')
+        '../source/configure CFLAGS="-O2" --prefix=/usr --disable-multilib --disable-nls --with-system-zlib --with-native-system-header-dir=/include --enable-languages=c,c++')
     os.execute("make" .. system.get_make_jobs())
     lfs.mkdir("_install")
     os.execute('make install-strip DESTDIR="' .. lfs.currentdir() .. '/_install"')
@@ -20,9 +20,9 @@ end
 
 function self.pack()
     os.execute("cp -ra obj/_install/* filesystem")
-    os.execute("mv filesystem/lib64/* filesystem/lib")
-    os.execute("rm -r filesystem/lib64")
-    lfs.link("gcc", "filesystem/bin/cc", true)
+    os.execute("mv filesystem/usr/lib64/* filesystem/usr/lib")
+    os.execute("rm -r filesystem/usr/lib64")
+    lfs.link("gcc", "filesystem/usr/bin/cc", true)
 end
 
 return self

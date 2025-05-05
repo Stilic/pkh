@@ -12,6 +12,9 @@ function self.build()
     os.execute("make install")
 end
 
-self.pack = tools.pack_default("source/install")
+function self.pack()
+    os.execute("cp -ra source/install/bin source/install/sbin filesystem")
+    os.execute("cp -ra source/install/usr/bin source/install/usr/sbin filesystem")
+end
 
 return self

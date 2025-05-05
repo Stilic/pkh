@@ -25,7 +25,7 @@ function self.pack()
 
     -- TODO: put headers in a different package
     os.execute('make headers_install ARCH="' .. system.capture("arch") .. '"')
-    os.execute("cp -ra usr/include ../filesystem")
+    os.execute("cp -ra include ../filesystem")
 end
 
 return self
