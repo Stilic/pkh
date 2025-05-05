@@ -27,6 +27,7 @@ local base_overlay = {
     "sqlite3",
     --
 
+    "libxcrypt",
     "toybox",
     "file",
     "rsync",
@@ -51,8 +52,6 @@ local base_overlay = {
     "dhcpcd",
     "ifupdown-ng",
 
-    -- TODO: check if bash does need this
-    -- "libxcrypt",
     "bash",
 
     "xz",
