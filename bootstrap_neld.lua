@@ -4,7 +4,7 @@ local pkh = require "main"
 local system = require "system"
 
 local BINARY_HOST = "https://pickle.stilic.net/packages"
-local base_layer = {
+local main_layer = {
     -- base
     "linux",
 
@@ -46,7 +46,7 @@ local base_layer = {
     "lua",
     "luarocks",
 }
-local build_layer = {
+local ports_layer = {
     "readline",
     "curses",
 
@@ -154,10 +154,10 @@ local function download(name, directory)
     end
 end
 
-for _, name in ipairs(base_layer) do
+for _, name in ipairs(main_layer) do
     download(name, "../root")
 end
-for _, name in ipairs(build_layer) do
+for _, name in ipairs(ports_layer) do
     download(name, "../root")
 end
 
