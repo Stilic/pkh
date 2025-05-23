@@ -1,7 +1,23 @@
 require "luarocks.loader"
+
+function pkg(module)
+    local name = module
+    module = require(module)
+    if not module.name then
+        local i = name:match(".*%.()")
+        if i ~= nil then
+            name = name:sub(i)
+        end
+        module.name = name
+        print(name)
+    end
+    return module
+end
+
 local lfs = require "lfs"
 
 local self = {}
+local built_packages = {}
 
 function self.get_file(name, version, variant)
     local file = name
@@ -48,11 +64,26 @@ local function pack(package, build_path, variant)
 
     return true
 end
-function self.build(name)
+function self.build(repository, name)
     local archived = true
 
-    local needed, og_path, package = true, lfs.currentdir(), require("pkgs." .. name)
-    package.name = name
+    local needed, og_path, package = true, lfs.currentdir(), pkg(repository .. "." .. name)
+
+    -- TODO: install the packages
+    if package.dev_dependencies then
+        for _, p in package.dev_dependencies do
+            if not built_packages[p] then
+                self.build(p)
+            end
+        end
+    end
+    if package.dependencies then
+        for _, p in package.dependencies do
+            if not built_packages[p] then
+                self.build(p)
+            end
+        end
+    end
 
     lfs.chdir("pkgs/" .. name)
     local pkg_path = lfs.currentdir()
@@ -105,17 +136,21 @@ function self.build(name)
 
             lfs.chdir(build_path)
             archived = pack(package, build_path, variant)
+
+            built_packages[name .. "-" .. index] = true
         end
     end
 
     lfs.chdir(og_path)
 
+    built_packages[name] = true
+
     return archived
 end
 
-function self.unpack(path, name, variant)
+function self.unpack(path, repository, name, variant)
     return os.execute("unsquashfs -d " ..
-        path .. " -f pkgs/" .. name .. "/.build/" .. self.get_file(name, require("pkgs." .. name).version, variant))
+        path .. " -f pkgs/" .. name .. "/.build/" .. self.get_file(name, pkg(repository .. "." .. name).version, variant))
 end
 
 return self

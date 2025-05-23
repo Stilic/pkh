@@ -5,7 +5,6 @@ local system = require "system"
 
 local BINARY_HOST = "https://pickle.stilic.net/packages"
 local main_layer = {
-    -- base
     "linux",
 
     "musl",
@@ -13,9 +12,7 @@ local main_layer = {
     "musl-obstack",
     "argp",
 
-    -- util-linux deps
     "sqlite3",
-    --
 
     "libxcrypt",
     "toybox",
@@ -41,53 +38,6 @@ local main_layer = {
     "zip",
 
     -- TODO: package pkh itself
-    "lzo",
-    "squashfs-tools",
-    "lua",
-    "luarocks",
-}
-local ports_layer = {
-    "readline",
-    "curses",
-
-    "attr",
-    "acl",
-    "popt",
-    "rsync",
-
-    "cpio",
-
-    "perl",
-    "python",
-
-    "pcre2",
-
-    "make",
-    "pkgconf",
-    "m4",
-
-    "gmp",
-    "mpfr",
-    "mpc",
-    "binutils",
-    "gcc",
-
-    -- autotools
-    "libtool",
-    "automake",
-    "autoconf",
-    --
-
-    -- TODO: make these optional
-    "e2fsprogs",
-    "gperf",
-    "libseccomp",
-    "nano",
-
-    -- for brotli
-    "cmake",
-
-    -- curl
     "libunistring",
     "libidn2",
     "libpsl",
@@ -97,18 +47,37 @@ local ports_layer = {
     "brotli",
     "curl",
 
-    -- git
-    "expat",
-    "libiconv",
-    "libxml2",
-    "git",
+    "lzo",
+    "squashfs-tools",
+    "lua",
+    "luarocks",
+}
+local ports_layer = {
+    "curses",
+    "rsync",
+    "cpio",
+    "python",
 
-    -- linux build dependencies
-    "bzip2",
-    "flex",
-    "bison",
-    "elfutils",
-    "dosfstools",
+    "pcre2",
+
+    "make",
+    "pkgconf",
+    "m4",
+    "gcc",
+
+    -- autotools
+    "libtool",
+    "automake",
+    "autoconf",
+    --
+
+    -- TODO: make these optional
+    -- "e2fsprogs",
+    -- "gperf",
+    -- "libseccomp",
+    "nano",
+
+    "git",
 }
 
 os.execute("rm -rf neld/root")

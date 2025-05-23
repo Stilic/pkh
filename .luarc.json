@@ -1,5 +1,6 @@
 {
     "diagnostics.disable": [
-        "unbalanced-assignments"
+        "unbalanced-assignments",
+        "lowercase-global"
     ]
 }
