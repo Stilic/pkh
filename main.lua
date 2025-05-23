@@ -52,6 +52,20 @@ local function pack(package, build_path, variant)
 
     lfs.chdir(build_path)
 
+    if package.dependencies then
+        local deps = io.open("filesystem/.deps", "w")
+        if deps then
+            local length = #package.dependencies
+            for i, p in ipairs(package.dependencies) do
+                deps:write(p.name .. "," .. p.version)
+                if i ~= length then
+                    deps:write("\n")
+                end
+            end
+            deps:close()
+        end
+    end
+
     -- make the archive
     -- TODO: make the variant stuff more compact
     local vname = nil
