@@ -1,0 +1,3 @@
+[submodule "pickle-linux"]
+	path = pickle-linux
+	url = https://github.com/Stilic/pickle-linux.git
