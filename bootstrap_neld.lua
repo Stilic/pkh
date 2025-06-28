@@ -1,4 +1,4 @@
-require "luarocks.loader"
+-- require "luarocks.loader"
 local lfs = require "lfs"
 local pkh = require "main"
 local system = require "system"

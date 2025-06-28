@@ -1,8 +1,8 @@
-require "luarocks.loader"
+-- require "luarocks.loader"
 
 function pkg(module)
     local name = module
-    module = require(module)
+    module = require("pickle-linux." .. module)
     if not module.name then
         local i = name:match(".*%.()")
         if i ~= nil then
