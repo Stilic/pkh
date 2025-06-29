@@ -1,3 +1,24 @@
+-- Get the path of this script
+local script_path = debug.getinfo(1, "S").source:sub(2)
+
+-- Convert to absolute if needed
+if not script_path:match("^/") then
+    local cwd = io.popen("pwd"):read("*l")
+    script_path = cwd .. "/" .. script_path
+end
+
+-- Extract script directory
+local script_dir = script_path:match("(.*/)")
+local abs_dir = script_dir:sub(-1) == "/" and script_dir:sub(1, -2) or script_dir
+
+-- Add the project root to package.path
+-- Assuming bootstrap_neld.lua is in: /home/natha/Git/pkh/
+-- and you want to access: /home/natha/Git/pkh/pickle-linux/main/linux.lua
+package.path = package.path
+    .. ";" .. abs_dir .. "/?.lua"
+    .. ";" .. abs_dir .. "/?/init.lua"
+
+
 -- require "luarocks.loader"
 local lfs = require "lfs"
 local pkh = require "main"
@@ -38,6 +59,14 @@ local main_layer = {
     "zip",
 
     -- TODO: package pkh itself
+
+    "lzo",
+    "squashfs-tools",
+    "lua",
+    "luarocks",
+}
+local ports_layer = {
+    -- TODO: move these back into the main repository
     "libunistring",
     "libidn2",
     "libpsl",
@@ -46,13 +75,8 @@ local main_layer = {
     "zstd",
     "brotli",
     "curl",
+    --
 
-    "lzo",
-    "squashfs-tools",
-    "lua",
-    "luarocks",
-}
-local ports_layer = {
     "curses",
     "rsync",
     "cpio",
@@ -110,29 +134,45 @@ for line in system.capture("curl -L " .. BINARY_HOST .. "/available.txt"):gmatch
     table.insert(available_versions, version)
 end
 
-local function download(name, directory)
+local installed_packages = {}
+local function download(repository, name, directory)
     local versions = available_packages[name]
     if versions then
         local file_name = pkh.get_file(name, versions[1])
         if not lfs.attributes(file_name) then
-            os.execute("curl -LOJ " .. BINARY_HOST .. "/" .. file_name)
+            os.execute("curl -LOJ " .. BINARY_HOST .. "/" .. repository .. "/" .. file_name)
         end
         os.execute("unsquashfs -d " .. directory .. " -f " .. file_name)
+        installed_packages[name] = true
+
+        local package = pkg(repository .. "." .. name)
+        if package then
+            if package.dependencies then
+                for _, dep in ipairs(package.dependencies) do
+                    local name = dep.name
+                    if not installed_packages[name] then
+                        download(dep.repository, name, directory)
+                    end
+                end
+            end
+        else
+            print("Can't find the `" .. name .. "` template!")
+        end
     else
         print("Package `" .. name .. "` isn't available!")
     end
 end
 
 for _, name in ipairs(main_layer) do
-    download(name, "../root")
+    download("main", name, "../root")
 end
 for _, name in ipairs(ports_layer) do
-    download(name, "../root")
+    download("ports", name, "../root")
 end
 
 os.execute("rm -rf ../ram_root")
 lfs.mkdir("../ram_root")
-download("busybox-static", "../ram_root")
+download("ports", "busybox-static", "../ram_root")
 
 os.remove("../vmlinuz")
 os.execute("ln -s root/lib/modules/" .. available_packages["linux"][1] .. "/vmlinuz ..")
