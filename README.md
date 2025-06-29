@@ -7,7 +7,7 @@ This is currently a **Proof Of Concept**. The goal is to demonstrate the viabili
 
 ## Bootstraping Pickle Linux
 
-You will need basic build tooling, [Lua](https://www.lua.org) (5.1 or newer), [LuaRocks](https://luarocks.org) and [Squashfs-tools](https://github.com/plougher/squashfs-tools).
+You will need basic build tooling, [Lua](https://www.lua.org) (5.1 or newer), [LuaRocks](https://luarocks.org), [Squashfs-tools](https://github.com/plougher/squashfs-tools) and [QEMU](https://www.qemu.org).
 
 ```
 # Install Lua dependencies
@@ -23,7 +23,7 @@ cd neld
 sudo ./build_disk.sh
 
 # Run the result in a VM
-./run.sh
+sudo ./run.sh
 ```
 
 Then, inside the VM, run `source init_dev.sh` to initialize the environment.

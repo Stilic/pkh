@@ -3,7 +3,7 @@ local system = require "system"
 
 local self = {}
 
-self.DEFAULT_CFLAGS = "-O2"
+self.DEFAULT_CFLAGS = "-O2 -fPIC"
 self.DEFAULT_CPPFLAGS = self.DEFAULT_CFLAGS
 
 function self.get_flags(cflags, cppflags)

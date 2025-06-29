@@ -1,4 +1,4 @@
--- require "luarocks.loader"
+pcall(require, "luarocks.loader")
 
 function pkg(module)
     local name = module

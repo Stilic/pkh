@@ -1,26 +1,11 @@
--- Get the path of this script
-local script_path = debug.getinfo(1, "S").source:sub(2)
-
--- Convert to absolute if needed
-if not script_path:match("^/") then
-    local cwd = io.popen("pwd"):read("*l")
-    script_path = cwd .. "/" .. script_path
-end
-
--- Extract script directory
-local script_dir = script_path:match("(.*/)")
-local abs_dir = script_dir:sub(-1) == "/" and script_dir:sub(1, -2) or script_dir
-
--- Add the project root to package.path
--- Assuming bootstrap_neld.lua is in: /home/natha/Git/pkh/
--- and you want to access: /home/natha/Git/pkh/pickle-linux/main/linux.lua
-package.path = package.path
-    .. ";" .. abs_dir .. "/?.lua"
-    .. ";" .. abs_dir .. "/?/init.lua"
-
-
--- require "luarocks.loader"
+pcall(require, "luarocks.loader")
 local lfs = require "lfs"
+
+local current_directory = lfs.currentdir()
+package.path = package.path
+    .. ";" .. current_directory .. "/?.lua"
+    .. ";" .. current_directory .. "/?/init.lua"
+
 local pkh = require "main"
 local system = require "system"
 
@@ -57,9 +42,9 @@ local main_layer = {
 
     "unzip",
     "zip",
+    "bzip2",
 
     -- TODO: package pkh itself
-
     "lzo",
     "squashfs-tools",
     "lua",
