@@ -84,6 +84,7 @@ local ports_layer = {
 
     "pcre2",
 
+    "binutils",
     "make",
     "pkgconf",
     "m4",
