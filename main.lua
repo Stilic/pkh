@@ -84,22 +84,23 @@ function self.build(repository, name)
     local needed, og_path, package = true, lfs.currentdir(), pkg(repository .. "." .. name)
 
     -- TODO: install the packages
-    if package.dev_dependencies then
-        for _, p in package.dev_dependencies do
-            if not built_packages[p] then
-                self.build(p)
-            end
-        end
-    end
-    if package.dependencies then
-        for _, p in package.dependencies do
-            if not built_packages[p] then
-                self.build(p)
-            end
-        end
-    end
+    -- if package.dev_dependencies then
+    --     for _, p in ipairs(package.dev_dependencies) do
+    --         if not built_packages[p] then
+    --             self.build(p.repository, p.name)
+    --         end
+    --     end
+    -- end
+    -- if package.dependencies then
+    --     for _, p in ipairs(package.dependencies) do
+    --         if not built_packages[p] then
+    --             self.build(p.repository, p.name)
+    --         end
+    --     end
+    -- end
 
-    lfs.chdir("pkgs/" .. name)
+    -- TODO: detect packages directory automatically
+    lfs.chdir("pickle-linux/" .. repository .. "/" .. name)
     local pkg_path = lfs.currentdir()
     if not lfs.attributes(".build") then
         lfs.mkdir(".build")
@@ -164,7 +165,9 @@ end
 
 function self.unpack(path, repository, name, variant)
     return os.execute("unsquashfs -d " ..
-        path .. " -f pkgs/" .. name .. "/.build/" .. self.get_file(name, pkg(repository .. "." .. name).version, variant))
+        path ..
+        " -f pickle-linux/" ..
+        repository .. "/" .. name .. "/.build/" .. self.get_file(name, pkg(repository .. "." .. name).version, variant))
 end
 
 return self

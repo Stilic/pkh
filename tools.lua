@@ -26,7 +26,7 @@ function self.make(prefix, options, cflags, cppflags, configure)
         configure = "configure"
     end
 
-    os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. options .. " --prefix=" .. prefix)
+    os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. " --prefix=" .. prefix .. options)
     os.execute("make" .. system.get_make_jobs())
 end
 
@@ -61,6 +61,30 @@ function self.build_autotools(prefix, options, source, cflags, cppflags)
 
         os.execute("autoreconf -vif")
         self.build_gnu_configure(prefix, options, "", cflags, cppflags)()
+    end
+end
+
+function self.build_meson(prefix, options, source, cflags, cppflags)
+    if not prefix then
+        prefix = "/usr"
+    end
+    if options then
+        options = " " .. options
+    else
+        options = ""
+    end
+    if not source then
+        source = "source"
+    end
+
+    return function()
+        if source ~= "" then
+            lfs.chdir(source)
+        end
+
+        os.execute(self.get_flags(cflags, cppflags) .. " meson setup build --prefix=" .. prefix .. options)
+        os.execute("ninja -C build")
+        os.execute('DESTDIR="' .. lfs.currentdir() .. '/_install" meson install -C build')
     end
 end
 
