@@ -153,12 +153,12 @@ for _, name in ipairs(main_layer) do
     download("main", name, "../root")
 end
 for _, name in ipairs(ports_layer) do
-    download("ports", name, "../root")
+    download("user", name, "../root")
 end
 
 os.execute("rm -rf ../ram_root")
 lfs.mkdir("../ram_root")
-download("ports", "busybox-static", "../ram_root")
+download("user", "busybox-static", "../ram_root")
 
 os.remove("../vmlinuz")
 os.execute("ln -s root/lib/modules/" .. available_packages["linux"][1] .. "/vmlinuz ..")
