@@ -92,6 +92,39 @@ function self.build_meson(prefix, options, source, cflags, cppflags)
     end
 end
 
+function self.build_python(source, env)
+    if not source then
+        source = "source"
+    end
+    if env then
+        env = env .. " "
+    else
+        env = ""
+    end
+
+    return function()
+        if source ~= "" then
+            lfs.chdir(source)
+        end
+
+        os.execute(env .. "python -m build --wheel --no-isolation")
+    end
+end
+
+function self.build_flit(source)
+    if not source then
+        source = "source"
+    end
+
+    return function()
+        if source ~= "" then
+            lfs.chdir(source)
+        end
+
+        os.execute("python -m flit_core.wheel")
+    end
+end
+
 function self.build_kconfig(source, cflags, cppflags)
     if not source then
         source = "source"
@@ -116,6 +149,16 @@ function self.pack_default(path)
 
     return function()
         os.execute("cp -ra " .. path .. "/* filesystem")
+    end
+end
+
+function self.pack_python(path)
+    if not path then
+        path = "source"
+    end
+
+    return function()
+        os.execute("python -m installer -d filesystem " .. path .. "/dist/*.whl")
     end
 end
 
