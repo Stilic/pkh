@@ -44,6 +44,15 @@ local main_layer = {
     "zip",
     "bzip2",
 
+    "libcap",
+    "udev",
+
+    "sysklogd",
+    "dinit",
+
+    -- for git
+    "libxml2",
+
     -- TODO: package pkh itself
     "lzo",
     "squashfs-tools",

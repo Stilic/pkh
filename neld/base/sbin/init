@@ -1,6 +1,1 @@
-#!/bin/sh
-for file in /etc/init.d/boot.d/*
-do
-  /sbin/service $file start &
-done
-exec bash
+dinit
