@@ -1,0 +1,6 @@
+type = scripted
+command = /sbin/ifup -a
+logfile = /var/log/network.log
+restart = false
+
+depends-on: rcboot
