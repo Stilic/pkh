@@ -12,7 +12,7 @@ if [ "$1" != "stop" ]; then
   
   # empty utmp, create needed directories
   : > /var/run/utmp
-  mkdir -m og-w /var/run/dbus
+  mkdir -m og-w /run/dbus
 
   # Configure random number generator
   if [ -e /var/state/random-seed ]; then

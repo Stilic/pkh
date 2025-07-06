@@ -47,6 +47,9 @@ local main_layer = {
     "libcap",
     "udev",
 
+    "shadow",
+    "dbus",
+
     "sysklogd",
     "dinit",
 

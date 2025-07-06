@@ -8,6 +8,8 @@ Use `lfs.link` for symlinks: https://lunarmodules.github.io/luafilesystem/manual
 
 Use `install` for packaging
 
+Dash for internal scripts, Fish for interactive use
+
 https://github.com/sabotage-linux/netbsd-curses/issues/58
 
 https://news.ycombinator.com/item?id=42830863

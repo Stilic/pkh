@@ -1,2 +1,2 @@
 local pkh = require "main"
-pkh.build("main", "sysklogd")
+pkh.build("main", "shadow")
