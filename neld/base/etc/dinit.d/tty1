@@ -1,5 +1,5 @@
 type = process
-command = /sbin/agetty tty1 linux-c
+command = /sbin/agetty tty1 linux
 restart = true
 termsignal = HUP
 smooth-recovery = true

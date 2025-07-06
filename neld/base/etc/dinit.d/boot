@@ -3,6 +3,7 @@
 type = internal
 
 # Each of these services starts a login prompt:
+depends-ms: ttyS0
 depends-ms: tty1
 depends-ms: tty2
 depends-ms: tty3
