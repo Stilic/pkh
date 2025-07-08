@@ -1,2 +1,2 @@
 local pkh = require "main"
-pkh.build("user", "cottonfetch")
+pkh.build("main", "turnstile")

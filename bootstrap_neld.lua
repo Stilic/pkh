@@ -51,6 +51,8 @@ local main_layer = {
     "shadow",
 
     "dbus",
+    "turnstile",
+
     "sysklogd",
     "dinit",
 
