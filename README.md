@@ -26,5 +26,6 @@ sudo ./build_disk.sh
 sudo ./run.sh
 ```
 
-Then, inside the VM, run `source init_dev.sh` to initialize the environment.
-You can now repeat the steps if you want to build NELD inside itself.
+To login, type `root` and press Enter.
+
+Then, you can repeat the steps if you want to build NELD inside itself.
