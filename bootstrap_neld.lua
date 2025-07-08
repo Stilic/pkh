@@ -47,9 +47,10 @@ local main_layer = {
     "libcap",
     "udev",
 
+    "linux-pam",
     "shadow",
-    "dbus",
 
+    "dbus",
     "sysklogd",
     "dinit",
 
