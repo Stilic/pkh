@@ -28,4 +28,4 @@ sudo ./run.sh
 
 To login, type `root` and press Enter.
 
-Then, you can repeat the steps if you want to build NELD inside itself.
+Then, you can repeat the steps if you want to build it again inside itself.
