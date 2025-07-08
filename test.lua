@@ -1,2 +1,2 @@
 local pkh = require "main"
-pkh.build("main", "shadow")
+pkh.build("user", "cottonfetch")

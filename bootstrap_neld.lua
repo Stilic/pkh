@@ -63,7 +63,7 @@ local main_layer = {
     "lua",
     "luarocks",
 }
-local ports_layer = {
+local user_layer = {
     -- TODO: move back to main repo
     "libunistring",
     "libidn2",
@@ -102,6 +102,9 @@ local ports_layer = {
     "nano",
 
     "git",
+
+    -- uwu
+    "cottonfetch"
 }
 
 os.execute("rm -rf neld/root")
@@ -166,7 +169,7 @@ end
 for _, name in ipairs(main_layer) do
     download("main", name, "../root")
 end
-for _, name in ipairs(ports_layer) do
+for _, name in ipairs(user_layer) do
     download("user", name, "../root")
 end
 
