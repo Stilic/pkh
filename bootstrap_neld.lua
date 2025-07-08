@@ -64,7 +64,7 @@ local main_layer = {
     "luarocks",
 }
 local ports_layer = {
-    -- TODO: move these back into the main repository
+    -- TODO: move back to main repo
     "libunistring",
     "libidn2",
     "libpsl",
@@ -82,6 +82,7 @@ local ports_layer = {
 
     "pcre2",
 
+    "flex",
     "binutils",
     "make",
     "pkgconf",
