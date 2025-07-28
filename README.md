@@ -7,7 +7,7 @@ This is currently a **Proof Of Concept**. The goal is to demonstrate the viabili
 
 ## Bootstraping Pickle Linux
 
-You will need basic build tooling, [Lua](https://www.lua.org) (5.1 or newer), [LuaRocks](https://luarocks.org), [Squashfs-tools](https://github.com/plougher/squashfs-tools) and [QEMU](https://www.qemu.org).
+You will need basic build tooling, [Lua](https://www.lua.org), [LuaFileSystem](https://lunarmodules.github.io/luafilesystem), [Lullaby](https://github.com/ameliasquires/lullaby), [Squashfs-tools](https://github.com/plougher/squashfs-tools) and [QEMU](https://www.qemu.org).
 
 ```
 # Install Lua dependencies

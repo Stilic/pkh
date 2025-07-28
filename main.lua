@@ -15,6 +15,7 @@ function pkg(module)
 end
 
 local lfs = require "lfs"
+local llby = require "lullaby"
 
 local self = {}
 local built_packages = {}
@@ -114,7 +115,7 @@ function self.build(repository, name)
         for _, source in ipairs(package.sources) do
             local path, url = source[1], source[2]
             if not lfs.attributes(path) then
-                os.execute("curl -Lo _" .. path .. " " .. url)
+                llby.net.srequest(url).content:file("_" .. path)
                 os.execute("rm -rf " .. path)
                 lfs.mkdir(path)
                 if string.sub(url, -4) == ".zip" then

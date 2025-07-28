@@ -1,14 +1,8 @@
-Define PATH environment variable everywhere
-
 Make tests run in a separate function + isolate builds to fix Python compilation (once we're out of the POC state)
-
-Rewrite file downloading: https://github.com/ameliasquires/lullaby
 
 Use `lfs.link` for symlinks: https://lunarmodules.github.io/luafilesystem/manual.html#reference
 
 Use `install` for packaging
-
-Use Dash for internal scripts and Fish for interactive use
 
 Move services to their respective packages
 

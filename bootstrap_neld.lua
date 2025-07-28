@@ -1,5 +1,6 @@
 pcall(require, "luarocks.loader")
 local lfs = require "lfs"
+local llby = require "lullaby"
 
 local current_directory = lfs.currentdir()
 package.path = package.path
@@ -7,7 +8,6 @@ package.path = package.path
     .. ";" .. current_directory .. "/?/init.lua"
 
 local pkh = require "main"
-local system = require "system"
 
 local BINARY_HOST = "https://pickle.stilic.net/packages"
 local main_layer = {
@@ -116,7 +116,7 @@ lfs.mkdir("neld/.cache")
 lfs.chdir("neld/.cache")
 
 local available_packages = {}
-for line in system.capture("curl -L " .. BINARY_HOST .. "/available.txt"):gmatch("[^\r\n]+") do
+for line in llby.net.srequest(BINARY_HOST .. "/available.txt").content:read():gmatch("[^\r\n]+") do
     local i, name, version = 1
 
     for part in line:gmatch("([^,]+)") do
@@ -145,7 +145,7 @@ local function download(repository, name, directory)
     if versions then
         local file_name = pkh.get_file(name, versions[1])
         if not lfs.attributes(file_name) then
-            os.execute("curl -LOJ " .. BINARY_HOST .. "/" .. repository .. "/" .. file_name)
+            llby.net.srequest(BINARY_HOST .. "/" .. repository .. "/" .. file_name).content:file(file_name)
         end
         os.execute("unsquashfs -d " .. directory .. " -f " .. file_name)
         installed_packages[name] = true
