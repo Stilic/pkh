@@ -1,2 +1,2 @@
 local pkh = require "main"
-pkh.build("main", "turnstile")
+pkh.build("main", "lua")

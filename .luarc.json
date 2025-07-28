@@ -1,6 +1,7 @@
 {
     "diagnostics.disable": [
         "unbalanced-assignments",
-        "lowercase-global"
+        "lowercase-global",
+        "need-check-nil"
     ]
 }
