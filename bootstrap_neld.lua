@@ -180,4 +180,4 @@ lfs.mkdir("../ram_root")
 download("user", "busybox-static", "../ram_root")
 
 os.remove("../vmlinuz")
-os.execute("ln -s root/lib/modules/" .. available_packages["linux"][1] .. "/vmlinuz ..")
+lfs.link("root/lib/modules/" .. available_packages["linux"][1] .. "/vmlinuz", "../vmlinuz", true)
