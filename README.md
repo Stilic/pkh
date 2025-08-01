@@ -10,8 +10,6 @@ This is currently a **Proof Of Concept**. The goal is to demonstrate the viabili
 You will need basic build tooling, [Lua](https://www.lua.org), [LuaFileSystem](https://lunarmodules.github.io/luafilesystem), [Lullaby](https://github.com/ameliasquires/lullaby), [Squashfs-tools](https://github.com/plougher/squashfs-tools) and [QEMU](https://www.qemu.org).
 
 ```
-# Install Lua dependencies
-luarocks install luafilesystem
 # Build the core packages
 lua bootstrap_neld.lua
 
