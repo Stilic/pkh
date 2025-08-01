@@ -1,8 +1,7 @@
 #!/bin/sh
-if [ "$EUID" -ne 0 ]
-then
-    echo Please run this script as root.
-    exit
+if ! [ $(id -u) = 0 ]; then
+   echo Please run this script as root.
+   exit 1
 fi
 truncate -s 100g disk
 mkfs.ext4 -F disk
