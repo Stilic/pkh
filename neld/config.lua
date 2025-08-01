@@ -11,6 +11,7 @@ return {
 
             "sqlite3",
 
+            "openssl",
             "libxcrypt",
             "toybox",
             "file",
@@ -61,7 +62,6 @@ return {
             "libunistring",
             "libidn2",
             "libpsl",
-            "openssl",
             "nghttp2",
             "zstd",
             "brotli",
