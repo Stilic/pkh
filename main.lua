@@ -115,7 +115,11 @@ function self.build(repository, name)
         for _, source in ipairs(package.sources) do
             local path, url = source[1], source[2]
             if not lfs.attributes(path) then
-                llby.net.srequest(url).content:file("_" .. path)
+                local req = llby.net.srequest(url)
+                while req ~= nil and (req.Code == 301 or req.Code == 302 or req.Code == 308) do
+                    req = llby.net.srequest(req.Location)
+                end
+                req.content:file("_" .. path)
                 os.execute("rm -rf " .. path)
                 lfs.mkdir(path)
                 if string.sub(url, -4) == ".zip" then
