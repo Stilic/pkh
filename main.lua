@@ -116,7 +116,7 @@ function self.build(repository, name)
             local path, url = source[1], source[2]
             if not lfs.attributes(path) then
                 local req = llby.net.srequest(url)
-                while req ~= nil and (req.code == "301" or req.code == "302" or req.code == "308") do
+                while req ~= nil and (req.code == 301 or req.code == 302 or req.code == 308) do
                     req = llby.net.srequest(req.Location)
                 end
                 req.content:file("_" .. path)
