@@ -117,7 +117,8 @@ function self.build(repository, name)
             if not lfs.attributes(path) then
                 local req = llby.net.srequest(url)
                 while req.Location ~= nil do
-                    req = llby.net.srequest(req.Location)
+                    url = req.Location
+                    req = llby.net.srequest(url)
                 end
                 req.content:file("_" .. path)
                 os.execute("rm -rf " .. path)
