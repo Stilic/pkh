@@ -15,6 +15,9 @@ for repository in pickle-linux/*; do
         if [ ! -d "$filesystem" ] || [ -z "$(ls -A "$filesystem" 2>/dev/null)" ]; then
             echo "$(basename "$package") ($(basename "$repository"))"
             not_compiled=$((not_compiled + 1))
+            if [ "$1" = "fix" ]; then
+                rm -rf "$package/.build"
+            fi
         fi
     done
 done
