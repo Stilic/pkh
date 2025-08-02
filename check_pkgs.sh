@@ -1,22 +1,24 @@
 #!/bin/sh
 
-compiled=0
 not_compiled=0
+total=0
 
-for pkg in pickle-linux/*; do
-    fs_dir="$pkg/.build/filesystem"
-    if [ ! -d "$fs_dir" ] || [ -z "$(ls -A "$fs_dir" 2>/dev/null)" ]; then
-        basename "$pkg"
-        ((not_compiled++))
-    else
-        ((compiled++))
-    fi
+for repository in pickle-linux/*; do
+    [ -d "$repository" ] || continue
+
+    for package in "$repository"/*; do
+        [ -d "$package" ] || continue
+        total=$((total + 1))
+
+        filesystem="$package/.build/filesystem"
+        # Check if filesystem is missing or empty
+        if [ -d "$filesystem" ] && [ ! -z "$(ls -A "$filesystem" 2>/dev/null)" ]; then
+            echo -n "$(basename "$package") ($(basename "$repository"))\n"
+            not_compiled=$((not_compiled + 1))
+        fi
+    done
 done
 
-total=$((compiled + not_compiled))
-
-echo
-echo "Summary:"
-echo "Compiled packages:     $compiled"
-echo "Not compiled packages: $not_compiled"
-echo "Total packages:        $total"
+echo "\nCompiled:     $(( total - not_compiled ))"
+echo "Not compiled: $not_compiled"
+echo "Total:        $total"
