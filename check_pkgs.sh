@@ -12,7 +12,7 @@ for repository in pickle-linux/*; do
 
         filesystem="$package/.build/filesystem"
         # Check if filesystem is missing or empty
-        if [ -d "$filesystem" ] && [ ! -z "$(ls -A "$filesystem" 2>/dev/null)" ]; then
+        if [ ! -d "$filesystem" ] || [ -z "$(ls -A "$filesystem" 2>/dev/null)" ]; then
             echo "$(basename "$package") ($(basename "$repository"))"
             not_compiled=$((not_compiled + 1))
         fi
