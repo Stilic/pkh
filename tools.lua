@@ -6,8 +6,9 @@ local self = {}
 self.DEFAULT_CFLAGS = "-O2 -fPIC"
 self.DEFAULT_CPPFLAGS = self.DEFAULT_CFLAGS
 
+-- TODO: remove CC
 function self.get_flags(cflags, cppflags)
-    return 'CFLAGS="' ..
+    return 'CC=gcc CFLAGS="' ..
         self.DEFAULT_CFLAGS ..
         (cflags and (" " .. cflags) or "") ..
         '" CPPFLAGS="' .. self.DEFAULT_CPPFLAGS .. (cppflags and (" " .. cppflags) or "") .. '"'
@@ -87,7 +88,7 @@ function self.build_meson(prefix, options, source, cflags, cppflags)
         end
 
         os.execute(self.get_flags(cflags, cppflags) .. " meson setup build --prefix=" .. prefix .. options)
-        os.execute("ninja -C build")
+        os.execute("meson compile -C build")
         os.execute('DESTDIR="' .. lfs.currentdir() .. '/_install" meson install -C build')
     end
 end

@@ -1,3 +1,5 @@
+Add DocBook 5
+
 Make tests run in a separate function + isolate builds to fix Python compilation (once we're out of the POC state)
 
 Move services to their respective packages

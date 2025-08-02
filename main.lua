@@ -120,14 +120,14 @@ function self.build(repository, name)
                     url = req.Location
                     req = llby.net.srequest(url)
                 end
-                req.content:file("." .. path)
+                req.content:file("S" .. path)
                 os.execute("rm -rf " .. path)
                 lfs.mkdir(path)
                 if string.sub(url, -4) == ".zip" then
                     -- TODO: check if there's a need for `--strip-components`
-                    os.execute("unzip ." .. path .. " -d " .. path)
+                    os.execute("unzip S" .. path .. " -d " .. path)
                 else
-                    os.execute("tar xf ." .. path .. " --strip-components=1 -C " .. path)
+                    os.execute("tar xf S" .. path .. " --strip-components=1 -C " .. path)
                 end
 
                 local patch_dir = pkg_path .. "/" .. path

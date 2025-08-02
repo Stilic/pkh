@@ -8,6 +8,14 @@ return {
             "musl-fts",
             "musl-obstack",
             "argp",
+            "readline",
+            "curses",
+
+            "gperf",
+            "libseccomp",
+
+            "libxml2",
+            "libxslt",
 
             "sqlite3",
 
@@ -48,9 +56,6 @@ return {
             "sysklogd",
             "dinit",
 
-            -- for git
-            "libxml2",
-
             -- TODO: package pkh itself
             "lzo",
             "squashfs-tools",
@@ -68,7 +73,6 @@ return {
             "curl",
             --
 
-            "curses",
             "rsync",
             "cpio",
             "python",
@@ -82,6 +86,10 @@ return {
             "m4",
             "gcc",
 
+            -- TODO: install dev dependencies
+            "muon",
+            "cmake",
+
             -- autotools
             "libtool",
             "automake",
@@ -90,8 +98,6 @@ return {
 
             -- TODO: make these optional
             -- "e2fsprogs",
-            -- "gperf",
-            -- "libseccomp",
             "nano",
 
             "git",
