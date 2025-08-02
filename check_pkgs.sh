@@ -13,12 +13,13 @@ for repository in pickle-linux/*; do
         filesystem="$package/.build/filesystem"
         # Check if filesystem is missing or empty
         if [ -d "$filesystem" ] && [ ! -z "$(ls -A "$filesystem" 2>/dev/null)" ]; then
-            echo -n "$(basename "$package") ($(basename "$repository"))\n"
+            echo "$(basename "$package") ($(basename "$repository"))"
             not_compiled=$((not_compiled + 1))
         fi
     done
 done
 
-echo "\nCompiled:     $(( total - not_compiled ))"
+echo
+echo "Compiled:     $(( total - not_compiled ))"
 echo "Not compiled: $not_compiled"
 echo "Total:        $total"
