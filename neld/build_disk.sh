@@ -3,7 +3,7 @@ if ! [ $(id -u) = 0 ]; then
    echo Please run this script as root.
    exit 1
 fi
-truncate -s 100g disk
+truncate -s 100G disk
 mkfs.ext4 -F disk
 mount disk /mnt
 mkdir -p /mnt/proc /mnt/sys /mnt/dev /mnt/mnt /mnt/root /mnt/etc /mnt/lib /mnt/sbin /mnt/bin /mnt/tmp /mnt/usr /mnt/run /mnt/var/run /mnt/var/log/init
