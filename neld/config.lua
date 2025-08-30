@@ -12,7 +12,6 @@ return {
             "curses",
 
             "gperf",
-            "libseccomp",
 
             "libxml2",
             "libxslt",
@@ -96,8 +95,8 @@ return {
             "autoconf",
             --
 
-            -- TODO: make these optional
             -- "e2fsprogs",
+            "libseccomp",
             "nano",
 
             "git",

@@ -62,15 +62,16 @@ local function download(repository, name, directory)
                 end
             end
         else
-            print("Can't find the `" .. name .. "` template!")
+            print("ERROR: Can't find the `" .. name .. "` template!")
         end
     else
-        print("Package `" .. name .. "` isn't available!")
+        print("ERROR: Package `" .. name .. "` isn't available!")
     end
 end
 
 for name, layer in pairs(config.layers) do
     for _, package in ipairs(layer) do
+        print("INSTALLING: " .. package)
         download(name, package, "../root")
     end
 end
