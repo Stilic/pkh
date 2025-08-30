@@ -59,7 +59,6 @@ return {
             "lzo",
             "squashfs-tools",
             "lua",
-            "luarocks",
         },
         user = {
             -- TODO: move back to main repo
@@ -101,7 +100,8 @@ return {
 
             "git",
 
-            -- uwu
+            "luarocks",
+
             "cottonfetch"
         }
     }
