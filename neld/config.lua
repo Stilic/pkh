@@ -2,6 +2,7 @@ return {
     repository = "https://pickle.stilic.net/packages",
     layers = {
         main = {
+            "base",
             "linux",
 
             "musl",
@@ -102,7 +103,7 @@ return {
 
             "luarocks",
 
-            "cottonfetch"
+            "cottonfetch",
         }
     }
 }

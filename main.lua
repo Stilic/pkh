@@ -112,39 +112,41 @@ function self.build(repository, name)
 
     local build_path, pbuild = lfs.currentdir(), package.build
     if needed then
-        for _, source in ipairs(package.sources) do
-            local path, url = source[1], source[2]
-            if not lfs.attributes(path) then
-                local req = llby.net.srequest(url)
-                while req.Location ~= nil do
-                    url = req.Location
-                    req = llby.net.srequest(url)
-                end
-                req.content:file("S" .. path)
-                os.execute("rm -rf " .. path)
-                lfs.mkdir(path)
-                if string.sub(url, -4) == ".zip" then
-                    -- TODO: check if there's a need for `--strip-components`
-                    os.execute("unzip S" .. path .. " -d " .. path)
-                else
-                    os.execute("tar xf S" .. path .. " --strip-components=1 -C " .. path)
-                end
-
-                local patch_dir = pkg_path .. "/" .. path
-                if not lfs.attributes(patch_dir) then
-                    if path == "source" then
-                        patch_dir = nil
+        if package.sources then
+            for _, source in ipairs(package.sources) do
+                local path, url = source[1], source[2]
+                if not lfs.attributes(path) then
+                    local req = llby.net.srequest(url)
+                    while req.Location ~= nil do
+                        url = req.Location
+                        req = llby.net.srequest(url)
+                    end
+                    req.content:file("S" .. path)
+                    os.execute("rm -rf " .. path)
+                    lfs.mkdir(path)
+                    if string.sub(url, -4) == ".zip" then
+                        -- TODO: check if there's a need for `--strip-components`
+                        os.execute("unzip S" .. path .. " -d " .. path)
                     else
-                        patch_dir = pkg_path .. "/source"
-                        if not lfs.attributes(patch_dir) then
+                        os.execute("tar xf S" .. path .. " --strip-components=1 -C " .. path)
+                    end
+
+                    local patch_dir = pkg_path .. "/" .. path
+                    if not lfs.attributes(patch_dir) then
+                        if path == "source" then
                             patch_dir = nil
+                        else
+                            patch_dir = pkg_path .. "/source"
+                            if not lfs.attributes(patch_dir) then
+                                patch_dir = nil
+                            end
                         end
                     end
-                end
-                if patch_dir then
-                    for file in lfs.dir(patch_dir) do
-                        if file ~= "." and file ~= ".." then
-                            os.execute("patch -d " .. path .. " -p1 -i " .. patch_dir .. "/" .. file)
+                    if patch_dir then
+                        for file in lfs.dir(patch_dir) do
+                            if file ~= "." and file ~= ".." then
+                                os.execute("patch -d " .. path .. " -p1 -i " .. patch_dir .. "/" .. file)
+                            end
                         end
                     end
                 end
