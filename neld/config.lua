@@ -51,6 +51,7 @@ return {
             "libcap",
             "udev",
 
+            "acl",
             "linux-pam",
             "shadow",
 
