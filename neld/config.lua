@@ -1,4 +1,5 @@
 return {
+    gnu_site = "https://mirror.cyberbits.eu/gnu",
     repository = "https://pickle.stilic.net/packages",
     layers = {
         main = {
