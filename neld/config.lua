@@ -19,6 +19,10 @@ return {
 
             "sqlite3",
 
+            -- for file
+            "libseccomp",
+            "zstd",
+
             "openssl",
             "libxcrypt",
             "toybox",
@@ -65,7 +69,6 @@ return {
             "libunistring",
             "libidn2",
             "nghttp2",
-            "zstd",
             "brotli",
             "curl",
             --
@@ -94,7 +97,6 @@ return {
             --
 
             -- "e2fsprogs",
-            "libseccomp",
             "nano",
 
             "git",
