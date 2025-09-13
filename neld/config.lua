@@ -2,7 +2,6 @@ return {
     repository = "https://pickle.stilic.net/packages",
     layers = {
         main = {
-            "base",
             "linux",
 
             "musl",

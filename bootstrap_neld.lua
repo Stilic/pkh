@@ -75,6 +75,7 @@ for name, layer in pairs(config.layers) do
         download(name, package, "../root")
     end
 end
+download("main", "base", "../root")
 
 os.execute("rm -rf ../ram_root")
 lfs.mkdir("../ram_root")
