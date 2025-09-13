@@ -61,7 +61,6 @@ return {
             "lua",
         },
         user = {
-            -- TODO: move back to main repo
             "libunistring",
             "libidn2",
             "libpsl",
