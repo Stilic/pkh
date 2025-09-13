@@ -1,0 +1,10 @@
+# For QEMU.
+type = process
+command = /sbin/agetty ttyS0 linux
+restart = true
+termsignal = HUP
+smooth-recovery = true
+inittab-id = 1
+inittab-line = ttyS0
+
+depends-on: loginready

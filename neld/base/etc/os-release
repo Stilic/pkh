@@ -1,0 +1,8 @@
+NAME=Pickle
+ID=pickle
+VERSION_ID=rolling
+PRETTY_NAME="Pickle Linux"
+HOME_URL="https://github.com/Stilic/pickle-linux"
+DOCUMENTATION_URL="https://github.com/Stilic/pickle-linux"
+SUPPORT_URL="https://github.com/Stilic/pickle-linux/issues"
+BUG_REPORT_URL="https://github.com/Stilic/pickle-linux/issues"

@@ -1,0 +1,6 @@
+type = process
+command = /lib/udevd.wrapper
+logfile = /run/udevd.log
+smooth-recovery = true
+
+depends-on: early-filesystems
