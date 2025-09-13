@@ -63,7 +63,6 @@ return {
         user = {
             "libunistring",
             "libidn2",
-            "libpsl",
             "nghttp2",
             "zstd",
             "brotli",
