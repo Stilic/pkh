@@ -52,6 +52,7 @@ return {
             "udev",
 
             "acl",
+            "attr",
             "linux-pam",
             "shadow",
 
