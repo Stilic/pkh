@@ -56,6 +56,7 @@ return {
             "linux-pam",
             "shadow",
 
+            "expat",
             "dbus",
             "turnstile",
 
