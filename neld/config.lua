@@ -53,7 +53,7 @@ return {
 
             "acl",
             "attr",
-            "linux-pam",
+            "openpam",
             "shadow",
 
             "expat",
