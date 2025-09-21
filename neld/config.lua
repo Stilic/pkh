@@ -82,7 +82,6 @@ return {
 
             "pcre2",
 
-            "flex",
             "binutils",
             "make",
             "pkgconf",
@@ -90,6 +89,10 @@ return {
             "gcc",
 
             -- TODO: install dev dependencies
+            "flex",
+            "bison",
+            "elfutils",
+            "dosfstools",
             "muon",
             "cmake",
 
