@@ -13,19 +13,18 @@ mount -r $(sed -e 's/^.*root=//' -e 's/ .*$//' /proc/cmdline) /mnt
 for file in /mnt/*; do 
     if [[ "$file" == *.sqsh ]]
     then
-        mount_dir="/$(basename -s .sqsh $file)"
+        mount_dir="/$(basename $file | cut -d "," -f 1)"
         mkdir $mount_dir
         mount $file $mount_dir
         lower_dirs="$mount_dir:$lower_dirs"
     fi
 done
-mkdir /merged
-mount -t overlay overlay -o lowerdir=${lower_dirs%?} /merged
 
-mount --move /proc /mnt/proc
-mount --move /sys /mnt/sys
-mount --move /dev /mnt/dev
-mount --move /run /mnt/run
+mount -t overlay overlay -o lowerdir=/ro:${lower_dirs%?} /root
 
-#exec switch_root /mnt /sbin/init
-exec /bin/sh
+mount --move /proc /root/proc
+mount --move /sys /root/sys
+mount --move /dev /root/dev
+mount --move /run /root/run
+
+exec switch_root /root /sbin/init
