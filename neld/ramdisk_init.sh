@@ -29,4 +29,4 @@ mount --move /sys /fs/sys
 mount --move /dev /fs/dev
 mount --move /run /fs/run
 
-exec switch_root /fs /bin/bash
+exec switch_root /fs /sbin/init
