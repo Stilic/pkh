@@ -7,8 +7,10 @@ mkdir -p /dev/pts
 mount -t devpts none /dev/pts
 
 mount -t tmpfs none /run
+mkdir /run/ow
 
-mount -r $(sed -e 's/^.*root=//' -e 's/ .*$//' /proc/cmdline) /mnt
+mount $(sed -e 's/^.*root=//' -e 's/ .*$//' /proc/cmdline) /mnt
+mkdir -p /mnt/var/var/log /mnt/work
 
 for file in /mnt/*; do 
     if [[ "$file" == *.sqsh ]]
@@ -20,11 +22,11 @@ for file in /mnt/*; do
     fi
 done
 
-mount -t overlay overlay -o lowerdir=/ro:${lower_dirs%?} /root
+mount -t overlay overlay -o lowerdir=/ro:${lower_dirs%?},upperdir=/mnt/var,workdir=/mnt/work /fs
 
-mount --move /proc /root/proc
-mount --move /sys /root/sys
-mount --move /dev /root/dev
-mount --move /run /root/run
+mount --move /proc /fs/proc
+mount --move /sys /fs/sys
+mount --move /dev /fs/dev
+mount --move /run /fs/run
 
-exec switch_root /root /sbin/init
+exec switch_root /fs /bin/bash
