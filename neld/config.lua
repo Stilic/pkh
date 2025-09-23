@@ -3,7 +3,7 @@ return {
     repository = "https://pickle.stilic.net/packages",
     layers = {
         main = {
-            "linux",
+            -- linux is kept inside the bootstrap script to be extracted
 
             "musl",
             "musl-fts",
