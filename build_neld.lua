@@ -14,4 +14,5 @@ for name, layer in pairs(config.layers) do
 end
 
 pkh.build("main", "base")
+pkh.build("main", "linux")
 pkh.build("user", "busybox-static")

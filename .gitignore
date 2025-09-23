@@ -40,7 +40,7 @@ luac.out
 *.hex
 
 # NELD
-root
+linux
 ram_root
 disk
 vmlinuz

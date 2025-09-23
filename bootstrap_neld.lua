@@ -13,9 +13,6 @@ local pkh = require "main"
 lfs.mkdir("neld/.cache")
 lfs.chdir("neld/.cache")
 
-os.execute("rm -rf neld/linux")
-lfs.mkdir("neld/linux")
-
 local available_packages = {}
 for line in llby.net.srequest(config.repository .. "/available.txt").content:read():gmatch("[^\r\n]+") do
     local i, name, version = 1
@@ -78,8 +75,12 @@ for name, layer in pairs(config.layers) do
         download(name, package)
     end
 end
-download("main", "linux", "../linux")
+
 download("main", "base")
+
+os.execute("rm -rf neld/linux")
+lfs.mkdir("neld/linux")
+download("main", "linux", "../linux")
 
 os.execute("rm -rf ../ram_root")
 lfs.mkdir("../ram_root")
