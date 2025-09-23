@@ -10,9 +10,6 @@ package.path = package.path
 local config = require "neld.config"
 local pkh = require "main"
 
-os.execute("rm -rf neld/root")
-lfs.mkdir("neld/root")
-
 lfs.mkdir("neld/.cache")
 lfs.chdir("neld/.cache")
 
@@ -48,7 +45,9 @@ local function download(repository, name, directory)
         if not lfs.attributes(file_name) then
             llby.net.srequest(config.repository .. "/" .. repository .. "/" .. file_name).content:file(file_name)
         end
-        os.execute("unsquashfs -d " .. directory .. " -f " .. file_name)
+        if directory then
+            os.execute("unsquashfs -d " .. directory .. " -f " .. file_name)
+        end
         installed_packages[name] = true
 
         local package = pkg(repository .. "." .. name)
@@ -72,10 +71,10 @@ end
 for name, layer in pairs(config.layers) do
     for _, package in ipairs(layer) do
         print("INSTALLING: " .. package)
-        download(name, package, "../root")
+        download(name, package)
     end
 end
-download("main", "base", "../root")
+download("main", "base")
 
 os.execute("rm -rf ../ram_root")
 lfs.mkdir("../ram_root")
