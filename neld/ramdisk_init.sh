@@ -15,6 +15,9 @@ for file in /mnt/*; do
 done
 
 mount -t overlay overlay -o lowerdir=/ro:${lower_dirs%?} /root
+
+mount --bind /mnt/home /root/home
+mount --bind /mnt/home/root /root/root
 mount -t overlay overlay -o lowerdir=/root/etc,upperdir=/etc,workdir=/work /root/etc
 
 mount --move /dev /root/dev
