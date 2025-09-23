@@ -39,6 +39,8 @@ end
 
 local installed_packages = {}
 local function download(repository, name, directory)
+    print("INSTALLING: " .. name)
+
     local versions = available_packages[name]
     if versions then
         local file_name = pkh.get_file(name, versions[1])
@@ -70,7 +72,6 @@ end
 
 for name, layer in pairs(config.layers) do
     for _, package in ipairs(layer) do
-        print("INSTALLING: " .. package)
         download(name, package)
     end
 end
