@@ -137,7 +137,8 @@ function self.build_kconfig(source, cflags, cppflags)
         end
 
         os.execute("cp ../../config .config")
-        os.execute("KCONFIG_NOTIMESTAMP=1 " .. self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs())
+        os.execute("make olddefconfig")
+        os.execute("KCONFIG_NOTIMESTAMP=1 " .. self.get_flags(cflags, cppflags) .. " make ARCH=x86_64" .. system.get_make_jobs())
     end
 end
 
