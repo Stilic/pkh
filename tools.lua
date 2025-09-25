@@ -95,7 +95,7 @@ end
 
 function self.build_cmake(prefix, options, source, cflags, cppflags)
     if not prefix then
-        prefix = "usr"
+        prefix = "/usr"
     end
     if options then
         options = " " .. options
@@ -112,8 +112,8 @@ function self.build_cmake(prefix, options, source, cflags, cppflags)
         end
 
         os.execute(self.get_flags(cflags, cppflags) ..
-            " cmake -B _install -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=" .. prefix .. options)
-        os.execute("cmake --build _install --config Release --target install" .. system.get_make_jobs())
+            " cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. prefix .. options)
+        os.execute("cmake --build build --config Release --target install" .. system.get_make_jobs())
     end
 end
 
