@@ -93,7 +93,7 @@ return {
             "bison",
             "elfutils",
             "dosfstools",
-            "muon",
+            "meson",
             "cmake",
 
             -- autotools
