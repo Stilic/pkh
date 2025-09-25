@@ -111,9 +111,11 @@ function self.build_cmake(prefix, options, source, cflags, cppflags)
             lfs.chdir(source)
         end
 
+        local install_dir = "_install" .. prefix
         os.execute(self.get_flags(cflags, cppflags) ..
-            " cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. prefix .. options)
+            " cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=" .. install_dir .. options)
         os.execute("cmake --build build --config Release --target install" .. system.get_make_jobs())
+        os.execute("mv " .. install_dir .. "/lib64 " .. install_dir .. "/lib")
     end
 end
 
