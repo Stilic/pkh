@@ -29,9 +29,9 @@ function self.make(prefix, options, cflags, cppflags, configure)
 
     if lfs.attributes(configure) then
         os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. " --prefix=" .. prefix .. options)
-        os.execute("make" .. system.get_jobs())
+        os.execute("make" .. system.get_make_jobs())
     else
-        os.execute(self.get_flags(cflags, cppflags) .. " make" .. system.get_jobs() .. options)
+        os.execute(self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs() .. options)
     end
 end
 
@@ -164,7 +164,7 @@ function self.build_kconfig(source, cflags, cppflags)
 
         os.execute("cp ../../config .config")
         os.execute("make olddefconfig")
-        os.execute("KCONFIG_NOTIMESTAMP=1 " .. self.get_flags(cflags, cppflags) .. " make" .. system.get_jobs())
+        os.execute("KCONFIG_NOTIMESTAMP=1 " .. self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs())
     end
 end
 
