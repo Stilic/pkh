@@ -29,9 +29,9 @@ function self.make(prefix, options, cflags, cppflags, configure)
 
     if lfs.attributes(configure) then
         os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. " --prefix=" .. prefix .. options)
-        os.execute("make" .. system.get_make_jobs())
+        os.execute("make" .. system.get_jobs())
     else
-        os.execute(self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs() .. options)
+        os.execute(self.get_flags(cflags, cppflags) .. " make" .. system.get_jobs() .. options)
     end
 end
 
@@ -93,6 +93,30 @@ function self.build_meson(prefix, options, source, cflags, cppflags)
     end
 end
 
+function self.build_cmake(prefix, options, source, cflags, cppflags)
+    if not prefix then
+        prefix = "usr"
+    end
+    if options then
+        options = " " .. options
+    else
+        options = ""
+    end
+    if not source then
+        source = "source"
+    end
+
+    return function()
+        if source ~= "" then
+            lfs.chdir(source)
+        end
+
+        os.execute(self.get_flags(cflags, cppflags) ..
+            " cmake -B _install -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=" .. prefix .. options)
+        os.execute("cmake --build _install --config Release --target install" .. system.get_make_jobs())
+    end
+end
+
 function self.build_python(source, env)
     if not source then
         source = "source"
@@ -138,7 +162,7 @@ function self.build_kconfig(source, cflags, cppflags)
 
         os.execute("cp ../../config .config")
         os.execute("make olddefconfig")
-        os.execute("KCONFIG_NOTIMESTAMP=1 " .. self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs())
+        os.execute("KCONFIG_NOTIMESTAMP=1 " .. self.get_flags(cflags, cppflags) .. " make" .. system.get_jobs())
     end
 end
 
