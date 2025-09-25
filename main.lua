@@ -124,8 +124,9 @@ function self.build(repository, name)
                     req.content:file("S" .. path)
                     os.execute("rm -rf " .. path)
                     lfs.mkdir(path)
-                    if string.sub(url, -4) == ".zip" then
-                        -- TODO: check if there's a need for `--strip-components`
+
+                    local extension = string.sub(url, -4)
+                    if extension == ".zip" or extension == ".whl" then
                         os.execute("unzip S" .. path .. " -d " .. path)
                     else
                         os.execute("tar xf S" .. path .. " --strip-components=1 -C " .. path)
