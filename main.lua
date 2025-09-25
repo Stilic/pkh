@@ -156,9 +156,9 @@ function self.build(repository, name)
 
         if pbuild then
             pbuild()
-            lfs.chdir(build_path)
         end
     end
+    lfs.chdir(build_path)
 
     archived = pack(package, build_path)
 
