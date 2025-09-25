@@ -43,6 +43,7 @@ luac.out
 linux
 ram_root
 disk
+mnt
 vmlinuz
 ramdisk
 ramdisk.cpio.gz
