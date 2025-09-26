@@ -87,7 +87,7 @@ function self.build_meson(prefix, options, source, cflags, cppflags)
             lfs.chdir(source)
         end
 
-        os.execute(self.get_flags(cflags, cppflags) .. " meson setup build --prefix=" .. prefix .. options)
+        os.execute(self.get_flags(cflags, cppflags) .. " meson setup build --buildtype=release --prefix=" .. prefix .. options)
         os.execute("meson compile -C build")
         os.execute('DESTDIR="' .. lfs.currentdir() .. '/_install" meson install -C build')
     end
