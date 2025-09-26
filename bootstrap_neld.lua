@@ -62,6 +62,14 @@ local function download(repository, name, directory)
                     end
                 end
             end
+            if package.dev_dependencies then
+                for _, dep in ipairs(package.dev_dependencies) do
+                    local name = dep.name
+                    if not installed_packages[name] then
+                        download(dep.repository, name, directory)
+                    end
+                end
+            end
         else
             print("ERROR: Can't find the `" .. name .. "` template!")
         end
