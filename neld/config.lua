@@ -97,7 +97,7 @@ return {
             "cmake",
 
             -- autotools
-            "libtool",
+            "slibtool",
             "automake",
             "autoconf",
             --
