@@ -8,7 +8,7 @@ self.DEFAULT_CPPFLAGS = self.DEFAULT_CFLAGS
 
 -- TODO: remove CC
 function self.get_flags(cflags, cppflags)
-    return 'CPATH=/include:/usr/include CC=gcc CFLAGS="' ..
+    return 'CC=gcc CFLAGS="' ..
         self.DEFAULT_CFLAGS ..
         (cflags and (" " .. cflags) or "") ..
         '" CPPFLAGS="' .. self.DEFAULT_CPPFLAGS .. (cppflags and (" " .. cppflags) or "") .. '"'
