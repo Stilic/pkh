@@ -28,7 +28,7 @@ function self.make(prefix, options, cflags, cppflags, configure)
     end
 
     if lfs.attributes(configure) then
-        os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. " --prefix=" .. prefix .. options)
+        os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. " LIBTOOL=slibtool --prefix=" .. prefix .. options)
         os.execute("make" .. system.get_make_jobs())
     else
         os.execute(self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs() .. options)
