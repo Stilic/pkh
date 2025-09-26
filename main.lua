@@ -79,23 +79,25 @@ local function pack(package, build_path, variant)
 
     return true
 end
-function self.build(repository, name)
+function self.build(repository, name, skip_dependencies)
     local archived = true
 
     local needed, og_path, package = true, lfs.currentdir(), pkg(repository .. "." .. name)
 
-    -- TODO: install the packages
-    if package.dev_dependencies then
-        for _, p in ipairs(package.dev_dependencies) do
-            if not built_packages[p] then
-                self.build(p.repository, p.name)
+    if not skip_dependencies then
+        -- TODO: install the packages
+        if package.dev_dependencies then
+            for _, p in ipairs(package.dev_dependencies) do
+                if not built_packages[p] then
+                    self.build(p.repository, p.name)
+                end
             end
         end
-    end
-    if package.dependencies then
-        for _, p in ipairs(package.dependencies) do
-            if not built_packages[p] then
-                self.build(p.repository, p.name)
+        if package.dependencies then
+            for _, p in ipairs(package.dependencies) do
+                if not built_packages[p] then
+                    self.build(p.repository, p.name)
+                end
             end
         end
     end
