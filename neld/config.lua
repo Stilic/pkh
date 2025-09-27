@@ -4,7 +4,6 @@ return {
     layers = {
         main = {
             -- linux is kept inside the bootstrap script to be extracted
-
             "musl",
             "musl-fts",
             "musl-obstack",
@@ -60,6 +59,7 @@ return {
             "dbus",
             "turnstile",
 
+            "e2fsprogs",
             "sysklogd",
             "dinit",
 
@@ -100,7 +100,6 @@ return {
             "autoconf",
             --
 
-            -- "e2fsprogs",
             "nano",
 
             "git",
