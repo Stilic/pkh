@@ -7,6 +7,6 @@ truncate -s 100G disk
 mkfs.ext4 -F disk
 mkdir mnt
 mount disk mnt
-mkdir -p mnt/home/root
+mkdir -p mnt/root mnt/home
 find .cache ! -name busybox-static* -exec cp -t mnt {} +
 umount mnt
