@@ -93,34 +93,6 @@ function self.build_meson(prefix, options, source, cflags, cppflags)
     end
 end
 
-function self.build_cmake(prefix, options, source, cflags, cppflags)
-    if not prefix then
-        prefix = "/usr"
-    end
-    if options then
-        options = " " .. options
-    else
-        options = ""
-    end
-    if not source then
-        source = "source"
-    end
-
-    return function()
-        if source ~= "" then
-            lfs.chdir(source)
-        end
-
-        local install_dir = "_install" .. prefix
-        os.execute(self.get_flags(cflags, cppflags) ..
-            " cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=" .. install_dir .. options)
-        os.execute("cmake --build build --config Release --target install" .. system.get_make_jobs())
-        if lfs.attributes(install_dir .. "/lib64") then
-            os.execute("mv " .. install_dir .. "/lib64 " .. install_dir .. "/lib")
-        end
-    end
-end
-
 function self.build_python(source, env)
     if not source then
         source = "source"

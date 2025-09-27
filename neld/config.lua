@@ -72,7 +72,6 @@ return {
             "libunistring",
             "libidn2",
             "nghttp2",
-            "brotli",
             "curl",
             --
 
@@ -94,7 +93,6 @@ return {
             "elfutils",
             "dosfstools",
             "meson",
-            "cmake",
 
             -- autotools
             "slibtool",
