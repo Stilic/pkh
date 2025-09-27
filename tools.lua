@@ -64,7 +64,7 @@ function self.build_autotools(prefix, options, source, cflags, cppflags)
             lfs.chdir(source)
         end
 
-        os.execute("LIBTOOL=slibtool autoreconf -vif")
+        os.execute("autoreconf -vif")
         self.build_gnu_configure(prefix, options, "", cflags, cppflags)()
     end
 end
