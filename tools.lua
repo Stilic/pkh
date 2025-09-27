@@ -29,7 +29,7 @@ function self.make(prefix, options, cflags, cppflags, configure)
 
     if lfs.attributes(configure) then
         os.execute(self.get_flags(cflags, cppflags) .. " LIBTOOL=slibtool ./" .. configure .. " --prefix=" .. prefix .. options)
-        os.execute("CPATH=/usr/include make" .. system.get_make_jobs())
+        os.execute("CPATH=/usr/include LIBRARY_PATH=/usr/lib make" .. system.get_make_jobs())
     else
         os.execute(self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs() .. options)
     end
