@@ -8,7 +8,7 @@ self.DEFAULT_CPPFLAGS = self.DEFAULT_CFLAGS
 
 -- TODO: remove CC
 function self.get_flags(cflags, cppflags)
-    return 'CC=gcc CPATH=/include:/usr/include CFLAGS="' ..
+    return 'CC=gcc CFLAGS="' ..
         self.DEFAULT_CFLAGS ..
         (cflags and (" " .. cflags) or "") ..
         '" CPPFLAGS="' .. self.DEFAULT_CPPFLAGS .. (cppflags and (" " .. cppflags) or "") .. '"'
@@ -29,7 +29,7 @@ function self.make(prefix, options, cflags, cppflags, configure)
 
     if lfs.attributes(configure) then
         os.execute(self.get_flags(cflags, cppflags) .. " LIBTOOL=slibtool ./" .. configure .. " --prefix=" .. prefix .. options)
-        os.execute("make" .. system.get_make_jobs())
+        os.execute("CPATH=/include:/usr/include make" .. system.get_make_jobs())
     else
         os.execute(self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs() .. options)
     end
