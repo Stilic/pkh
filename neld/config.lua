@@ -95,7 +95,7 @@ return {
             "meson",
 
             -- autotools
-            "slibtool",
+            "libtool",
             "automake",
             "autoconf",
             --
