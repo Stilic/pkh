@@ -5,12 +5,15 @@ mkdir work
 cd work
 
 mkdir rootfs
+cd rootfs
 
-for package in ../*.sqsh
+mkdir -p sys dev run proc var tmp usr/lib64 root home etc
+
+for package in ../../*.sqsh
 do
     [[ $(basename "$package") = "base,1.sqsh" ]] && continue
-    unsquashfs -f -d rootfs "$package"
+    unsquashfs -f -d . "$package"
 done
 
-unsquashfs -f -d rootfs ../base,1.sqsh
-mksquashfs rootfs rootfs.sqsh -comp lzo -force-uid 0 -force-gid 0
+unsquashfs -f -d . ../../base,1.sqsh
+mksquashfs . ../rootfs.sqsh -comp lzo -force-uid 0 -force-gid 0
