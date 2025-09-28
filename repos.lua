@@ -56,19 +56,15 @@ function self.download(repository, name, directory, skip_dependencies)
 
         if not skip_dependencies then
             local package = pkg(repository .. "." .. name)
-            if package then
-                if package.dependencies then
-                    for _, dep in ipairs(package.dependencies) do
-                        self.download(dep.repository, dep.name, directory)
-                    end
+            if package.dependencies then
+                for _, dep in ipairs(package.dependencies) do
+                    self.download(dep.repository, dep.name, directory)
                 end
-                if package.dev_dependencies then
-                    for _, dep in ipairs(package.dev_dependencies) do
-                        self.download(dep.repository, dep.name, directory)
-                    end
+            end
+            if package.dev_dependencies then
+                for _, dep in ipairs(package.dev_dependencies) do
+                    self.download(dep.repository, dep.name, directory)
                 end
-            else
-                print("ERROR: Can't find the `" .. name .. "` template!")
             end
         end
     else
