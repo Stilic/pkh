@@ -12,7 +12,7 @@ local pkh = require "main"
 
 local self = { available_packages = {} }
 
-for line in llby.net.srequest(config.repository .. "/available.txt").content:read():gmatch("[^\r\n]+") do
+for line in llby.net.srequest(config.repository .. "/packages/available.txt").content:read():gmatch("[^\r\n]+") do
     local i, name, version = 1
 
     for part in line:gmatch("([^,]+)") do
@@ -47,7 +47,7 @@ function self.download(repository, name, directory, skip_dependencies)
     if versions then
         local file_name = pkh.get_file(name, versions[1])
         if not lfs.attributes(file_name) then
-            llby.net.srequest(config.repository .. "/" .. repository .. "/" .. file_name).content:file(file_name)
+            llby.net.srequest(config.repository .. "/packages/" .. repository .. "/" .. file_name).content:file(file_name)
         end
         if directory then
             os.execute("unsquashfs -d " .. directory .. " -f " .. file_name)
