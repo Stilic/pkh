@@ -69,6 +69,7 @@ return {
             "lzo",
             "squashfs-tools",
             "lua",
+            "luafilesystem",
             "lullaby"
         },
         user = { "gcc.libs" }
@@ -107,8 +108,6 @@ return {
         "nano",
 
         "git",
-
-        "luarocks",
 
         "cottonfetch",
     }

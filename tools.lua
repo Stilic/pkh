@@ -31,7 +31,7 @@ function self.make(prefix, options, cflags, cppflags, configure)
         os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. " --prefix=" .. prefix .. options)
         os.execute("CPATH=/usr/include make" .. system.get_make_jobs())
     else
-        os.execute(self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs() .. options)
+        os.execute(self.get_flags(cflags, cppflags) .. " make PREFIX=" .. prefix .. system.get_make_jobs() .. options)
     end
 end
 
