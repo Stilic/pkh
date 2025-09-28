@@ -69,6 +69,7 @@ return {
             "lzo",
             "squashfs-tools",
             "lua",
+            "lullaby"
         },
         user = { "gcc.libs" }
     },
