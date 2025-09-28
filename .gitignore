@@ -50,3 +50,6 @@ ramdisk.cpio.gz
 
 .build
 .cache
+
+rootfs
+rootfs.sqsh

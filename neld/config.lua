@@ -67,46 +67,6 @@ return {
             "lzo",
             "squashfs-tools",
             "lua",
-        },
-        user = {
-            "libunistring",
-            "libidn2",
-            "nghttp2",
-            "curl",
-            --
-
-            "rsync",
-            "cpio",
-            "python",
-
-            "pcre2",
-
-            "binutils",
-            "make",
-            "pkgconf",
-            "m4",
-            "gcc",
-
-            -- TODO: install dev dependencies
-            "flex",
-            "bison",
-            "elfutils",
-            "dosfstools",
-            "meson",
-
-            -- autotools
-            "libtool",
-            "automake",
-            "autoconf",
-            --
-
-            "nano",
-
-            "git",
-
-            "luarocks",
-
-            "cottonfetch",
         }
     }
 }

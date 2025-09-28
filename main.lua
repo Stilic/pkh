@@ -30,8 +30,12 @@ end
 
 local function pack(package, build_path, variant)
     -- create the filesystem
-    os.execute("rm -rf filesystem")
-    lfs.mkdir("filesystem")
+    local filesystem = "filesystem"
+    if variant then
+        filesystem = filesystem .. "-" .. variant.name
+    end
+    os.execute("rm -rf " .. filesystem)
+    lfs.mkdir(filesystem)
 
     local ppack = variant
     if ppack then
@@ -39,8 +43,7 @@ local function pack(package, build_path, variant)
         if ppack then
             ppack()
         end
-    end
-    if not ppack then
+    else
         ppack = package.pack
         if ppack then
             ppack()
@@ -61,7 +64,7 @@ local function pack(package, build_path, variant)
     end
     local file = self.get_file(package.name, package.version, vname)
     os.remove(file)
-    os.execute("mksquashfs filesystem " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
+    os.execute("mksquashfs " .. filesystem .. " " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
 
     return true
 end
@@ -74,15 +77,17 @@ function self.build(repository, name, skip_dependencies)
         -- TODO: install the packages
         if package.dev_dependencies then
             for _, p in ipairs(package.dev_dependencies) do
-                if not built_packages[p] then
-                    self.build(p.repository, p.name)
+                local name = p.name
+                if not built_packages[name] then
+                    self.build(p.repository, name)
                 end
             end
         end
         if package.dependencies then
             for _, p in ipairs(package.dependencies) do
-                if not built_packages[p] then
-                    self.build(p.repository, p.name)
+                local name = p.name
+                if not built_packages[name] then
+                    self.build(p.repository, name)
                 end
             end
         end
@@ -98,7 +103,7 @@ function self.build(repository, name, skip_dependencies)
     end
     lfs.chdir(".build")
 
-    local build_path, pbuild = lfs.currentdir(), package.build
+    local build_path = lfs.currentdir()
     if needed then
         if package.sources then
             for _, source in ipairs(package.sources) do
@@ -142,23 +147,22 @@ function self.build(repository, name, skip_dependencies)
             end
         end
 
-        if pbuild then
-            pbuild()
+        local build = package.build
+        if build then
+            build()
             lfs.chdir(build_path)
         end
     end
 
     archived = pack(package, build_path)
 
-    if package.out then
-        for index, variant in pairs(package.out) do
+    if package.variants then
+        for index, variant in pairs(package.variants) do
             variant.name = index
 
-            -- TODO: separate main package and variants environments
-            if variant.build then
-                variant.build()
-            elseif pbuild then
-                pbuild()
+            local build = variant.build
+            if build then
+                build()
             end
 
             lfs.chdir(build_path)
