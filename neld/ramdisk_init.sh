@@ -3,18 +3,19 @@ mount -t devtmpfs none /dev
 mount -t proc none /proc
 
 mount $(sed -e 's/^.*root=//' -e 's/ .*$//' /proc/cmdline) /mnt
+mount /mnt/rootfs.sqsh /ro
 
-# for file in /mnt/*; do 
-#     if [[ "$file" == *.sqsh ]]
-#     then
-#         mount_dir="/$(basename $file | cut -d "," -f 1)"
-#         mkdir $mount_dir
-#         mount $file $mount_dir
-#         lower_dirs="$mount_dir:$lower_dirs"
-#     fi
-# done
+for file in /mnt/*; do 
+    if [[ "$file" == *.sqsh ]]
+    then
+        mount_dir="/$(basename $file | cut -d "," -f 1)"
+        mkdir $mount_dir
+        mount $file $mount_dir
+        lower_dirs="$mount_dir:$lower_dirs"
+    fi
+done
 
-# mount -t overlay overlay -o lowerdir=/ro:${lower_dirs%?} /root
+mount -t overlay overlay -o lowerdir=/ro:${lower_dirs%?} /root
 mount /mnt/rootfs.sqsh /root
 
 mount --bind /mnt/home /root/home
