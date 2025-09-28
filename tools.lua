@@ -82,15 +82,15 @@ function self.build_meson(prefix, options, source, cflags, cppflags)
         source = "source"
     end
 
+    local libdir = "lib"
+    if prefix ~= "/" then
+        libdir = "/" .. libdir
+    end
     return function()
         if source ~= "" then
             lfs.chdir(source)
         end
 
-        local libdir = "lib"
-        if prefix ~= "/" then
-            libdir = "/" .. libdir
-        end
         os.execute(self.get_flags(cflags, cppflags) ..
             " meson setup build --buildtype=release --libdir=" .. prefix .. libdir .. " --prefix=" .. prefix .. options)
         os.execute("meson compile -C build")
