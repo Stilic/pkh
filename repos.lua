@@ -37,7 +37,7 @@ end
 
 local installed_packages = {}
 function self.download(repository, name, directory, skip_dependencies)
-    if not installed_packages[name] then
+    if installed_packages[name] then
         return
     end
 
