@@ -8,6 +8,8 @@ truncate -s 100G disk
 mkfs.ext4 -F disk
 mkdir mnt
 mount disk mnt
-mkdir -p mnt/root mnt/home
-cp rootfs.sqsh ../*.sqsh mnt
+cd mnt
+mkdir usr root home
+cp ../rootfs.sqsh .
+cp ../../*.sqsh usr
 umount mnt

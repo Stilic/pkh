@@ -5,7 +5,7 @@ mount -t proc none /proc
 mount $(sed -e 's/^.*root=//' -e 's/ .*$//' /proc/cmdline) /mnt
 mount /mnt/rootfs.sqsh /ro
 
-for file in /mnt/*; do 
+for file in /mnt/usr/*; do 
     if [[ "$file" == *.sqsh ]]
     then
         mount_dir="/$(basename $file | cut -d "," -f 1)"
