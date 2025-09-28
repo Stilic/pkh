@@ -55,8 +55,8 @@ function self.download(repository, name, directory, skip_dependencies)
         installed_packages[name] = true
 
         if not skip_dependencies then
-            local status, package = pcall(pkg, repository .. "." .. name)
-            if status then
+            local package = pkg(repository .. "." .. name)
+            if package then
                 if package.dependencies then
                     for _, dep in ipairs(package.dependencies) do
                         self.download(dep.repository, dep.name, directory)
