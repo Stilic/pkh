@@ -39,6 +39,10 @@ end
 
 local installed_packages = {}
 local function download(repository, name, directory)
+    if installed_packages[name] then
+        return
+    end
+
     print("INSTALLING: " .. name)
 
     local versions = available_packages[name]
@@ -52,27 +56,21 @@ local function download(repository, name, directory)
         end
         installed_packages[name] = true
 
-        local package = pkg(repository .. "." .. name)
-        if package then
-            -- if package.dependencies then
-            --     for _, dep in ipairs(package.dependencies) do
-            --         local name = dep.name
-            --         if not installed_packages[name] then
-            --             download(dep.repository, name, directory)
-            --         end
-            --     end
-            -- end
-            -- if package.dev_dependencies then
-            --     for _, dep in ipairs(package.dev_dependencies) do
-            --         local name = dep.name
-            --         if not installed_packages[name] then
-            --             download(dep.repository, name, directory)
-            --         end
-            --     end
-            -- end
-        else
-            print("ERROR: Can't find the `" .. name .. "` template!")
-        end
+        -- local status, package = pcall(pkg, repository .. "." .. name)
+        -- if status then
+        --     if package.dependencies then
+        --         for _, dep in ipairs(package.dependencies) do
+        --             download(dep.repository, dep.name, directory)
+        --         end
+        --     end
+        --     if package.dev_dependencies then
+        --         for _, dep in ipairs(package.dev_dependencies) do
+        --             download(dep.repository, dep.name, directory)
+        --         end
+        --     end
+        -- else
+        --     print("ERROR: Can't find the `" .. name .. "` template!")
+        -- end
     else
         print("ERROR: Package `" .. name .. "` isn't available!")
     end

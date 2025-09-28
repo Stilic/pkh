@@ -23,7 +23,7 @@ local built_packages = {}
 function self.get_file(name, version, variant)
     local file = name
     if variant then
-        file = file .. "-" .. variant
+        file = file .. "." .. variant
     end
     return file .. "," .. version .. ".sqsh"
 end

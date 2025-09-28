@@ -7,6 +7,7 @@ return {
             "musl",
             "musl-fts",
             "musl-obstack",
+            "libiconv",
             "argp",
             "readline",
             "curses",
@@ -68,6 +69,6 @@ return {
             "squashfs-tools",
             "lua",
         },
-        user = { "gcc-libs" }
+        user = { "gcc.libs" }
     }
 }
