@@ -70,7 +70,8 @@ return {
             "squashfs-tools",
             "lua",
             "luafilesystem",
-            "lullaby"
+            "lullaby",
+            "bubblewrap"
         },
         user = { "gcc.libs" }
     },
