@@ -1,7 +1,7 @@
 return {
     gnu_site = "https://mirror.cyberbits.eu/gnu",
     repository = "https://pickle.stilic.net/packages",
-    layers = {
+    rootfs = {
         main = {
             -- linux is kept inside the bootstrap script to be extracted
             "musl",
