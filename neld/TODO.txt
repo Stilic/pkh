@@ -1,11 +1,5 @@
-Add DocBook 5
+Run tests run in a separate package function
 
-Make tests run in a separate function + isolate builds to fix Python compilation (once we're out of the POC state)
-
-Move services to their respective packages
-
-Depend less on shell utils where it's feasible
-
-https://github.com/sabotage-linux/netbsd-curses/issues/58
+Isolate the build environment for each package
 
 https://news.ycombinator.com/item?id=42830863
