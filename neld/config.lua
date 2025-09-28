@@ -3,8 +3,8 @@ return {
     repository = "https://pickle.stilic.net",
     rootfs = {
         main = {
-            -- linux is kept inside the bootstrap script to be extracted
             "base",
+            "linux",
             "musl",
             "musl-fts",
             "musl-obstack",
