@@ -40,16 +40,5 @@ luac.out
 *.hex
 
 # NELD
-linux
-ram_root
-disk
-mnt
-vmlinuz
-ramdisk
-ramdisk.cpio.gz
-
+.rootfs
 .build
-.cache
-
-rootfs
-rootfs.sqsh

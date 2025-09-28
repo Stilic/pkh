@@ -4,6 +4,7 @@ return {
     rootfs = {
         main = {
             -- linux is kept inside the bootstrap script to be extracted
+            "base",
             "musl",
             "musl-fts",
             "musl-obstack",
@@ -70,5 +71,44 @@ return {
             "lua",
         },
         user = { "gcc.libs" }
+    },
+    user_packages = {
+        "libunistring",
+        "libidn2",
+        "nghttp2",
+        "curl",
+        --
+
+        "rsync",
+        "cpio",
+        "python",
+
+        "pcre2",
+
+        "binutils",
+        "make",
+        "pkgconf",
+        "m4",
+        "gcc",
+
+        "flex",
+        "bison",
+        "elfutils",
+        "dosfstools",
+        "meson",
+
+        -- autotools
+        "libtool",
+        "automake",
+        "autoconf",
+        --
+
+        "nano",
+
+        "git",
+
+        "luarocks",
+
+        "cottonfetch",
     }
 }
