@@ -16,7 +16,6 @@ for file in /mnt/*; do
 done
 
 mount -t overlay overlay -o lowerdir=/ro:${lower_dirs%?} /root
-mount /mnt/rootfs.sqsh /root
 
 mount --bind /mnt/home /root/home
 mount --bind /mnt/root /root/root
