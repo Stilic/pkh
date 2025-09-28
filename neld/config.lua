@@ -67,6 +67,7 @@ return {
             "lzo",
             "squashfs-tools",
             "lua",
-        }
+        },
+        user = { "gcc-libs" }
     }
 }
