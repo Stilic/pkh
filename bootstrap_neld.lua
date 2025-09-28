@@ -12,6 +12,7 @@ for _, package in ipairs(config.user_packages) do
 end
 
 os.execute("rm -rf work")
+lfs.mkdir("work")
 lfs.chdir("work")
 
 print("DOWNLOADING ROOTFS")
