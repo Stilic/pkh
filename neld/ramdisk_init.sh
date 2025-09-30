@@ -19,10 +19,7 @@ mount /mnt/rootfs.sqsh /root
 
 mount --bind /mnt/home /root/home
 mount --bind /mnt/root /root/root
-mount -t overlay overlay -o lowerdir=/root/etc,upperdir=/etc,workdir=/work /root/etc
-
-mount --move /dev /root/dev
-mount --move /proc /root/proc
+mount -t overlay overlay -o lowerdir=/root/etc,upperdir=/mnt/etc,workdir=/work /root/etc
 
 #mount --bind /root/usr/lib /root/usr/lib64
 
@@ -30,5 +27,8 @@ mount -t tmpfs var /root/var
 mkdir /root/var/log /root/var/run /root/var/db
 
 mount -t tmpfs tmp /root/tmp
+
+umount /dev
+umount /proc
 
 exec switch_root /root /sbin/init
