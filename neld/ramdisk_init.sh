@@ -28,7 +28,7 @@ mkdir /root/var/log /root/var/run /root/var/db
 
 mount -t tmpfs tmp /root/tmp
 
-umount /dev
+mount --move /dev /root/dev
 umount /proc
 
 exec switch_root /root /sbin/init
