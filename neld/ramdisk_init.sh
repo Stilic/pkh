@@ -19,7 +19,7 @@ mount /mnt/rootfs.sqsh /root
 
 mount --bind /mnt/home /root/home
 mount --bind /mnt/root /root/root
-mount -t overlay overlay -o lowerdir=/root/etc,upperdir=/mnt/etc,workdir=/work /root/etc
+mount -t overlay overlay -o lowerdir=/root/etc,upperdir=/etc,workdir=/work /root/etc
 
 #mount --bind /root/usr/lib /root/usr/lib64
 
