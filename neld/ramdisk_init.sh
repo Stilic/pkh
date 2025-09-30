@@ -5,17 +5,17 @@ mount -t proc none /proc
 mount $(sed -e 's/^.*root=//' -e 's/ .*$//' /proc/cmdline) /mnt
 mount /mnt/rootfs.sqsh /root
 
-for file in /mnt/usr/*; do 
-    if [[ "$file" == *.sqsh ]]
-    then
-        mount_dir="/$(basename $file | cut -d "," -f 1)"
-        mkdir $mount_dir
-        mount $file $mount_dir
-        lower_dirs="$mount_dir:$lower_dirs"
-    fi
-done
+#for file in /mnt/usr/*; do 
+#    if [[ "$file" == *.sqsh ]]
+#    then
+#        mount_dir="/$(basename $file | cut -d "," -f 1)"
+#        mkdir $mount_dir
+#        mount $file $mount_dir
+#        lower_dirs="$mount_dir:$lower_dirs"
+#    fi
+#done
 
-mount -t overlay overlay -o lowerdir=${lower_dirs%?} /root/usr
+#mount -t overlay overlay -o lowerdir=${lower_dirs%?} /root/usr
 
 mount --bind /mnt/home /root/home
 mount --bind /mnt/root /root/root
@@ -24,7 +24,7 @@ mount -t overlay overlay -o lowerdir=/root/etc,upperdir=/etc,workdir=/work /root
 mount --move /dev /root/dev
 mount --move /proc /root/proc
 
-mount --bind /root/usr/lib /root/usr/lib64
+#mount --bind /root/usr/lib /root/usr/lib64
 
 mount -t tmpfs var /root/var
 mkdir /root/var/log /root/var/run /root/var/db
