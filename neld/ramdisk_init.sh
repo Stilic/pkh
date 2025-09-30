@@ -31,4 +31,4 @@ mkdir /root/var/log /root/var/run /root/var/db
 
 mount -t tmpfs tmp /root/tmp
 
-exec switch_root /root /bin/bash
+exec switch_root /root /sbin/init
