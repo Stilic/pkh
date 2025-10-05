@@ -21,8 +21,11 @@ for file in /mnt/usr/*; do
    fi
 done
 mount -t overlay overlay -o lowerdir=${lower_dirs%?} /root/usr
-
 # mount --bind /root/usr/lib /root/usr/lib64
+
+mount -t tmpfs var /root/var
+mount -t tmpfs tmp /root/tmp
+mkdir /root/var/log /root/var/run /root/var/db
 
 mount --move /dev /root/dev
 umount /proc
