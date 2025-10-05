@@ -27,4 +27,4 @@ mount -t overlay overlay -o lowerdir=${lower_dirs%?} /root/usr
 mount --move /dev /root/dev
 umount /proc
 
-exec switch_root /root /bin/bash
+exec switch_root /root /sbin/init
