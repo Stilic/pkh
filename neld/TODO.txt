@@ -1,5 +1,7 @@
-Run tests run in a separate package function
-
 Isolate the build environment for each package
+
+Check for overlaping files between packages
+
+Run tests run in a separate package function
 
 https://news.ycombinator.com/item?id=42830863
