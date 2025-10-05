@@ -102,7 +102,7 @@ function self.build_python(source, env)
             lfs.chdir(source)
         end
 
-        os.execute(env .. "python -m gpep517 build-wheel --output-fd 1 --sysroot / --wheel-dir dist")
+        os.execute(env .. "python -m gpep517 build-wheel --output-fd 1 --wheel-dir dist")
     end
 end
 
@@ -168,7 +168,7 @@ function self.pack_python(path)
     end
 
     return function()
-        os.execute("python -m installer -d filesystem " .. path .. "/dist/*.whl")
+        os.execute("python -m installer --prefix / -d filesystem " .. path .. "/dist/*.whl")
     end
 end
 
