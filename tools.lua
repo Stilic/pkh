@@ -102,7 +102,7 @@ function self.build_python(source, env)
             lfs.chdir(source)
         end
 
-        os.execute(env .. "python -m gpep517 build-wheel --output-fd 1 --wheel-dir dist")
+        os.execute(env .. "python -m gpep517 build-wheel --output-fd 1 --prefix / --wheel-dir dist")
     end
 end
 
