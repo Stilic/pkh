@@ -5,7 +5,7 @@ rm -rf ramdisk
 mkdir ramdisk
 cd ramdisk
 
-mkdir dev proc mnt root etc work
+mkdir dev proc mnt root ro etc work
 
 cp -ra ../ram_root/* .
 cp -a ../../../ramdisk_init.sh init
