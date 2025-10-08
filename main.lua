@@ -49,10 +49,12 @@ local function pack(package, build_path, variant)
             ppack()
         end
     end
-
     if not ppack then
         return false
     end
+
+    -- remove libtool archives as they're useless
+    os.execute("find " .. filesystem .. " -type f -name *.la -exec rm {} +")
 
     lfs.chdir(build_path)
 
