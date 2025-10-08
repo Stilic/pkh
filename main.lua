@@ -53,10 +53,10 @@ local function pack(package, build_path, variant)
         return false
     end
 
+    lfs.chdir(build_path)
+
     -- remove libtool archives as they're useless
     os.execute("find " .. filesystem .. " -type f -name *.la -exec rm {} +")
-
-    lfs.chdir(build_path)
 
     -- make the archive
     -- TODO: make the variant stuff more compact
