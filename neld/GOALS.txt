@@ -1,0 +1,6 @@
+- Base similar to Chimera's: Musl, LLVM (allow GCC to be used for e.g. Haxe), Dinit
+- PacK Head (package manager written in Lua, allow system configuration in an unified way)
+- Atomic / immutable root (whole system except /home and /opt is read-only)
+- Always reproductible setup, inspired by NixOS (not possible to install packages temporarily unless if it's done in a wrapped environement, like `nix-shell` but there's not `nix-env` equivalent)
+- FHS compatible (allows you to run abitrary binaries out-of-the-box)
+- Bootstrapable from a small seed binary
