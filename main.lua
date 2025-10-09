@@ -76,7 +76,7 @@ function self.build(repository, name, skip_dependencies)
                         end
                     end
                     if patch_dir then
-                        for file in lfs.dir(patch_dir) doPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+                        for file in lfs.dir(patch_dir) do
                             if file ~= "." and file ~= ".." then
                                 os.execute("patch -d " .. path .. " -p1 -i " .. patch_dir .. "/" .. file)
                             end
