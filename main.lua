@@ -89,8 +89,9 @@ function self.build(repository, name, skip_dependencies)
 
     lfs.chdir(base_path)
 
+    -- TODO: mount our own rootfs and user packages
     os.execute(
-        "bwrap --unshare-all --clearenv --chdir /pkh --dev /dev --ro-bind /bin /bin --ro-bind /lib /lib --ro-bind /sbin /sbin --ro-bind . /pkh --bind " ..
+        "bwrap --unshare-all --clearenv --chdir /pkh --dev /dev --ro-bind /bin /bin --ro-bind /lib /lib --ro-bind /sbin /sbin --ro-bind /usr /usr --ro-bind . /pkh --bind " ..
         build_path ..
         " /pkh/" ..
         build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
