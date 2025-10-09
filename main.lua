@@ -31,8 +31,8 @@ function self.build(repository, name, skip_dependencies)
         end
     end
 
-    -- TODO: detect packages directory automatically
-    lfs.chdir("pickle-linux/" .. repository .. "/" .. name)
+    local build_suffix = "pickle-linux/" .. repository .. "/" .. name
+    lfs.chdir(build_suffix)
     local pkg_path = lfs.currentdir()
     if not lfs.attributes(".build") then
         lfs.mkdir(".build")
@@ -40,6 +40,8 @@ function self.build(repository, name, skip_dependencies)
         rebuild = false
     end
     lfs.chdir(".build")
+    build_suffix = build_suffix .. "/.build"
+    local build_path = lfs.currentdir()
 
     if rebuild then
         if package.sources then
@@ -87,7 +89,10 @@ function self.build(repository, name, skip_dependencies)
 
     lfs.chdir(base_path)
 
-    os.execute("bwrap --ro-bind /bin /bin --ro-bind /lib /lib --ro-bind /sbin /sbin /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
+    os.execute("bwrap --ro-bind /bin /bin --ro-bind /lib /lib --ro-bind /sbin /sbin --ro-bind . /pkh --bind " ..
+        build_path ..
+        " /pkh/" ..
+        build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
 
     if package.variants then
         for index, _ in pairs(package.variants) do
