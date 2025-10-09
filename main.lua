@@ -109,7 +109,7 @@ function self.build(repository, name, skip_dependencies)
     lfs.chdir(debug.getinfo(1).source:match("@?(.*/)"))
 
     -- TODO: run with bwrap
-    os.execute("lua untrusted_build.lua " .. repository .. " " .. package .. " " .. (rebuild and "1" or "0"))
+    os.execute("lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
 
     if package.variants then
         for index, _ in pairs(package.variants) do
