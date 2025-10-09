@@ -1,3 +1,4 @@
+require "global"
 local lfs = require "lfs"
 
 local function pack(package, variant)
