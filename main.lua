@@ -93,7 +93,8 @@ function self.build(repository, name, skip_dependencies)
         end
     end
 
-    lfs.chdir(base_path)
+    -- lfs.chdir(base_path)
+    lfs.chdir(build_path)
 
     -- TODO: run with bwrap
     os.execute("lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
