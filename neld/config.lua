@@ -33,6 +33,7 @@ return {
             "sed",
             "util-linux",
 
+            "pcre2",
             "grep",
 
             "libmd",
@@ -85,8 +86,6 @@ return {
         "rsync",
         "cpio",
         "python",
-
-        "pcre2",
 
         "binutils",
         "make",
