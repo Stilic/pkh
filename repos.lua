@@ -4,11 +4,6 @@ local lfs = require "lfs"
 local llby = require "lullaby"
 local tools = require "tools"
 
-local current_directory = lfs.currentdir()
-package.path = package.path
-    .. ";" .. current_directory .. "/?.lua"
-    .. ";" .. current_directory .. "/?/init.lua"
-
 local config = require "neld.config"
 
 local self = { available_packages = {} }

@@ -1,3 +1,11 @@
+pcall(require, "luarocks.loader")
+local lfs = require "lfs"
+
+local current_directory = lfs.currentdir()
+package.path = package.path
+    .. ";" .. current_directory .. "/?.lua"
+    .. ";" .. current_directory .. "/?/init.lua"
+
 function pkg(module)
     local name = module
     module = require("pickle-linux." .. module)
