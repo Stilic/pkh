@@ -16,7 +16,7 @@ local function pack(package, variant)
     os.execute("rm -rf " .. filesystem)
     lfs.mkdir(filesystem)
 
-    print(lfs.currentdir)
+    print(lfs.currentdir())
 
     local ppack = variant
     if ppack then
