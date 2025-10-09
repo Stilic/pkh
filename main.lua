@@ -89,7 +89,7 @@ function self.build(repository, name, skip_dependencies)
 
     lfs.chdir(base_path)
 
-    os.execute("bwrap --ro-bind /bin /bin --ro-bind /lib /lib --ro-bind /sbin /sbin --ro-bind . /pkh --bind " ..
+    os.execute("bwrap --chdir /pkh --ro-bind /bin /bin --ro-bind /lib /lib --ro-bind /sbin /sbin --ro-bind . /pkh --bind " ..
         build_path ..
         " /pkh/" ..
         build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
