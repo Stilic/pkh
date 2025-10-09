@@ -28,52 +28,8 @@ function self.get_file(name, version, variant)
     return file .. "," .. version .. ".sqsh"
 end
 
-local function pack(package, build_path, variant)
-    -- create the filesystem
-    local filesystem = "filesystem"
-    if variant then
-        filesystem = filesystem .. "-" .. variant.name
-    end
-    os.execute("rm -rf " .. filesystem)
-    lfs.mkdir(filesystem)
-
-    local ppack = variant
-    if ppack then
-        ppack = variant.pack
-        if ppack then
-            ppack()
-        end
-    else
-        ppack = package.pack
-        if ppack then
-            ppack()
-        end
-    end
-    if not ppack then
-        return false
-    end
-
-    lfs.chdir(build_path)
-
-    -- remove libtool archives as they're useless
-    os.execute("find " .. filesystem .. " -type f -name *.la -exec rm {} +")
-
-    -- make the archive
-    -- TODO: make the variant stuff more compact
-    local vname = nil
-    if variant then
-        vname = variant.name
-    end
-    local file = self.get_file(package.name, package.version, vname)
-    os.remove(file)
-    os.execute("mksquashfs " .. filesystem .. " " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
-
-    return true
-end
 function self.build(repository, name, skip_dependencies)
-    local archived = true
-
-    local needed, og_path, package = true, lfs.currentdir(), pkg(repository .. "." .. name)
+    local rebuild, package = true, pkg(repository .. "." .. name)
 
     if not skip_dependencies then
         -- TODO: install the packages
@@ -101,12 +57,12 @@ function self.build(repository, name, skip_dependencies)
     if not lfs.attributes(".build") then
         lfs.mkdir(".build")
     elseif lfs.attributes(".build/" .. self.get_file(name, package.version)) then
-        needed = false
+        rebuild = false
     end
     lfs.chdir(".build")
 
     local build_path = lfs.currentdir()
-    if needed then
+    if rebuild then
         if package.sources then
             for _, source in ipairs(package.sources) do
                 local path, url = source[1], source[2]
@@ -148,37 +104,19 @@ function self.build(repository, name, skip_dependencies)
                 end
             end
         end
-
-        local build = package.build
-        if build then
-            build()
-            lfs.chdir(build_path)
-        end
     end
 
-    archived = pack(package, build_path)
+    lfs.chdir(debug.getinfo(1).source:match("@?(.*/)"))
+
+    -- TODO: run with bwrap
+    os.execute("lua untrusted_build.lua " .. repository .. " " .. package .. " " .. (rebuild and "1" or "0"))
 
     if package.variants then
-        for index, variant in pairs(package.variants) do
-            variant.name = index
-
-            local build = variant.build
-            if build then
-                build()
-            end
-
-            lfs.chdir(build_path)
-            archived = pack(package, build_path, variant)
-
+        for index, _ in pairs(package.variants) do
             built_packages[name .. "-" .. index] = true
         end
     end
-
-    lfs.chdir(og_path)
-
     built_packages[name] = true
-
-    return archived
 end
 
 function self.unpack(path, repository, name, variant)

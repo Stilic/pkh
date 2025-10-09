@@ -2,6 +2,7 @@
     "diagnostics.disable": [
         "unbalanced-assignments",
         "lowercase-global",
-        "need-check-nil"
+        "need-check-nil",
+        "discard-returns"
     ]
 }
