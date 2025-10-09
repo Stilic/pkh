@@ -4,9 +4,10 @@ local lfs = require "lfs"
 local tools = require "tools"
 
 local build_dir = "pickle-linux/" .. arg[1] .. "/" .. arg[2] .. "/.build"
-lfs.chdir(build_dir)
 
 local function pack(package, variant)
+    lfs.chdir(build_dir)
+
     -- create the filesystem
     local filesystem = "filesystem"
     if variant then
@@ -27,8 +28,6 @@ local function pack(package, variant)
             ppack()
         end
     end
-
-    lfs.chdir(build_dir)
 
     -- remove libtool archives as they're useless
     os.execute("find " .. filesystem .. " -type f -name *.la -exec rm {} +")
@@ -58,22 +57,20 @@ end
 if arg[3] == "1" then
     local build = package.build
     if build then
-        build()
         lfs.chdir(build_dir)
+        build()
     end
 end
 pack(package)
 
 if package.variants then
     for index, variant in pairs(package.variants) do
-        lfs.chdir(build_dir)
-
         variant.name = index
 
         local build = variant.build
         if build then
-            build()
             lfs.chdir(build_dir)
+            build()
         end
 
         pack(package, variant)
