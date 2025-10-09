@@ -44,6 +44,7 @@ function self.build(repository, name, skip_dependencies)
     if not lfs.attributes(".build") then
         lfs.mkdir(".build")
     elseif lfs.attributes(".build/" .. self.get_file(name, package.version)) then
+        print("dUHSHSHSH")
         rebuild = false
     end
     lfs.chdir(".build")
