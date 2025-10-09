@@ -87,8 +87,7 @@ function self.build(repository, name, skip_dependencies)
 
     lfs.chdir(base_path)
 
-    -- TODO: run with bwrap
-    os.execute("lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
+    os.execute("bwrap --ro-bind /bin /bin --ro-bind /lib /lib --ro-bind /sbin /sbin /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
 
     if package.variants then
         for index, _ in pairs(package.variants) do
