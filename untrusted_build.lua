@@ -30,25 +30,28 @@ if not package.name then
     package.repository, package.name = repository, name
 end
 
+local build_dir = "pickle-linux/" .. arg[1] .. "/" .. arg[2] .. "/.build"
+lfs.chdir()
+
 if arg[3] == "1" then
     local build = package.build
     if build then
         build()
-        lfs.chdir("/")
+        lfs.chdir(build_dir)
     end
 end
 archived = pack(package)
 
 if package.variants then
     for index, variant in pairs(package.variants) do
-        lfs.chdir("/")
+        lfs.chdir(build_dir)
 
         variant.name = index
 
         local build = variant.build
         if build then
             build()
-            lfs.chdir("/")
+            lfs.chdir(build_dir)
         end
 
         archived = pack(package, variant)
