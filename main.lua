@@ -29,7 +29,7 @@ function self.get_file(name, version, variant)
 end
 
 function self.build(repository, name, skip_dependencies)
-    local rebuild, package = true, pkg(repository .. "." .. name)
+    local base_path, rebuild, package = lfs.currentdir(), true, pkg(repository .. "." .. name)
 
     if not skip_dependencies then
         -- TODO: install the packages
@@ -106,7 +106,7 @@ function self.build(repository, name, skip_dependencies)
         end
     end
 
-    lfs.chdir(debug.getinfo(1).source:match("@?(.*/)"))
+    lfs.chdir(base_path)
 
     -- TODO: run with bwrap
     os.execute("lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
