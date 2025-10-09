@@ -14,9 +14,6 @@ local function pack(package, variant)
             ppack()
         end
     end
-    if not ppack then
-        return false
-    end
 end
 
 local name = arg[1] .. "." .. arg[2]
@@ -40,7 +37,7 @@ if arg[3] == "1" then
         lfs.chdir(build_dir)
     end
 end
-archived = pack(package)
+pack(package)
 
 if package.variants then
     for index, variant in pairs(package.variants) do
@@ -54,6 +51,6 @@ if package.variants then
             lfs.chdir(build_dir)
         end
 
-        archived = pack(package, variant)
+        pack(package, variant)
     end
 end

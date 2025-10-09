@@ -96,6 +96,7 @@ function self.build(repository, name, skip_dependencies)
     lfs.chdir(base_path)
 
     -- TODO: run with bwrap
+    print("REBUILD NEEDED: " .. str(rebuild))
     os.execute("lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
 
     if package.variants then
