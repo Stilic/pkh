@@ -3,7 +3,7 @@ require "global"
 local lfs = require "lfs"
 local tools = require "tools"
 
-local build_dir = lfs.currentdir() .. "pickle-linux/" .. arg[1] .. "/" .. arg[2] .. "/.build"
+local build_dir = lfs.currentdir() .. "/pickle-linux/" .. arg[1] .. "/" .. arg[2] .. "/.build"
 
 local function pack(package, variant)
     lfs.chdir(build_dir)
