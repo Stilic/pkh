@@ -3,17 +3,10 @@ require "global"
 
 local lfs = require "lfs"
 local llby = require "lullaby"
+local tools = require "tools"
 
 local self = {}
 local built_packages = {}
-
-function self.get_file(name, version, variant)
-    local file = name
-    if variant then
-        file = file .. "." .. variant
-    end
-    return file .. "," .. version .. ".sqsh"
-end
 
 function self.build(repository, name, skip_dependencies)
     local base_path, rebuild, package = lfs.currentdir(), true, pkg(repository .. "." .. name)
@@ -43,13 +36,11 @@ function self.build(repository, name, skip_dependencies)
     local pkg_path = lfs.currentdir()
     if not lfs.attributes(".build") then
         lfs.mkdir(".build")
-    elseif lfs.attributes(".build/" .. self.get_file(name, package.version)) then
-        print("dUHSHSHSH")
+    elseif lfs.attributes(".build/" .. tools.get_file(name, package.version)) then
         rebuild = false
     end
     lfs.chdir(".build")
 
-    local build_path = lfs.currentdir()
     if rebuild then
         if package.sources then
             for _, source in ipairs(package.sources) do
@@ -97,7 +88,6 @@ function self.build(repository, name, skip_dependencies)
     lfs.chdir(base_path)
 
     -- TODO: run with bwrap
-    print("REBUILD NEEDED: " .. tostring(rebuild))
     os.execute("lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
 
     if package.variants then
@@ -112,7 +102,7 @@ function self.unpack(path, repository, name, variant)
     return os.execute("unsquashfs -d " ..
         path ..
         " -f pickle-linux/" ..
-        repository .. "/" .. name .. "/.build/" .. self.get_file(name, pkg(repository .. "." .. name).version, variant))
+        repository .. "/" .. name .. "/.build/" .. tools.get_file(name, pkg(repository .. "." .. name).version, variant))
 end
 
 return self

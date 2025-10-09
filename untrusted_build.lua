@@ -1,7 +1,20 @@
 require "global"
+
 local lfs = require "lfs"
+local tools = require "tools"
+
+local build_dir = "pickle-linux/" .. arg[1] .. "/" .. arg[2] .. "/.build"
+lfs.chdir(build_dir)
 
 local function pack(package, variant)
+    -- create the filesystem
+    local filesystem = "filesystem"
+    if variant then
+        filesystem = filesystem .. "-" .. variant.name
+    end
+    os.execute("rm -rf " .. filesystem)
+    lfs.mkdir(filesystem)
+
     local ppack = variant
     if ppack then
         ppack = variant.pack
@@ -14,6 +27,21 @@ local function pack(package, variant)
             ppack()
         end
     end
+
+    lfs.chdir(build_dir)
+
+    -- remove libtool archives as they're useless
+    os.execute("find " .. filesystem .. " -type f -name *.la -exec rm {} +")
+
+    -- make the archive
+    -- TODO: make the variant stuff more compact
+    local vname = nil
+    if variant then
+        vname = variant.name
+    end
+    local file = tools.get_file(package.name, package.version, vname)
+    os.remove(file)
+    os.execute("mksquashfs " .. filesystem .. " " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
 end
 
 local name = arg[1] .. "." .. arg[2]
@@ -26,9 +54,6 @@ if not package.name then
     end
     package.repository, package.name = repository, name
 end
-
-local build_dir = "pickle-linux/" .. arg[1] .. "/" .. arg[2] .. "/.build"
-lfs.chdir(build_dir)
 
 if arg[3] == "1" then
     local build = package.build

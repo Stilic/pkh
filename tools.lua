@@ -6,6 +6,14 @@ local self = {}
 self.DEFAULT_CFLAGS = "-O2 -fPIC"
 self.DEFAULT_CPPFLAGS = self.DEFAULT_CFLAGS
 
+function self.get_file(name, version, variant)
+    local file = name
+    if variant then
+        file = file .. "." .. variant
+    end
+    return file .. "," .. version .. ".sqsh"
+end
+
 function self.get_flags(cflags, cppflags)
     return 'CC=gcc CPATH=/usr/include CFLAGS="' ..
         self.DEFAULT_CFLAGS ..

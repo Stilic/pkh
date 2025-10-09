@@ -1,6 +1,8 @@
 pcall(require, "luarocks.loader")
+
 local lfs = require "lfs"
 local llby = require "lullaby"
+local tools = require "tools"
 
 local current_directory = lfs.currentdir()
 package.path = package.path
@@ -8,7 +10,6 @@ package.path = package.path
     .. ";" .. current_directory .. "/?/init.lua"
 
 local config = require "neld.config"
-local pkh = require "main"
 
 local self = { available_packages = {} }
 
@@ -45,7 +46,7 @@ function self.download(repository, name, directory, skip_dependencies)
 
     local versions = self.available_packages[name]
     if versions then
-        local file_name = pkh.get_file(name, versions[1])
+        local file_name = tools.get_file(name, versions[1])
         if not lfs.attributes(file_name) then
             llby.net.srequest(config.repository .. "/packages/" .. repository .. "/" .. file_name).content:file(file_name)
         end
