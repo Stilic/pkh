@@ -3,7 +3,7 @@ require "global"
 local lfs = require "lfs"
 local tools = require "tools"
 
-local build_dir = "pickle-linux/" .. arg[1] .. "/" .. arg[2] .. "/.build"
+local build_dir = lfs.currentdir() .. "pickle-linux/" .. arg[1] .. "/" .. arg[2] .. "/.build"
 
 local function pack(package, variant)
     lfs.chdir(build_dir)
@@ -15,8 +15,6 @@ local function pack(package, variant)
     end
     os.execute("rm -rf " .. filesystem)
     lfs.mkdir(filesystem)
-
-    print(lfs.currentdir())
 
     local ppack = variant
     if ppack then
