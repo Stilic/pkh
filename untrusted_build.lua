@@ -31,7 +31,7 @@ if not package.name then
 end
 
 local build_dir = "pickle-linux/" .. arg[1] .. "/" .. arg[2] .. "/.build"
-lfs.chdir()
+lfs.chdir(build_dir)
 
 if arg[3] == "1" then
     local build = package.build
