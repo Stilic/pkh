@@ -1,11 +1,8 @@
+require "global"
 pcall(require, "luarocks.loader")
+
 local lfs = require "lfs"
 local pkh = require "main"
-
-local current_directory = lfs.currentdir()
-package.path = package.path
-    .. ";" .. current_directory .. "/?.lua"
-    .. ";" .. current_directory .. "/?/init.lua"
 
 pkh.init()
 
