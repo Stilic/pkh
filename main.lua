@@ -7,6 +7,7 @@ local tools = require "tools"
 
 local self = {}
 local built_packages = {}
+local mnt_path = lfs.currentdir() .. "/neld/.build/work/mnt"
 
 function self.build(repository, name, skip_dependencies)
     local base_path, rebuild, package = lfs.currentdir(), true, pkg(repository .. "." .. name)
@@ -89,9 +90,16 @@ function self.build(repository, name, skip_dependencies)
 
     lfs.chdir(base_path)
 
-    -- TODO: mount our own rootfs and user packages
+    -- TODO: mount our own user packages
+    local root_path = mnt_path .. "/root"
     os.execute(
-        "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /pkh --dev /dev --tmpfs /tmp --ro-bind /bin /bin --ro-bind /lib /lib --ro-bind /include /include --ro-bind /sbin /sbin --ro-bind /usr /usr --ro-bind . /pkh --bind " ..
+        "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /pkh --dev /dev --tmpfs /tmp --ro-bind " ..
+        root_path ..
+        "/bin /bin --ro-bind " ..
+        root_path ..
+        "/lib /lib --ro-bind " ..
+        root_path ..
+        "/include /include --ro-bind " .. root_path .. "/sbin /sbin --ro-bind /usr /usr --ro-bind . /pkh --bind " ..
         build_path ..
         " /pkh/" ..
         build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
@@ -109,6 +117,19 @@ function self.unpack(path, repository, name, variant)
         path ..
         " -f pickle-linux/" ..
         repository .. "/" .. name .. "/.build/" .. tools.get_file(name, pkg(repository .. "." .. name).version, variant))
+end
+
+function self.init()
+    local root_path = mnt_path .. "/root"
+
+    lfs.mkdir(mnt_path)
+    lfs.mkdir(root_path)
+
+    os.execute("mount neld/.build/work/rootfs.sqsh " .. root_path)
+end
+
+function self.close()
+    os.execute("umount neld/.build/work/mnt/root")
 end
 
 return self

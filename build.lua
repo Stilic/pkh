@@ -7,6 +7,8 @@ package.path = package.path
     .. ";" .. current_directory .. "/?.lua"
     .. ";" .. current_directory .. "/?/init.lua"
 
+pkh.init()
+
 local repos = "pickle-linux"
 for layer in lfs.dir(repos) do
     if layer ~= "." and layer ~= ".." then
@@ -21,3 +23,5 @@ for layer in lfs.dir(repos) do
         end
     end
 end
+
+pkh.close()
