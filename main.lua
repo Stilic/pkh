@@ -91,7 +91,7 @@ function self.build(repository, name, skip_dependencies)
 
     -- TODO: mount our own rootfs and user packages
     os.execute(
-        "bwrap --unshare-user-try --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /pkh --dev /dev --tmpfs /tmp --ro-bind /bin /bin --ro-bind /lib /lib --ro-bind /include /include --ro-bind /sbin /sbin --ro-bind /usr /usr --ro-bind . /pkh --bind " ..
+        "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /pkh --dev /dev --tmpfs /tmp --ro-bind /bin /bin --ro-bind /lib /lib --ro-bind /include /include --ro-bind /sbin /sbin --ro-bind /usr /usr --ro-bind . /pkh --bind " ..
         build_path ..
         " /pkh/" ..
         build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
