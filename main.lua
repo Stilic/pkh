@@ -41,7 +41,7 @@ local function prepare_mount(overlay, packages, prebuilt)
 
         local pkg_base = "/.build/"
         if prebuilt then
-            pkg_base = "/neld" .. pkg_base
+            pkg_base = "neld" .. pkg_base
         else
             prepare_mount(overlay, p.dev_dependencies)
             pkg_base = "pickle-linux/" .. p.repository .. "/" .. p.name .. pkg_base
