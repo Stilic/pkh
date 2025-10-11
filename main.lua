@@ -49,7 +49,6 @@ local function prepare_mount(overlay, packages, prebuilt)
         prepare_mount(overlay, p.dependencies, prebuilt)
 
         lfs.mkdir(mountpoint)
-        print(lfs.attributes(pkg_base .. tools.get_file(p.name, p.version)))
         os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
     end
 end
@@ -104,7 +103,6 @@ function self.build(repository, name, skip_dependencies)
 
     local lowerdir = ""
     for _, m in pairs(overlay) do
-        print("MOUNTING: " .. m)
         lowerdir = lowerdir .. m .. ":"
     end
     os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
