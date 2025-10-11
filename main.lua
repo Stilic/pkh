@@ -53,21 +53,6 @@ local function prepare_mount(overlay, packages, prebuilt)
     end
 end
 
-local function mount(suffix, ...)
-    local overlay = {}
-    prepare_mount(overlay, ...)
-
-    local lowerdir = ""
-    for _, m in pairs(overlay) do
-        lowerdir = lowerdir .. m .. ":"
-    end
-
-    local mountpoint = mnt_path .. "/" .. suffix
-    lfs.mkdir(mountpoint)
-    os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. mountpoint)
-    return mountpoint
-end
-
 function self.init()
     lfs.mkdir(mnt_path)
     lfs.mkdir(root_path)
@@ -108,13 +93,18 @@ function self.build(repository, name, skip_dependencies)
         end
     end
 
+    local overlay = {}
+
     -- TODO: add support for variants
+    prepare_mount(overlay, config.user_packages, true)
+    prepare_mount(overlay, package.dev_dependencies)
+    prepare_mount(overlay, package.dependencies)
+
     local lowerdir = ""
-    for _, m in pairs({ mount("usrpkg", config.user_packages, true),
-        mount("devdep", package.dev_dependencies),
-        mount("dep", package.dependencies) }) do
+    for _, m in pairs(overlay) do
         lowerdir = lowerdir .. m .. ":"
     end
+    print(#("lowerdir=" .. lowerdir))
     os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
 
     local build_suffix = "pickle-linux/" .. repository .. "/" .. name
