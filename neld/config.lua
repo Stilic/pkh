@@ -84,17 +84,17 @@ return {
         -- final set of packages required to kickstart the process
         "gcc",
 
-        "binutils",
-        "make",
-        "pkgconf",
-        "m4",
-        "bison",
+        -- "binutils",
+        -- "make",
+        -- "pkgconf",
+        -- "m4",
+        -- "bison",
 
-        "libtool",
-        "automake",
-        "autoconf",
+        -- "libtool",
+        -- "automake",
+        -- "autoconf",
 
-        "meson",
+        -- "meson",
         -- 
 
         -- "libunistring",
