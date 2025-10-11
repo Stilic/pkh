@@ -139,7 +139,6 @@ function self.build(repository, name, skip_dependencies)
 
     lfs.chdir(base_path)
 
-    -- TODO: mount our own user packages
     local root_path = mnt_path .. "/root"
     os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /pkh --dev /dev --tmpfs /tmp --ro-bind " ..
