@@ -25,19 +25,18 @@ local function prepare_mount(mountpoints, packages, prebuilt)
             p = pkg("user." .. p)
         end
 
-        prepare_mount(mountpoints, p.dev_dependencies, prebuilt)
-        prepare_mount(mountpoints, p.dependencies, prebuilt)
-
-        local mountpoint = mnt_path .. "/" .. p.name
-        table.insert(mountpoints, mountpoint)
-        lfs.mkdir(mountpoint)
-
         local pkg_base = "/.build/"
         if prebuilt then
             pkg_base = "neld" .. pkg_base
         else
             pkg_base = "pickle-linux/" .. p.repository .. "/" .. p.name .. pkg_base
+            prepare_mount(mountpoints, p.dev_dependencies, prebuilt)
         end
+        prepare_mount(mountpoints, p.dependencies)
+
+        local mountpoint = mnt_path .. "/" .. p.name
+        table.insert(mountpoints, mountpoint)
+        lfs.mkdir(mountpoint)
         os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
     end
 end

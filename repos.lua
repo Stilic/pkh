@@ -57,11 +57,6 @@ function self.download(repository, name, directory, skip_dependencies)
                     self.download(dep.repository, dep.name, directory)
                 end
             end
-            if package.dev_dependencies then
-                for _, dep in ipairs(package.dev_dependencies) do
-                    self.download(dep.repository, dep.name, directory)
-                end
-            end
         end
     else
         print("ERROR: Package `" .. name .. "` isn't available!")
