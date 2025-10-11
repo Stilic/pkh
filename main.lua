@@ -34,11 +34,6 @@ local function prepare_mount(overlay, packages, prebuilt)
         local mountpoint = mnt_path .. "/" .. p.name
         overlay[p.name] = mountpoint
 
-        if mountpoints[p.name] then
-            return
-        end
-        mountpoints[p.name] = mountpoint
-
         local pkg_base = "/.build/"
         if prebuilt then
             pkg_base = "neld" .. pkg_base
@@ -48,8 +43,11 @@ local function prepare_mount(overlay, packages, prebuilt)
         end
         prepare_mount(overlay, p.dependencies, prebuilt)
 
-        lfs.mkdir(mountpoint)
-        os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
+        if not mountpoint[p.name] then
+            mountpoints[p.name] = mountpoint
+            lfs.mkdir(mountpoint)
+            os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
+        end
     end
 end
 
