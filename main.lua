@@ -175,7 +175,7 @@ function self.build(repository, name, skip_dependencies)
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind "
         .. root_path ..
         " / --dev /dev --tmpfs /tmp" ..
-        (overlay_length ~= 0 and "" or (" --ro-bind " .. overlay_path .. " /usr")) ..
+        (overlay_length == 0 and "" or (" --ro-bind " .. overlay_path .. " /usr")) ..
         " --bind " .. build_path .. " /root/" ..
         build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
 
