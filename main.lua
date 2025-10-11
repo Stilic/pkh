@@ -167,7 +167,6 @@ function self.build(repository, name, skip_dependencies)
 
     lfs.chdir(cwd)
 
-    local root_path = mnt_path .. "/root"
     local rebuild_option = " 0"
     if rebuild then
         rebuild_option = " 1"
