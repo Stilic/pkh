@@ -41,6 +41,8 @@ local function prepare_mount(mountpoints, packages, prebuilt)
         mountpoints[p.name] = mountpoint
         lfs.mkdir(mountpoint)
         os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
+
+        print("MOUNTING: " .. p.name)
     end
 end
 
@@ -63,7 +65,6 @@ function self.build(repository, name, skip_dependencies)
     local base_path, rebuild, package = lfs.currentdir(), true, pkg(repository .. "." .. name)
 
     if not skip_dependencies then
-        -- TODO: install the packages
         if package.dev_dependencies then
             for _, p in ipairs(package.dev_dependencies) do
                 local name = p.name
