@@ -90,9 +90,9 @@ return {
         "m4",
         "bison",
 
-        -- "libtool",
-        -- "automake",
-        -- "autoconf",
+        "libtool",
+        "automake",
+        "autoconf",
 
         -- "meson",
         -- 
