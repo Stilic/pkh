@@ -85,10 +85,10 @@ return {
         "gcc",
 
         "binutils",
-        -- "make",
-        -- "pkgconf",
-        -- "m4",
-        -- "bison",
+        "make",
+        "pkgconf",
+        "m4",
+        "bison",
 
         -- "libtool",
         -- "automake",
