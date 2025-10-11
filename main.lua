@@ -14,9 +14,8 @@ local overlay_path = mnt_path .. "/usr"
 local function mount(...)
     local mountpoints = {}
 
-    for _, packages in ipairs(arg) do
+    for _, packages in ipairs({ ... }) do
         if packages then
-            ---@diagnostic disable-next-line: param-type-mismatch
             for _, p in ipairs(packages) do
                 if p.repository ~= "main" then
                     local mountpoint = mnt_path .. "/" .. p.name
@@ -25,21 +24,24 @@ local function mount(...)
                         p.repository ..
                         "/" ..
                         p.name .. "/.build/" .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
-                    print(mountpoint)
                     mountpoints:insert(mountpoint)
                 end
             end
         end
     end
 
-    local length, lowerdir = #mountpoints, ""
+    local length = #mountpoints
+    if length == 0 then
+        return nil
+    end
+
+    local lowerdir = ""
     for i, m in ipairs(mountpoints) do
         lowerdir = lowerdir .. m
         if i ~= length then
             lowerdir = lowerdir .. ":"
         end
     end
-    print(lowerdir)
     os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir .. " " .. overlay_path)
 
     return mountpoints
@@ -157,8 +159,10 @@ function self.build(repository, name, skip_dependencies)
     end
     built_packages[name] = true
 
-    for _, m in ipairs(mountpoints) do
-        os.execute("umount " .. m)
+    if mountpoints then
+        for _, m in ipairs(mountpoints) do
+            os.execute("umount " .. m)
+        end
     end
 end
 
