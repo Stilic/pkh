@@ -24,26 +24,21 @@ local function prepare_mount(mountpoints, packages, prebuilt)
         if type(p) == "string" then
             p = pkg("user." .. p)
         end
+        if mountpoints[p.name] then
+            return
+        end
 
         local pkg_base = "/.build/"
         if prebuilt then
             pkg_base = "neld" .. pkg_base
         else
-            if p.repository == "user" then
-                for _, n in ipairs(config.user_packages) do
-                    if p.name == n then
-                        return
-                    end
-                end
-            end
-            prepare_mount(mountpoints, p.dev_dependencies, prebuilt)
-
+            prepare_mount(mountpoints, p.dev_dependencies)
             pkg_base = "pickle-linux/" .. p.repository .. "/" .. p.name .. pkg_base
         end
-        prepare_mount(mountpoints, p.dependencies)
+        prepare_mount(mountpoints, p.dependencies, prebuilt)
 
         local mountpoint = mnt_path .. "/" .. p.name
-        table.insert(mountpoints, mountpoint)
+        mountpoints[p.name] = mountpoint
         lfs.mkdir(mountpoint)
         os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
     end
@@ -96,11 +91,12 @@ function self.build(repository, name, skip_dependencies)
 
     local length = #mountpoints
     if length ~= 0 then
-        local lowerdir = ""
-        for i, m in ipairs(mountpoints) do
+        local lowerdir, i = "", 1
+        for _, m in pairs(mountpoints) do
             lowerdir = lowerdir .. m
             if i ~= length then
                 lowerdir = lowerdir .. ":"
+                i = i + 1
             end
         end
         os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir .. " " .. overlay_path)
@@ -179,7 +175,7 @@ function self.build(repository, name, skip_dependencies)
     end
     built_packages[name] = true
 
-    for _, m in ipairs(mountpoints) do
+    for _, m in pairs(mountpoints) do
         os.execute("umount " .. m)
     end
     os.execute("umount " .. overlay_path)
