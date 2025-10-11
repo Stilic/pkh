@@ -77,38 +77,40 @@ return {
         user = { "gcc.libs" }
     },
     user_packages = {
-        "libunistring",
-        "libidn2",
-        "nghttp2",
-        "curl",
-        --
-
-        "rsync",
-        "cpio",
-        "python",
-
-        "binutils",
-        "make",
-        "pkgconf",
-        "m4",
+        -- final set of packages required to kickstart the process
         "gcc",
 
-        "flex",
-        "bison",
-        "elfutils",
-        "dosfstools",
-        "meson",
-
-        -- autotools
-        "libtool",
-        "automake",
-        "autoconf",
+        -- "libunistring",
+        -- "libidn2",
+        -- "nghttp2",
+        -- "curl",
         --
 
-        "nano",
+        -- "rsync",
+        -- "cpio",
+        -- "python",
 
-        "git",
+        -- "binutils",
+        -- "make",
+        -- "pkgconf",
+        -- "m4",
 
-        "cottonfetch",
+        -- "flex",
+        -- "bison",
+        -- "elfutils",
+        -- "dosfstools",
+        -- "meson",
+
+        -- autotools
+        -- "libtool",
+        -- "automake",
+        -- "autoconf",
+        --
+
+        -- "nano",
+
+        -- "git",
+
+        -- "cottonfetch",
     }
 }
