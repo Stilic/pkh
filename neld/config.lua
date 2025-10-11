@@ -84,6 +84,19 @@ return {
         -- final set of packages required to kickstart the process
         "gcc",
 
+        "binutils",
+        "make",
+        "pkgconf",
+        "m4",
+        "bison",
+
+        "libtool",
+        "automake",
+        "autoconf",
+
+        "meson",
+        -- 
+
         -- "libunistring",
         -- "libidn2",
         -- "nghttp2",
@@ -94,22 +107,11 @@ return {
         -- "cpio",
         -- "python",
 
-        -- "binutils",
-        -- "make",
-        -- "pkgconf",
-        -- "m4",
-
         -- "flex",
-        -- "bison",
         -- "elfutils",
         -- "dosfstools",
-        -- "meson",
 
-        -- autotools
-        -- "libtool",
-        -- "automake",
-        -- "autoconf",
-        --
+
 
         -- "nano",
 
