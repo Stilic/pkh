@@ -96,7 +96,6 @@ function self.build(repository, name, skip_dependencies)
     local overlay = {}
 
     -- TODO: add support for variants
-    lfs.chdir(cwd)
     prepare_mount(overlay, config.user_packages, true)
     prepare_mount(overlay, package.dev_dependencies)
     prepare_mount(overlay, package.dependencies)
@@ -105,7 +104,7 @@ function self.build(repository, name, skip_dependencies)
     for _, m in pairs(overlay) do
         lowerdir = lowerdir .. m .. ":"
     end
-    os.execute("mount -v -t overlay overlay -o 'lowerdir=" .. lowerdir:sub(1, -2) .. "' " .. overlay_path)
+    os.execute("mount -t overlay overlay -o 'lowerdir=" .. lowerdir:sub(1, -2) .. "' " .. overlay_path)
 
     local build_suffix = "pickle-linux/" .. repository .. "/" .. name
     lfs.chdir(build_suffix)
