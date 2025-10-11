@@ -61,7 +61,7 @@ local function overlay_group(group, index)
 end
 
 local function mount_overlay(mounts)
-    local MAX_GROUP_SIZE = 2
+    local MAX_GROUP_SIZE = 5
     local overlays = {}
 
     for i = 1, #mounts, MAX_GROUP_SIZE do
