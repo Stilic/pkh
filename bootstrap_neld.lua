@@ -22,9 +22,9 @@ llby.net.srequest(config.repository .. "/rootfs.sqsh").content:file("rootfs.sqsh
 
 print("EXTRACTING KERNEL")
 lfs.mkdir("linux")
-repos.download("main", "linux", "linux")
+repos.download("main", "linux", "linux", true)
 lfs.link("linux/lib/modules/" .. repos.available_packages["linux"][1] .. "/vmlinuz", "vmlinuz", true)
 
 print("CONFIGURING RAMDISK")
 lfs.mkdir("ram_root")
-repos.download("user", "busybox-static", "ram_root")
+repos.download("user", "busybox-static", "ram_root", true)

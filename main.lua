@@ -30,7 +30,7 @@ local function prepare_mount(packages, prebuilt)
         prepare_mount(p.dependencies)
 
         local mountpoint = mnt_path .. "/" .. p.name
-        mountpoints:insert(mountpoint)
+        table.insert(mountpoints, mountpoint)
         lfs.mkdir(mountpoint)
 
         os.execute("mount " ..
@@ -83,18 +83,16 @@ function self.build(repository, name, skip_dependencies)
     prepare_mount(package.dependencies)
 
     local length = #mountpoints
-    if length == 0 then
-        return
-    end
-
-    local lowerdir = ""
-    for i, m in ipairs(mountpoints) do
-        lowerdir = lowerdir .. m
-        if i ~= length then
-            lowerdir = lowerdir .. ":"
+    if length ~= 0 then
+        local lowerdir = ""
+        for i, m in ipairs(mountpoints) do
+            lowerdir = lowerdir .. m
+            if i ~= length then
+                lowerdir = lowerdir .. ":"
+            end
         end
+        os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir .. " " .. overlay_path)
     end
-    os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir .. " " .. overlay_path)
 
     local build_suffix = "pickle-linux/" .. repository .. "/" .. name
     lfs.chdir(build_suffix)

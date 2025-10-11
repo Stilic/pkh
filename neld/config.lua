@@ -12,6 +12,7 @@ return {
             "argp",
             "readline",
             "curses",
+
             "gperf",
 
             "libxml2",
@@ -65,11 +66,6 @@ return {
             "sysklogd",
             "dinit",
 
-            -- for gcc and awk
-            "gmp",
-            "mpfr",
-            "mpc",
-
             -- TODO: package pkh itself
             "lzo",
             "squashfs-tools",
@@ -81,40 +77,38 @@ return {
         user = { "gcc.libs" }
     },
     user_packages = {
-        -- final set of packages required to kickstart the process
+        "libunistring",
+        "libidn2",
+        "nghttp2",
+        "curl",
+        --
+
+        "rsync",
+        "cpio",
+        "python",
+
+        "binutils",
+        "make",
+        "pkgconf",
+        "m4",
         "gcc",
 
-        -- "libunistring",
-        -- "libidn2",
-        -- "nghttp2",
-        -- "curl",
-        --
-
-        -- "rsync",
-        -- "cpio",
-        -- "python",
-
-        -- "binutils",
-        -- "make",
-        -- "pkgconf",
-        -- "m4",
-
-        -- "flex",
-        -- "bison",
-        -- "elfutils",
-        -- "dosfstools",
-        -- "meson",
+        "flex",
+        "bison",
+        "elfutils",
+        "dosfstools",
+        "meson",
 
         -- autotools
-        -- "libtool",
-        -- "automake",
-        -- "autoconf",
+        "libtool",
+        "automake",
+        "autoconf",
         --
 
-        -- "nano",
+        "nano",
 
-        -- "git",
+        "git",
 
-        -- "cottonfetch",
+        "cottonfetch",
     }
 }
