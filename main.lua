@@ -38,10 +38,12 @@ local function prepare_mount(overlay, packages)
         mountpoints[p.name] = mountpoint
 
         local pkg_base, is_prebuilt = "/.build/"
-        for _, n in ipairs(config.user_packages) do
-            if n == p.name then
-                is_prebuilt = true
-                break
+        if p.repository == "user" then
+            for _, n in ipairs(config.user_packages) do
+                if n == p.name then
+                    is_prebuilt = true
+                    break
+                end
             end
         end
         if is_prebuilt then
