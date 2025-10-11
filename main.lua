@@ -13,6 +13,10 @@ local overlay_path = mnt_path .. "/usr"
 local mountpoints = {}
 
 local function prepare_mount(packages, prebuilt)
+    if not packages then
+        return
+    end
+
     for _, p in ipairs(packages) do
         if p.repository == "main" then
             return
@@ -21,6 +25,9 @@ local function prepare_mount(packages, prebuilt)
         if type(p) == "string" then
             p = pkg("user." .. p)
         end
+
+        prepare_mount(p.dev_dependencies)
+        prepare_mount(p.dependencies)
 
         local mountpoint = mnt_path .. "/" .. p.name
         mountpoints:insert(mountpoint)
@@ -72,9 +79,8 @@ function self.build(repository, name, skip_dependencies)
 
     -- TODO: add support for variants
     prepare_mount(config.user_packages, true)
-    for _, packages in ipairs({ self.dev_dependencies, self.dependencies }) do
-        prepare_mount(packages, false)
-    end
+    prepare_mount(package.dev_dependencies)
+    prepare_mount(package.dependencies)
 
     local length = #mountpoints
     if length == 0 then
