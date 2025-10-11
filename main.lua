@@ -35,6 +35,7 @@ local function prepare_mount(overlay, packages, prebuilt)
         if mountpoints[p.name] then
             return
         end
+        mountpoints[p.name] = mountpoint
 
         local pkg_base = "/.build/"
         if prebuilt then
@@ -45,7 +46,6 @@ local function prepare_mount(overlay, packages, prebuilt)
         end
         prepare_mount(mountpoints, p.dependencies, prebuilt)
 
-        mountpoints[p.name] = mountpoint
         lfs.mkdir(mountpoint)
         os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
     end
@@ -171,13 +171,24 @@ function self.build(repository, name, skip_dependencies)
     lfs.chdir(base_path)
 
     local root_path = mnt_path .. "/root"
+
+    local usr_option = " "
+    if overlay_length ~= 0 then
+        usr_option = " --ro-bind " .. overlay_path .. " /usr "
+    end
+
+    local rebuild_option = " 0"
+    if rebuild then
+        rebuild_option = " 1"
+    end
+
     os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind "
         .. root_path ..
         " / --dev /dev --tmpfs /tmp" ..
-        (overlay_length == 0 and "" or (" --ro-bind " .. overlay_path .. " /usr")) ..
-        " --bind " .. build_path .. " /root/" ..
-        build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
+        usr_option ..
+        "--bind " .. build_path .. " /root/" ..
+        build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. rebuild_option)
 
     if package.variants then
         for index, _ in pairs(package.variants) do
