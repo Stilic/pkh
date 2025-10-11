@@ -76,6 +76,8 @@ return {
             "lua",
             "luafilesystem",
             "lullaby",
+            "libfuse",
+            "fuse-overlayfs",
             "bubblewrap"
         },
         user = { "gcc.libs" }
