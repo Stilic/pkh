@@ -37,6 +37,7 @@ local function mount(...)
             lowerdir = lowerdir .. ":"
         end
     end
+    print(lowerdir)
     os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir .. " " .. overlay_path)
 
     return mountpoints
