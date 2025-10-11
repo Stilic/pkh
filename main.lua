@@ -33,9 +33,13 @@ local function prepare_mount(packages, prebuilt)
         table.insert(mountpoints, mountpoint)
         lfs.mkdir(mountpoint)
 
-        os.execute("mount " ..
-            (prebuilt and "neld" or ("pickle-linux/" .. p.repository .. "/" .. p.name))
-            .. "/.build/" .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
+        local pkg_base = "/.build/"
+        if prebuilt then
+            pkg_base = "neld" .. pkg_base
+        else
+            pkg_base = "pickle-linux/" .. p.repository .. "/" .. p.name .. pkg_base
+        end
+        os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
     end
 end
 
