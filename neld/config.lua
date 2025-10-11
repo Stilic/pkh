@@ -12,7 +12,6 @@ return {
             "argp",
             "readline",
             "curses",
-
             "gperf",
 
             "libxml2",
@@ -65,6 +64,11 @@ return {
             "e2fsprogs",
             "sysklogd",
             "dinit",
+
+            -- for gcc and awk
+            "gmp",
+            "mpfr",
+            "mpc",
 
             -- TODO: package pkh itself
             "lzo",
