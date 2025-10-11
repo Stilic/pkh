@@ -7,6 +7,7 @@ local tools = require "tools"
 local config = require "neld.config"
 
 local self = {}
+local cwd = lfs.currentdir()
 local built_packages = {}
 local mnt_path = lfs.currentdir() .. "/neld/.build/work/mnt"
 local overlay_path = mnt_path .. "/usr"
@@ -64,6 +65,7 @@ function self.init()
 end
 
 function self.close()
+    lfs.chdir(cwd)
     os.execute("umount neld/.build/work/mnt/root")
     for _, m in pairs(mountpoints) do
         os.execute("umount " .. m)
