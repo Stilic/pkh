@@ -7,14 +7,15 @@ local tools = require "tools"
 local config = require "neld.config"
 
 local self = {}
-local cwd = lfs.currentdir()
+local CWD = lfs.currentdir()
+local MOUNT_PATH = CWD .. "/neld/.build/work/mnt"
+local ROOT_PATH = MOUNT_PATH .. "/root"
+local OVERLAY_PATH = MOUNT_PATH .. "/usr"
+local MAX_GROUP_SIZE = 5
 local built_packages = {}
-local mnt_path = cwd .. "/neld/.build/work/mnt"
-local root_path = mnt_path .. "/root"
-local overlay_path = mnt_path .. "/usr"
 local mountpoints = {}
 
-local function prepare_mount(overlay, packages, prebuilt)
+local function prepare_overlay(overlay, packages, prebuilt)
     if not packages then
         return
     end
@@ -31,7 +32,7 @@ local function prepare_mount(overlay, packages, prebuilt)
         if overlay[p.name] then
             return
         end
-        local mountpoint = mnt_path .. "/" .. p.name
+        local mountpoint = MOUNT_PATH .. "/" .. p.name
         overlay[p.name] = mountpoint
 
         if mountpoints[p.name] then
@@ -43,10 +44,10 @@ local function prepare_mount(overlay, packages, prebuilt)
         if prebuilt then
             pkg_base = "neld" .. pkg_base
         else
-            prepare_mount(overlay, p.dev_dependencies)
+            prepare_overlay(overlay, p.dev_dependencies)
             pkg_base = "pickle-linux/" .. p.repository .. "/" .. p.name .. pkg_base
         end
-        prepare_mount(overlay, p.dependencies, prebuilt)
+        prepare_overlay(overlay, p.dependencies, prebuilt)
 
         lfs.mkdir(mountpoint)
         os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
@@ -54,14 +55,13 @@ local function prepare_mount(overlay, packages, prebuilt)
 end
 
 local function overlay_group(group, index)
-    local mountpoint = mnt_path .. "/grp" .. tostring(index)
+    local mountpoint = MOUNT_PATH .. "/grp" .. tostring(index)
     lfs.mkdir(mountpoint)
     os.execute("mount -t overlay overlay -o lowerdir=" .. table.concat(group, ":") .. " " .. mountpoint)
     return mountpoint
 end
 
 local function mount_overlay(mounts)
-    local MAX_GROUP_SIZE = 5
     local overlays = {}
 
     for i = 1, #mounts, MAX_GROUP_SIZE do
@@ -72,23 +72,23 @@ local function mount_overlay(mounts)
         table.insert(overlays, overlay_group(group, i))
     end
 
-    os.execute("mount -t overlay overlay -o lowerdir=" .. table.concat(overlays, ":") .. " " .. overlay_path)
+    os.execute("mount -t overlay overlay -o lowerdir=" .. table.concat(overlays, ":") .. " " .. OVERLAY_PATH)
     return overlays
 end
 
 function self.init()
-    lfs.mkdir(mnt_path)
-    lfs.mkdir(root_path)
-    lfs.mkdir(overlay_path)
+    lfs.mkdir(MOUNT_PATH)
+    lfs.mkdir(ROOT_PATH)
+    lfs.mkdir(OVERLAY_PATH)
 
-    os.execute("mount neld/.build/work/rootfs.sqsh " .. root_path)
-    os.execute("mount --bind . " .. root_path .. "/root")
+    os.execute("mount neld/.build/work/rootfs.sqsh " .. ROOT_PATH)
+    os.execute("mount --bind . " .. ROOT_PATH .. "/root")
 end
 
 function self.close()
-    lfs.chdir(cwd)
-    os.execute("umount " .. root_path .. "/root")
-    os.execute("umount " .. root_path)
+    lfs.chdir(CWD)
+    os.execute("umount " .. ROOT_PATH .. "/root")
+    os.execute("umount " .. ROOT_PATH)
     for _, m in pairs(mountpoints) do
         os.execute("umount " .. m)
     end
@@ -119,9 +119,9 @@ function self.build(repository, name, skip_dependencies)
     local overlay = {}
 
     -- TODO: add support for variants
-    prepare_mount(overlay, config.user_packages, true)
-    prepare_mount(overlay, package.dev_dependencies)
-    prepare_mount(overlay, package.dependencies)
+    prepare_overlay(overlay, config.user_packages, true)
+    prepare_overlay(overlay, package.dev_dependencies)
+    prepare_overlay(overlay, package.dependencies)
 
     local mounts = {}
     for _, m in pairs(overlay) do
@@ -185,12 +185,12 @@ function self.build(repository, name, skip_dependencies)
         end
     end
 
-    lfs.chdir(cwd)
+    lfs.chdir(CWD)
 
     os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind "
-        .. root_path ..
-        " / --dev /dev --tmpfs /tmp --ro-bind " .. overlay_path .. " /usr --bind " .. build_path .. " /root/" ..
+        .. ROOT_PATH ..
+        " / --dev /dev --tmpfs /tmp --ro-bind " .. OVERLAY_PATH .. " /usr --bind " .. build_path .. " /root/" ..
         build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. (rebuild and " 1" or " 0")
     )
 
@@ -201,7 +201,7 @@ function self.build(repository, name, skip_dependencies)
     end
     built_packages[name] = true
 
-    os.execute("umount " .. overlay_path)
+    os.execute("umount " .. OVERLAY_PATH)
     for _, o in ipairs(overlays) do
         lfs.rmdir(o)
         os.execute("umount " .. o)
