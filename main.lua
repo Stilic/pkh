@@ -10,9 +10,8 @@ local self = {}
 local built_packages = {}
 local mnt_path = lfs.currentdir() .. "/neld/.build/work/mnt"
 local overlay_path = mnt_path .. "/usr"
-local mountpoints = {}
 
-local function prepare_mount(packages, prebuilt)
+local function prepare_mount(mountpoints, packages, prebuilt)
     if not packages then
         return
     end
@@ -26,8 +25,8 @@ local function prepare_mount(packages, prebuilt)
             p = pkg("user." .. p)
         end
 
-        prepare_mount(p.dev_dependencies)
-        prepare_mount(p.dependencies)
+        prepare_mount(mountpoints, p.dev_dependencies, prebuilt)
+        prepare_mount(mountpoints, p.dependencies, prebuilt)
 
         local mountpoint = mnt_path .. "/" .. p.name
         table.insert(mountpoints, mountpoint)
@@ -81,10 +80,12 @@ function self.build(repository, name, skip_dependencies)
         end
     end
 
+    local mountpoints = {}
+
     -- TODO: add support for variants
-    prepare_mount(config.user_packages, true)
-    prepare_mount(package.dev_dependencies)
-    prepare_mount(package.dependencies)
+    prepare_mount(mountpoints, config.user_packages, true)
+    prepare_mount(mountpoints, package.dev_dependencies)
+    prepare_mount(mountpoints, package.dependencies)
 
     local length = #mountpoints
     if length ~= 0 then
@@ -174,7 +175,7 @@ function self.build(repository, name, skip_dependencies)
     for _, m in ipairs(mountpoints) do
         os.execute("umount " .. m)
     end
-    mountpoints = {}
+    os.execute("umount " .. overlay_path)
 end
 
 function self.unpack(path, repository, name, variant)
