@@ -14,8 +14,9 @@ local overlay_path = mnt_path .. "/usr"
 local function mount(...)
     local mountpoints = {}
 
-    for _, packages in ipairs({ ... }) do
+    for _, packages in ipairs(arg) do
         if packages then
+            ---@diagnostic disable-next-line: param-type-mismatch
             for _, p in ipairs(packages) do
                 if p.repository ~= "main" then
                     local mountpoint = mnt_path .. "/" .. p.name
