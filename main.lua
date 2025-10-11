@@ -41,10 +41,10 @@ local function prepare_mount(overlay, packages, prebuilt)
         if prebuilt then
             pkg_base = "neld" .. pkg_base
         else
-            prepare_mount(mountpoints, p.dev_dependencies)
+            prepare_mount(overlay, p.dev_dependencies)
             pkg_base = "pickle-linux/" .. p.repository .. "/" .. p.name .. pkg_base
         end
-        prepare_mount(mountpoints, p.dependencies, prebuilt)
+        prepare_mount(overlay, p.dependencies, prebuilt)
 
         lfs.mkdir(mountpoint)
         os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
