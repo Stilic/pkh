@@ -47,6 +47,7 @@ local function prepare_mount(overlay, packages, prebuilt)
         prepare_mount(overlay, p.dependencies, prebuilt)
 
         lfs.mkdir(mountpoint)
+        print(mountpoint)
         os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
     end
 end
