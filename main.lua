@@ -9,7 +9,7 @@ local config = require "neld.config"
 local self = {}
 local cwd = lfs.currentdir()
 local built_packages = {}
-local mnt_path = lfs.currentdir() .. "/neld/.build/work/mnt"
+local mnt_path = cwd .. "/neld/.build/work/mnt"
 local overlay_path = mnt_path .. "/usr"
 local mountpoints = {}
 
@@ -65,8 +65,7 @@ function self.init()
 end
 
 function self.close()
-    lfs.chdir(cwd)
-    os.execute("umount neld/.build/work/mnt/root")
+    os.execute("umount -rf neld/.build/work/mnt/root")
     for _, m in pairs(mountpoints) do
         os.execute("umount " .. m)
     end
@@ -164,7 +163,7 @@ function self.build(repository, name, skip_dependencies)
         end
     end
 
-    lfs.chdir(base_path)
+    lfs.chdir(cwd)
 
     local root_path = mnt_path .. "/root"
     local rebuild_option = " 0"
