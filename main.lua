@@ -4,47 +4,32 @@ require "global"
 local lfs = require "lfs"
 local llby = require "lullaby"
 local tools = require "tools"
+local config = require "neld.config"
 
 local self = {}
 local built_packages = {}
 local mnt_path = lfs.currentdir() .. "/neld/.build/work/mnt"
 local overlay_path = mnt_path .. "/usr"
+local mountpoints = {}
 
--- TODO: add support for variants
-local function mount(...)
-    local mountpoints = {}
-
-    for _, packages in ipairs({ ... }) do
-        if packages then
-            for _, p in ipairs(packages) do
-                if p.repository ~= "main" then
-                    local mountpoint = mnt_path .. "/" .. p.name
-                    lfs.mkdir(mountpoint)
-                    os.execute("mount neld/pickle-linux/" ..
-                        p.repository ..
-                        "/" ..
-                        p.name .. "/.build/" .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
-                    mountpoints:insert(mountpoint)
-                end
-            end
+local function prepare_mount(packages, prebuilt)
+    for _, p in ipairs(packages) do
+        if p.repository == "main" then
+            return
         end
-    end
 
-    local length = #mountpoints
-    if length == 0 then
-        return nil
-    end
-
-    local lowerdir = ""
-    for i, m in ipairs(mountpoints) do
-        lowerdir = lowerdir .. m
-        if i ~= length then
-            lowerdir = lowerdir .. ":"
+        if type(p) == "string" then
+            p = pkg("user." .. p)
         end
-    end
-    os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir .. " " .. overlay_path)
 
-    return mountpoints
+        local mountpoint = mnt_path .. "/" .. p.name
+        mountpoints:insert(mountpoint)
+        lfs.mkdir(mountpoint)
+
+        os.execute("mount " ..
+            (prebuilt and "neld" or ("pickle-linux/" .. p.repository .. "/" .. p.name))
+            .. "/.build/" .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
+    end
 end
 
 function self.init()
@@ -85,7 +70,25 @@ function self.build(repository, name, skip_dependencies)
         end
     end
 
-    local mountpoints = mount(package.dev_dependencies, package.dependencies)
+    -- TODO: add support for variants
+    prepare_mount(config.user_packages, true)
+    for _, packages in ipairs({ self.dev_dependencies, self.dependencies }) do
+        prepare_mount(packages, false)
+    end
+
+    local length = #mountpoints
+    if length == 0 then
+        return
+    end
+
+    local lowerdir = ""
+    for i, m in ipairs(mountpoints) do
+        lowerdir = lowerdir .. m
+        if i ~= length then
+            lowerdir = lowerdir .. ":"
+        end
+    end
+    os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir .. " " .. overlay_path)
 
     local build_suffix = "pickle-linux/" .. repository .. "/" .. name
     lfs.chdir(build_suffix)
@@ -160,11 +163,10 @@ function self.build(repository, name, skip_dependencies)
     end
     built_packages[name] = true
 
-    if mountpoints then
-        for _, m in ipairs(mountpoints) do
-            os.execute("umount " .. m)
-        end
+    for _, m in ipairs(mountpoints) do
+        os.execute("umount " .. m)
     end
+    mountpoints = {}
 end
 
 function self.unpack(path, repository, name, variant)
