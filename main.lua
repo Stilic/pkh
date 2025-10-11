@@ -24,6 +24,7 @@ local function mount(...)
                         p.repository ..
                         "/" ..
                         p.name .. "/.build/" .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
+                    print(mountpoint)
                     mountpoints:insert(mountpoint)
                 end
             end
