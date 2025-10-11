@@ -49,7 +49,7 @@ local function prepare_mount(overlay, packages, prebuilt)
         prepare_mount(overlay, p.dependencies, prebuilt)
 
         lfs.mkdir(mountpoint)
-        os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
+        os.execute("mount -v " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
     end
 end
 
@@ -66,9 +66,9 @@ function self.close()
     lfs.chdir(cwd)
     os.execute("umount " .. root_path .. "/root")
     os.execute("umount " .. root_path)
-    for _, m in pairs(mountpoints) do
-        os.execute("umount " .. m)
-    end
+    -- for _, m in pairs(mountpoints) do
+    --     os.execute("umount " .. m)
+    -- end
 end
 
 function self.build(repository, name, skip_dependencies)
