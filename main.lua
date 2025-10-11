@@ -142,13 +142,7 @@ function self.build(repository, name, skip_dependencies)
     local root_path = mnt_path .. "/root"
     os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /pkh --dev /dev --tmpfs /tmp --ro-bind " ..
-        root_path ..
-        "/bin /bin --ro-bind " ..
-        root_path ..
-        "/lib /lib --ro-bind " ..
-        root_path ..
-        "/include /include --ro-bind " ..
-        root_path .. "/sbin /sbin --ro-bind " .. overlay_path .. " /usr --ro-bind . /pkh --bind " ..
+        root_path .. " / --ro-bind " .. overlay_path .. " /usr --ro-bind . /pkh --bind " ..
         build_path ..
         " /pkh/" ..
         build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
