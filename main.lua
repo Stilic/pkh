@@ -29,8 +29,16 @@ local function prepare_mount(mountpoints, packages, prebuilt)
         if prebuilt then
             pkg_base = "neld" .. pkg_base
         else
-            pkg_base = "pickle-linux/" .. p.repository .. "/" .. p.name .. pkg_base
+            if p.repository == "user" then
+                for _, n in ipairs(config.user_packages) do
+                    if p.name == n then
+                        return
+                    end
+                end
+            end
             prepare_mount(mountpoints, p.dev_dependencies, prebuilt)
+
+            pkg_base = "pickle-linux/" .. p.repository .. "/" .. p.name .. pkg_base
         end
         prepare_mount(mountpoints, p.dependencies)
 
