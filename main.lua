@@ -95,6 +95,7 @@ function self.build(repository, name, skip_dependencies)
         lowerdir = lowerdir .. m .. ":"
     end
     if lowerdir ~= "" then
+        print(lowerdir:sub(1, -2))
         os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
     end
 
