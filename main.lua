@@ -11,7 +11,7 @@ local CWD = lfs.currentdir()
 local MOUNT_PATH = CWD .. "/neld/.build/work/mnt"
 local ROOT_PATH = MOUNT_PATH .. "/root"
 local OVERLAY_PATH = MOUNT_PATH .. "/usr"
-local MAX_GROUP_SIZE = 10
+local MAX_GROUP_SIZE = 7
 local built_packages = {}
 local mountpoints = {}
 
