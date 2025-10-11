@@ -102,6 +102,7 @@ function self.build(repository, name, skip_dependencies)
 
     local lowerdir = ""
     for _, m in pairs(overlay) do
+        print("MOUNTING: " .. m)
         lowerdir = lowerdir .. m .. ":"
     end
     os.execute("fuse-overlayfs -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
