@@ -12,7 +12,7 @@ local mnt_path = lfs.currentdir() .. "/neld/.build/work/mnt"
 local overlay_path = mnt_path .. "/usr"
 local mountpoints = {}
 
-local function prepare_mount(overlay, packages, prebuilt)
+local function prepare_mount(overlay, packages)
     if not packages then
         return
     end
@@ -37,14 +37,20 @@ local function prepare_mount(overlay, packages, prebuilt)
         end
         mountpoints[p.name] = mountpoint
 
-        local pkg_base = "/.build/"
-        if prebuilt then
+        local pkg_base, is_prebuilt = "/.build/"
+        for _, n in ipairs(config.user_packages) do
+            if n == p.name then
+                is_prebuilt = true
+                break
+            end
+        end
+        if is_prebuilt then
             pkg_base = "neld" .. pkg_base
         else
             prepare_mount(mountpoints, p.dev_dependencies)
             pkg_base = "pickle-linux/" .. p.repository .. "/" .. p.name .. pkg_base
         end
-        prepare_mount(mountpoints, p.dependencies, prebuilt)
+        prepare_mount(mountpoints, p.dependencies)
 
         lfs.mkdir(mountpoint)
         os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
@@ -94,9 +100,9 @@ function self.build(repository, name, skip_dependencies)
     local overlay = {}
 
     -- TODO: add support for variants
-    prepare_mount(overlay, config.user_packages, true)
-    prepare_mount(overlay, package.dev_dependencies)
-    prepare_mount(overlay, package.dependencies)
+    for _, p in ipairs({ config.user_packages, package.dev_dependencies, package.dependencies }) do
+        prepare_mount(overlay, p)
+    end
 
     local lowerdir = ""
     for _, m in pairs(overlay) do
