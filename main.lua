@@ -90,17 +90,12 @@ function self.build(repository, name, skip_dependencies)
     prepare_mount(mountpoints, package.dev_dependencies)
     prepare_mount(mountpoints, package.dependencies)
 
-    local length = #mountpoints
-    if length ~= 0 then
-        local lowerdir, i = "", 1
-        for _, m in pairs(mountpoints) do
-            lowerdir = lowerdir .. m
-            if i ~= length then
-                lowerdir = lowerdir .. ":"
-                i = i + 1
-            end
-        end
-        os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir .. " " .. overlay_path)
+    local lowerdir = ""
+    for _, m in pairs(mountpoints) do
+        lowerdir = lowerdir .. m .. ":"
+    end
+    if lowerdir ~= "" then
+        os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
     end
 
     local build_suffix = "pickle-linux/" .. repository .. "/" .. name
@@ -163,10 +158,11 @@ function self.build(repository, name, skip_dependencies)
 
     local root_path = mnt_path .. "/root"
     os.execute(
-        "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind " ..
-        root_path .. " / --dev /dev --tmpfs /tmp --ro-bind " .. overlay_path .. " /usr --bind " ..
-        build_path ..
-        " /root/" ..
+        "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind "
+        .. root_path ..
+        " / --dev /dev --tmpfs /tmp" ..
+        (lowerdir == "" and "" or (" --ro-bind " .. overlay_path .. " /usr")) ..
+        " --bind " .. build_path .. " /root/" ..
         build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
 
     if package.variants then
