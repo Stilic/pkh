@@ -105,7 +105,7 @@ function self.build(repository, name, skip_dependencies)
     for _, m in pairs(overlay) do
         lowerdir = lowerdir .. m .. ":"
     end
-    os.execute("mount -v -t overlay overlay -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
+    os.execute("mount -v -t overlay overlay -o 'lowerdir=" .. lowerdir:sub(1, -2) .. "' " .. overlay_path)
 
     local build_suffix = "pickle-linux/" .. repository .. "/" .. name
     lfs.chdir(build_suffix)

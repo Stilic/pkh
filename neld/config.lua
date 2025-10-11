@@ -94,7 +94,7 @@ return {
         "automake",
         "autoconf",
 
-        -- "meson",
+        "meson",
         -- 
 
         -- "libunistring",
