@@ -84,7 +84,7 @@ return {
         -- final set of packages required to kickstart the process
         "gcc",
 
-        -- "binutils",
+        "binutils",
         -- "make",
         -- "pkgconf",
         -- "m4",
