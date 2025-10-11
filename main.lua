@@ -8,6 +8,53 @@ local tools = require "tools"
 local self = {}
 local built_packages = {}
 local mnt_path = lfs.currentdir() .. "/neld/.build/work/mnt"
+local overlay_path = mnt_path .. "/usr"
+
+-- TODO: add support for variants
+local function mount(...)
+    local mountpoints = {}
+
+    for _, packages in ipairs({ ... }) do
+        if packages then
+            for _, p in ipairs(packages) do
+                if p.repository ~= "main" then
+                    local mountpoint = mnt_path .. "/" .. p.name
+                    lfs.mkdir(mountpoint)
+                    os.execute("mount neld/pickle-linux/" ..
+                        p.repository ..
+                        "/" ..
+                        p.name .. "/.build/" .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
+                    mountpoints:insert(mountpoint)
+                end
+            end
+        end
+    end
+
+    local length, lowerdir = #mountpoints, ""
+    for i, m in ipairs(mountpoints) do
+        lowerdir = lowerdir .. m
+        if i ~= length then
+            lowerdir = lowerdir .. ":"
+        end
+    end
+    os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir .. " " .. overlay_path)
+
+    return mountpoints
+end
+
+function self.init()
+    local root_path = mnt_path .. "/root"
+
+    lfs.mkdir(mnt_path)
+    lfs.mkdir(root_path)
+    lfs.mkdir(overlay_path)
+
+    os.execute("mount neld/.build/work/rootfs.sqsh " .. root_path)
+end
+
+function self.close()
+    os.execute("umount neld/.build/work/mnt/root")
+end
 
 function self.build(repository, name, skip_dependencies)
     local base_path, rebuild, package = lfs.currentdir(), true, pkg(repository .. "." .. name)
@@ -31,6 +78,8 @@ function self.build(repository, name, skip_dependencies)
             end
         end
     end
+
+    local mountpoints = mount(package.dev_dependencies, package.dependencies)
 
     local build_suffix = "pickle-linux/" .. repository .. "/" .. name
     lfs.chdir(build_suffix)
@@ -99,7 +148,8 @@ function self.build(repository, name, skip_dependencies)
         root_path ..
         "/lib /lib --ro-bind " ..
         root_path ..
-        "/include /include --ro-bind " .. root_path .. "/sbin /sbin --ro-bind /usr /usr --ro-bind . /pkh --bind " ..
+        "/include /include --ro-bind " ..
+        root_path .. "/sbin /sbin --ro-bind " .. overlay_path .. " /usr --ro-bind . /pkh --bind " ..
         build_path ..
         " /pkh/" ..
         build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
@@ -110,6 +160,10 @@ function self.build(repository, name, skip_dependencies)
         end
     end
     built_packages[name] = true
+
+    for _, m in ipairs(mountpoints) do
+        os.execute("umount " .. m)
+    end
 end
 
 function self.unpack(path, repository, name, variant)
@@ -117,19 +171,6 @@ function self.unpack(path, repository, name, variant)
         path ..
         " -f pickle-linux/" ..
         repository .. "/" .. name .. "/.build/" .. tools.get_file(name, pkg(repository .. "." .. name).version, variant))
-end
-
-function self.init()
-    local root_path = mnt_path .. "/root"
-
-    lfs.mkdir(mnt_path)
-    lfs.mkdir(root_path)
-
-    os.execute("mount neld/.build/work/rootfs.sqsh " .. root_path)
-end
-
-function self.close()
-    os.execute("umount neld/.build/work/mnt/root")
 end
 
 return self
