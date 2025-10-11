@@ -203,6 +203,7 @@ function self.build(repository, name, skip_dependencies)
 
     os.execute("umount " .. overlay_path)
     for _, o in ipairs(overlays) do
+        lfs.rmdir(o)
         os.execute("umount " .. o)
     end
 end
