@@ -10,8 +10,9 @@ local self = {}
 local built_packages = {}
 local mnt_path = lfs.currentdir() .. "/neld/.build/work/mnt"
 local overlay_path = mnt_path .. "/usr"
+local mountpoints = {}
 
-local function prepare_mount(mountpoints, packages, prebuilt)
+local function prepare_mount(overlay, packages, prebuilt)
     if not packages then
         return
     end
@@ -24,6 +25,13 @@ local function prepare_mount(mountpoints, packages, prebuilt)
         if type(p) == "string" then
             p = pkg("user." .. p)
         end
+
+        if overlay[p.name] then
+            return
+        end
+        local mountpoint = mnt_path .. "/" .. p.name
+        overlay[p.name] = mountpoint
+
         if mountpoints[p.name] then
             return
         end
@@ -37,12 +45,9 @@ local function prepare_mount(mountpoints, packages, prebuilt)
         end
         prepare_mount(mountpoints, p.dependencies, prebuilt)
 
-        local mountpoint = mnt_path .. "/" .. p.name
         mountpoints[p.name] = mountpoint
         lfs.mkdir(mountpoint)
         os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
-
-        print("MOUNTING: " .. p.name)
     end
 end
 
@@ -59,6 +64,9 @@ end
 
 function self.close()
     os.execute("umount neld/.build/work/mnt/root")
+    for _, m in pairs(mountpoints) do
+        os.execute("umount " .. m)
+    end
 end
 
 function self.build(repository, name, skip_dependencies)
@@ -83,15 +91,15 @@ function self.build(repository, name, skip_dependencies)
         end
     end
 
-    local mountpoints = {}
+    local overlay = {}
 
     -- TODO: add support for variants
-    prepare_mount(mountpoints, config.user_packages, true)
-    prepare_mount(mountpoints, package.dev_dependencies)
-    prepare_mount(mountpoints, package.dependencies)
+    prepare_mount(overlay, config.user_packages, true)
+    prepare_mount(overlay, package.dev_dependencies)
+    prepare_mount(overlay, package.dependencies)
 
     local lowerdir = ""
-    for _, m in pairs(mountpoints) do
+    for _, m in pairs(overlay) do
         lowerdir = lowerdir .. m .. ":"
     end
     if lowerdir ~= "" then
@@ -173,9 +181,6 @@ function self.build(repository, name, skip_dependencies)
     end
     built_packages[name] = true
 
-    for _, m in pairs(mountpoints) do
-        os.execute("umount " .. m)
-    end
     os.execute("umount " .. overlay_path)
 end
 
