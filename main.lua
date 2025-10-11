@@ -98,13 +98,18 @@ function self.build(repository, name, skip_dependencies)
     prepare_mount(overlay, package.dev_dependencies)
     prepare_mount(overlay, package.dependencies)
 
-    local lowerdir = ""
+    local lowerdir, overlay_length = "", 0
     for _, m in pairs(overlay) do
         lowerdir = lowerdir .. m .. ":"
+        overlay_length = overlay_length + 1
     end
-    if lowerdir ~= "" then
-        print(lowerdir:sub(1, -2))
-        os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
+    if overlay_length ~= 0 then
+        lowerdir = lowerdir:sub(1, -2)
+        if overlay_length == 1 then
+            os.execute("mount " .. lowerdir .. " " .. overlay_path)
+        else
+            os.execute("mount -t overlay overlay -o lowerdir=" .. lowerdir .. " " .. overlay_path)
+        end
     end
 
     local build_suffix = "pickle-linux/" .. repository .. "/" .. name
@@ -170,7 +175,7 @@ function self.build(repository, name, skip_dependencies)
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind "
         .. root_path ..
         " / --dev /dev --tmpfs /tmp" ..
-        (lowerdir == "" and "" or (" --ro-bind " .. overlay_path .. " /usr")) ..
+        (overlay_length ~= 0 and "" or (" --ro-bind " .. overlay_path .. " /usr")) ..
         " --bind " .. build_path .. " /root/" ..
         build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. (rebuild and "1" or "0"))
 
