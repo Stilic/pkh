@@ -99,26 +99,26 @@ return {
         "meson",
         -- 
 
-        -- "libunistring",
-        -- "libidn2",
-        -- "nghttp2",
-        -- "curl",
-        --
+        "libunistring",
+        "libidn2",
+        "nghttp2",
+        "curl",
+        
 
-        -- "rsync",
-        -- "cpio",
-        -- "python",
+        "rsync",
+        "cpio",
+        "python",
 
-        -- "flex",
-        -- "elfutils",
-        -- "dosfstools",
+        "flex",
+        "elfutils",
+        "dosfstools",
 
 
 
-        -- "nano",
+        "nano",
 
-        -- "git",
+        "git",
 
-        -- "cottonfetch",
+        "cottonfetch",
     }
 }

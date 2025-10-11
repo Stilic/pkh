@@ -104,7 +104,6 @@ function self.build(repository, name, skip_dependencies)
     for _, m in pairs(overlay) do
         lowerdir = lowerdir .. m .. ":"
     end
-    print(#("lowerdir=" .. lowerdir))
     os.execute("fuse-overlayfs -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
 
     local build_suffix = "pickle-linux/" .. repository .. "/" .. name
