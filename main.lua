@@ -67,7 +67,7 @@ end
 function self.close()
     lfs.chdir(cwd)
     print(lfs.currentdir())
-    os.execute("umount -rf neld/.build/work/mnt/root")
+    os.execute("umount neld/.build/work/mnt/root")
     for _, m in pairs(mountpoints) do
         os.execute("umount " .. m)
     end
