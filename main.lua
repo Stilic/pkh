@@ -28,6 +28,8 @@ local function prepare_mount(overlay, packages, prebuilt)
             p = pkg("user." .. p)
         end
 
+        print(p.name)
+
         if overlay[p.name] then
             return
         end
