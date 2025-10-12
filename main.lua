@@ -30,6 +30,8 @@ local function prepare_mount(overlay, packages, prebuilt)
         if overlay[p.name] then
             return
         end
+        local mountpoint = mnt_path .. "/" .. p.name
+        overlay[p.name] = mountpoint
 
         local pkg_base = "/.build/"
         if prebuilt then
@@ -38,12 +40,10 @@ local function prepare_mount(overlay, packages, prebuilt)
             pkg_base = "pickle-linux/" .. p.repository .. "/" .. p.name .. pkg_base
         end
 
-        local mountpoint = mnt_path .. "/" .. p.name
         if not mountpoints[p.name] then
             lfs.mkdir(mountpoint)
             if os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint) then
                 mountpoints[p.name] = mountpoint
-                overlay[p.name] = mountpoint
             end
         end
 
