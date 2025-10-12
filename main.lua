@@ -41,12 +41,11 @@ local function prepare_mount(overlay, packages, prebuilt)
             lfs.mkdir(mountpoint)
             if os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint) then
                 mountpoints[p.name] = mountpoint
+            elseif not prebuilt then
+                prepare_mount(overlay, p.dev_dependencies)
             end
         end
 
-        if not prebuilt then
-            prepare_mount(overlay, p.dev_dependencies)
-        end
         prepare_mount(overlay, p.dependencies, prebuilt)
     end
 end
