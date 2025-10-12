@@ -128,20 +128,6 @@ function self.build_flit(source)
     end
 end
 
-function self.build_gpep517(source)
-    if not source then
-        source = "source"
-    end
-
-    return function()
-        if source ~= "" then
-            lfs.chdir(source)
-        end
-
-        os.execute("python -m flit_core.wheel")
-    end
-end
-
 function self.build_kconfig(source, cflags, cppflags)
     if not source then
         source = "source"
