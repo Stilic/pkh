@@ -61,7 +61,7 @@ function self.init()
 
     lfs.mkdir(ro_path)
     lfs.mkdir(ro_path .. "/bin")
-    lfs.link("../../bin/env", ro_path .. "/bin/env")
+    lfs.link("../../bin/env", ro_path .. "/bin/env", true)
 end
 
 function self.close()
