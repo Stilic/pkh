@@ -28,27 +28,24 @@ local function prepare_mount(overlay, packages, prebuilt)
             p = pkg("user." .. p)
         end
 
+        if mountpoints[p.name] then
+            return
+        end
         local mountpoint = mnt_path .. "/" .. p.name
         overlay[p.name] = mountpoint
-        print(overlay[p.name])
+        mountpoints[p.name] = mountpoint
 
         local pkg_base = "/.build/"
         if prebuilt then
             pkg_base = "neld" .. pkg_base
         else
             pkg_base = "pickle-linux/" .. p.repository .. "/" .. p.name .. pkg_base
-        end
-
-        if mountpoint[p.name] == nil then
-            mountpoints[p.name] = mountpoint
-            lfs.mkdir(mountpoint)
-            os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
-        end
-
-        if not prebuilt then
             prepare_mount(overlay, p.dev_dependencies)
         end
         prepare_mount(overlay, p.dependencies, prebuilt)
+
+        lfs.mkdir(mountpoint)
+        os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
     end
 end
 
