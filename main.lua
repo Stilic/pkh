@@ -59,9 +59,10 @@ function self.init()
     os.execute("mount neld/.build/work/rootfs.sqsh " .. root_path)
     os.execute("mount --bind . " .. root_path .. "/root")
 
-    lfs.mkdir(ro_path)
-    lfs.mkdir(ro_path .. "/bin")
-    lfs.link("../../bin/env", ro_path .. "/bin/env", true)
+    if lfs.mkdir(ro_path) then
+        lfs.mkdir(ro_path .. "/bin")
+        lfs.link("../../bin/env", ro_path .. "/bin/env", true)
+    end
 end
 
 function self.close()
