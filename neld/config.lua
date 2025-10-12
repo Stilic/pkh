@@ -43,6 +43,7 @@ return {
 
             "xz",
             "zlib",
+            "libunistring",
             "gettext",
 
             "unzip",
@@ -99,7 +100,6 @@ return {
         "meson",
         -- 
 
-        -- "libunistring",
         -- "libidn2",
         -- "nghttp2",
         -- "curl",
