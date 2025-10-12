@@ -28,9 +28,8 @@ local function prepare_mount(overlay, packages, prebuilt)
             p = pkg("user." .. p)
         end
 
-        print(p.name)
-
-        if overlay[p.name] then
+        print(overlay[p.name])
+        if overlay[p.name] ~= nil then
             return
         end
         local mountpoint = mnt_path .. "/" .. p.name
@@ -43,7 +42,7 @@ local function prepare_mount(overlay, packages, prebuilt)
             pkg_base = "pickle-linux/" .. p.repository .. "/" .. p.name .. pkg_base
         end
 
-        if not mountpoint[p.name] then
+        if mountpoint[p.name] == nil then
             mountpoints[p.name] = mountpoint
             lfs.mkdir(mountpoint)
             os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint)
