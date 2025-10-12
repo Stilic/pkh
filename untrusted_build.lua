@@ -29,6 +29,8 @@ local function pack(package, variant)
         end
     end
 
+    lfs.chdir(build_path)
+
     -- remove libtool archives as they're useless
     os.execute("find " .. filesystem .. " -type f -name *.la -exec rm {} +")
 
