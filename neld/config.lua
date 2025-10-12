@@ -98,7 +98,12 @@ return {
         "autoconf",
         -- 
 
-        -- "git",
         -- "cottonfetch",
+        -- "curl",
+        -- "nano",
+
+        -- "rsync",
+        -- "cpio",
+        -- "git",
     }
 }
