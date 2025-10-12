@@ -12,6 +12,7 @@ local built_packages = {}
 local mnt_path = cwd .. "/neld/.build/work/mnt"
 local root_path = mnt_path .. "/root"
 local overlay_path = mnt_path .. "/usr"
+local ro_path = mnt_path .. "/ro"
 local mountpoints = {}
 
 local function prepare_mount(overlay, packages, prebuilt)
@@ -57,6 +58,10 @@ function self.init()
 
     os.execute("mount neld/.build/work/rootfs.sqsh " .. root_path)
     os.execute("mount --bind . " .. root_path .. "/root")
+
+    lfs.mkdir(ro_path)
+    lfs.mkdir(ro_path .. "/bin")
+    lfs.link("../../bin/env", ro_path .. "/bin/env")
 end
 
 function self.close()
@@ -97,7 +102,7 @@ function self.build(repository, name, skip_dependencies)
     prepare_mount(overlay, package.dev_dependencies)
     prepare_mount(overlay, package.dependencies)
 
-    local lowerdir = ""
+    local lowerdir = ro_path .. ":"
     for _, m in pairs(overlay) do
         print("MOUNTING: " .. m)
         lowerdir = lowerdir .. m .. ":"
