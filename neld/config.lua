@@ -39,7 +39,7 @@ return {
             "dhcpcd",
             "ifupdown-ng",
 
-            "bash",
+            "sh",
 
             "xz",
             "zlib",
@@ -88,7 +88,7 @@ return {
         "gcc",
 
         "binutils",
-        "make",
+        "gmake",
         "pkgconf",
         "m4",
         "bison",
@@ -98,12 +98,12 @@ return {
         "autoconf",
         -- 
 
-        -- "cottonfetch",
-        -- "curl",
-        -- "nano",
+        "cottonfetch",
+        "curl",
+        "nano",
 
-        -- "rsync",
-        -- "cpio",
-        -- "git",
+        "rsync",
+        "cpio",
+        "git",
     }
 }
