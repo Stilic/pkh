@@ -96,29 +96,9 @@ return {
         "libtool",
         "automake",
         "autoconf",
-
-        -- "meson",
         -- 
 
-        -- "libidn2",
-        -- "nghttp2",
-        -- "curl",
-        --
-
-        -- "rsync",
-        -- "cpio",
-        -- "python",
-
-        -- "flex",
-        -- "elfutils",
-        -- "dosfstools",
-
-
-
-        -- "nano",
-
         -- "git",
-
         -- "cottonfetch",
     }
 }
