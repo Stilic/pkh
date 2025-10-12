@@ -28,12 +28,9 @@ local function prepare_mount(overlay, packages, prebuilt)
             p = pkg("user." .. p)
         end
 
-        print(overlay[p.name])
-        if overlay[p.name] ~= nil then
-            return
-        end
         local mountpoint = mnt_path .. "/" .. p.name
         overlay[p.name] = mountpoint
+        print(overlay[p.name])
 
         local pkg_base = "/.build/"
         if prebuilt then
