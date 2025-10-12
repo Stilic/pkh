@@ -97,7 +97,7 @@ return {
         "automake",
         "autoconf",
 
-        "meson",
+        -- "meson",
         -- 
 
         -- "libidn2",
