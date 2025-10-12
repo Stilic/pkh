@@ -27,9 +27,6 @@ local function prepare_mount(overlay, packages, prebuilt)
         if type(p) == "string" then
             p = pkg("user." .. p)
         end
-        if overlay[p.name] then
-            return
-        end
         local mountpoint = mnt_path .. "/" .. p.name
         overlay[p.name] = mountpoint
 
