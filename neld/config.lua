@@ -28,7 +28,6 @@ return {
             "toybox",
             "file",
             "diffutils",
-            "awk",
             "util-linux",
 
             "pcre2",
