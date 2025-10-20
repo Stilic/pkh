@@ -29,7 +29,6 @@ return {
             "file",
             "diffutils",
             "awk",
-            "sed",
             "util-linux",
 
             "pcre2",
