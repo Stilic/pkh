@@ -88,7 +88,6 @@ return {
         "gcc",
 
         "binutils",
-        -- "gmake",
         "make",
         "pkgconf",
         "m4",
