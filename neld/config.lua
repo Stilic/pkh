@@ -88,12 +88,12 @@ return {
         "gcc",
 
         "binutils",
-        -- "gmake",
-        "make",
+        "gmake",
+        -- "make",
         "pkgconf",
         "m4",
-        -- "bison",
-        "yacc",
+        "bison",
+        -- "yacc",
 
         "libtool",
         "automake",
