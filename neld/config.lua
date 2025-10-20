@@ -28,7 +28,7 @@ return {
             "toybox",
             "file",
             "diffutils",
-            "gawk",
+            "awk",
             "sed",
             "util-linux",
 
@@ -66,7 +66,7 @@ return {
             "sysklogd",
             "dinit",
 
-            -- for gcc and awk
+            -- for gcc and gawk
             "gmp",
             "mpfr",
             "mpc",
@@ -88,10 +88,12 @@ return {
         "gcc",
 
         "binutils",
-        "gmake",
+        -- "gmake",
+        "make",
         "pkgconf",
         "m4",
-        "bison",
+        -- "bison",
+        "yacc",
 
         "libtool",
         "automake",
