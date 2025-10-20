@@ -83,8 +83,8 @@ return {
         },
         user = { "gcc.libs" }
     },
-    user_packages = {
-        -- final set of packages required to kickstart the process
+    -- final set of packages required to kickstart the process
+    user_development = {
         "gcc",
 
         "binutils",
@@ -97,8 +97,8 @@ return {
         "libtool",
         "automake",
         "autoconf",
-        -- 
-
+    },
+    user_production = {
         "cottonfetch",
         "curl",
         "nano",

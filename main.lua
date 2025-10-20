@@ -98,7 +98,7 @@ function self.build(repository, name, skip_dependencies)
     local overlay = {}
 
     -- TODO: add support for variants
-    prepare_mount(overlay, config.user_packages, true)
+    prepare_mount(overlay, config.user_development, true)
     prepare_mount(overlay, package.dev_dependencies)
     prepare_mount(overlay, package.dependencies)
 
