@@ -43,7 +43,13 @@ function self.download(repository, name, directory, skip_dependencies)
     if versions then
         local file_name = tools.get_file(name, versions[1])
         if not lfs.attributes(file_name) then
-            llby.net.srequest(config.repository .. "/packages/" .. repository .. "/" .. file_name).content:file(file_name)
+            local req = llby.net.srequest(config.repository .. "/packages/" .. repository .. "/" .. file_name)
+            if req.code == 200 then
+                req.content:file(file_name)
+            else
+                print("ERROR: Package `" .. name .. "` isn't available!")
+                return
+            end
         end
         if directory then
             os.execute("unsquashfs -d " .. directory .. " -f " .. file_name)
