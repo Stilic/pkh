@@ -12,9 +12,9 @@ lfs.chdir("neld/.build")
 for _, package in ipairs(config.user_development) do
     repos.download("user", package)
 end
-for _, package in ipairs(config.user_production) do
-    repos.download("user", package)
-end
+-- for _, package in ipairs(config.user_production) do
+--     repos.download("user", package)
+-- end
 
 os.execute("rm -rf work")
 lfs.mkdir("work")
