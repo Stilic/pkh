@@ -77,8 +77,7 @@ return {
             "luafilesystem",
             "lullaby",
             "libfuse",
-            "fuse-overlayfs",
-            "bubblewrap"
+            "fuse-overlayfs"
         },
         user = { "gcc.libs" }
     },
@@ -96,6 +95,9 @@ return {
         "libtool",
         "automake",
         "autoconf",
+
+        -- for pkh sandbox
+        "bubblewrap"
     },
     user_production = {
         "cottonfetch",
