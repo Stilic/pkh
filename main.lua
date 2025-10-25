@@ -51,19 +51,6 @@ local function prepare_mount(overlay, packages, prebuilt)
     end
 end
 
-function self.init()
-    lfs.mkdir(mnt_path)
-    lfs.mkdir(root_path)
-    lfs.mkdir(overlay_path)
-
-    os.execute("mount neld/.build/work/rootfs.sqsh " .. root_path)
-    os.execute("mount --bind . " .. root_path .. "/root")
-
-    lfs.mkdir(ro_path)
-    lfs.mkdir(ro_path .. "/bin")
-    lfs.link("../../bin/env", ro_path .. "/bin/env", true)
-end
-
 function self.close()
     lfs.chdir(cwd)
     os.execute("umount " .. root_path .. "/root")
@@ -193,5 +180,16 @@ function self.unpack(path, repository, name, variant)
         " -f pickle-linux/" ..
         repository .. "/" .. name .. "/.build/" .. tools.get_file(name, pkg(repository .. "." .. name).version, variant))
 end
+
+lfs.mkdir(mnt_path)
+lfs.mkdir(root_path)
+lfs.mkdir(overlay_path)
+
+os.execute("mount neld/.build/work/rootfs.sqsh " .. root_path)
+os.execute("mount --bind . " .. root_path .. "/root")
+
+lfs.mkdir(ro_path)
+lfs.mkdir(ro_path .. "/bin")
+lfs.link("../../bin/env", ro_path .. "/bin/env", true)
 
 return self

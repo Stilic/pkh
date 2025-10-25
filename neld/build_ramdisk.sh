@@ -7,7 +7,7 @@ cd ramdisk
 
 mkdir dev proc mnt root ro etc work
 
-cp -ra ../ram_root/* .
+cp -Ra ../ram_root/* .
 cp -a ../../../ramdisk_init.sh init
 
 find . -print | cpio -o --format=newc | gzip -9 > ../ramdisk.cpio.gz

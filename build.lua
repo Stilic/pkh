@@ -4,8 +4,6 @@ pcall(require, "luarocks.loader")
 local lfs = require "lfs"
 local pkh = require "main"
 
-pkh.init()
-
 local repos = "pickle-linux"
 for layer in lfs.dir(repos) do
     if layer ~= "." and layer ~= ".." then
