@@ -46,16 +46,7 @@ local function pack(package, variant)
     os.execute("mksquashfs " .. filesystem .. " " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
 end
 
-local name = arg[1] .. "." .. arg[2]
-local package = require("pickle-linux." .. name)
-if not package.name then
-    local i, repository = name:match(".*%.()")
-    if i ~= nil then
-        repository = name:sub(1, i - 2)
-        name = name:sub(i)
-    end
-    package.repository, package.name = repository, name
-end
+local package = pkg("pickle-linux." .. arg[1] .. "." .. arg[2])
 
 if arg[3] == "1" then
     local build = package.build
