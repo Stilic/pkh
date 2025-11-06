@@ -20,7 +20,7 @@ function pkg(module)
         return package
     end
 
-    package = loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. ".lua", 't', {})
+    package = loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. ".lua", 't', {})()
     pkg_cache[module] = package
     return package
 end
