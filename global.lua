@@ -45,5 +45,6 @@ function pkg(module)
     return package
 end
 
-package_environment.pkg = pkg
+package_environment.os = os
 package_environment.require = secure_require
+package_environment.pkg = pkg
