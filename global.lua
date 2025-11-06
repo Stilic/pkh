@@ -11,7 +11,7 @@ for _, module in ipairs({ "lfs", "system" }) do
     require_whitelist[module] = module
 end
 local function secure_require(module)
-    ---@diagnostic disable-next-line: undefined-global)
+    ---@diagnostic disable-next-line: undefined-global
     if module == "tools" or module == "neld.config" then
         return require(module)
     elseif allowrequire then
