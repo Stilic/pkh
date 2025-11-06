@@ -39,10 +39,8 @@ function pkg(module)
     end
 
     package = { repository = repository, name = name }
-    local pkg, error = loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. "/init.lua", "t",
-        setmetatable(package, { __index = package_environment }))
-    print(pkg, error)
-    pkg()
+    loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. "/init.lua", "t",
+        setmetatable(package, { __index = package_environment }))()
     package_cache[module] = package
     return package
 end

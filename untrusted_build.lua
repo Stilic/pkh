@@ -46,7 +46,7 @@ local function pack(package, variant)
     os.execute("mksquashfs " .. filesystem .. " " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
 end
 
-local package = pkg("pickle-linux." .. arg[1] .. "." .. arg[2])
+local package = pkg(arg[1] .. "." .. arg[2])
 
 if arg[3] == "1" then
     local build = package.build
