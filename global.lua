@@ -11,10 +11,10 @@ for _, module in ipairs({ "lfs", "system" }) do
     require_whitelist[module] = module
 end
 local function secure_require(module)
-    ---@diagnostic disable-next-line: undefined-global
     if module == "tools" or module == "neld.config" then
         return require(module)
-    elseif allowrequire then
+        ---@diagnostic disable-next-line: undefined-global
+    elseif buildmode then
         if require_whitelist[module] then
             return require(module)
         end
@@ -45,6 +45,9 @@ function pkg(module)
     return package
 end
 
-package_environment.os = os
+---@diagnostic disable-next-line: undefined-global
+if buildmode then
+    package_environment.os = os
+end
 package_environment.require = secure_require
 package_environment.pkg = pkg
