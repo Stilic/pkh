@@ -2,10 +2,6 @@ pcall(require, "luarocks.loader")
 local lfs = require "lfs"
 
 local current_directory = lfs.currentdir()
-package.path = package.path
-    .. ";" .. current_directory .. "/?.lua"
-    .. ";" .. current_directory .. "/?/init.lua"
-
 local pkg_cache = {}
 
 function pkg(module)
@@ -20,7 +16,8 @@ function pkg(module)
         return package
     end
 
-    package = loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. ".lua", 't', {})()
+    package = loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. "/init.lua", 't', {})
+    print()
     pkg_cache[module] = package
     return package
 end
