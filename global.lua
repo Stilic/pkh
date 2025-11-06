@@ -7,13 +7,13 @@ package.path = package.path
     .. ";" .. current_directory .. "/?/init.lua"
 
 local require_whitelist = {}
-for _, module in ipairs({ "lfs", "system", "neld.config" }) do
+for _, module in ipairs({ "lfs", "system" }) do
     require_whitelist[module] = module
 end
 local function secure_require(module)
     ---@diagnostic disable-next-line: undefined-global)
-    if module == "tools" then
-        return require("tools")
+    if module == "tools" or module == "neld.config" then
+        return require(module)
     elseif allowrequire then
         if require_whitelist[module] then
             return require(module)
