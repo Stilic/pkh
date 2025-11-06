@@ -16,8 +16,7 @@ function pkg(module)
         return package
     end
 
-    package = loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. "/init.lua", 't', {})
-    print()
+    package = loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. "/init.lua", 't', {})()
     pkg_cache[module] = package
     return package
 end
