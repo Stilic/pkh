@@ -7,11 +7,12 @@ package.path = package.path
     .. ";" .. current_directory .. "/?/init.lua"
 
 local require_whitelist = {}
-for _, module in ipairs({ "lfs", "system", "tools", "neld.config" }) do
+for _, module in ipairs({ "lfs", "system", "neld.config" }) do
     require_whitelist[module] = module
 end
 local function secure_require(module)
-    if require_whitelist[module] then
+    ---@diagnostic disable-next-line: undefined-global)
+    if module == "tools" or (allowrequire and not require_whitelist[module]) then
         return require(module)
     end
     error("blacklisted module: " .. module)
@@ -32,7 +33,7 @@ function pkg(module)
         return package
     end
 
-    package = loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. "/init.lua", 't',
+    package = loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. "/init.lua", "t",
         setmetatable({}, { __index = package_environment }))()
     package.repository, package.name = repository, name
     package_cache[module] = package

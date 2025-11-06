@@ -1,3 +1,4 @@
+allowrequire = true
 require "global"
 
 local lfs = require "lfs"

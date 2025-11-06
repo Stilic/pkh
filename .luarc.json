@@ -1,8 +1,8 @@
 {
-    "diagnostics.disable": [
-        "unbalanced-assignments",
-        "lowercase-global",
-        "need-check-nil",
-        "discard-returns"
-    ]
+  "diagnostics.disable": [
+    "unbalanced-assignments",
+    "lowercase-global",
+    "need-check-nil",
+    "discard-returns"
+  ]
 }
