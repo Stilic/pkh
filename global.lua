@@ -6,16 +6,21 @@ package.path = package.path
     .. ";" .. current_directory .. "/?.lua"
     .. ";" .. current_directory .. "/?/init.lua"
 
+local pkg_cache = {}
+
 function pkg(module)
-    local name = module
-    module = require("pickle-linux." .. module)
-    if not module.name then
-        local i, repository = name:match(".*%.()")
-        if i ~= nil then
-            repository = name:sub(1, i - 2)
-            name = name:sub(i)
-        end
-        module.repository, module.name = repository, name
+    local i, repository, name = module:match(".*%.()")
+    if i ~= nil then
+        repository = module:sub(1, i - 2)
+        name = module:sub(i)
     end
-    return module
+
+    local package = pkg_cache[module]
+    if package then
+        return package
+    end
+
+    package = loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. ".lua", 't', {})
+    pkg_cache[module] = package
+    return package
 end
