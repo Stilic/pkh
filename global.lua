@@ -2,7 +2,23 @@ pcall(require, "luarocks.loader")
 local lfs = require "lfs"
 
 local current_directory = lfs.currentdir()
-local pkg_cache = {}
+package.path = package.path
+    .. ";" .. current_directory .. "/?.lua"
+    .. ";" .. current_directory .. "/?/init.lua"
+
+local require_whitelist = {}
+for _, module in ipairs({ "lfs", "system", "tools", "neld.config" }) do
+    require_whitelist[module] = module
+end
+local function secure_require(module)
+    if require_whitelist[module] then
+        return require(module)
+    end
+    error("blacklisted module: " .. module)
+end
+
+local package_cache = {}
+local package_environment = {}
 
 function pkg(module)
     local i, repository, name = module:match(".*%.()")
@@ -11,12 +27,16 @@ function pkg(module)
         name = module:sub(i)
     end
 
-    local package = pkg_cache[module]
+    local package = package_cache[module]
     if package then
         return package
     end
 
-    package = loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. "/init.lua", 't', {})()
-    pkg_cache[module] = package
+    package = loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. "/init.lua", 't',
+        setmetatable({}, { __index = package_environment }))()
+    package_cache[module] = package
     return package
 end
+
+package_environment.pkg = pkg
+package_environment.require = secure_require
