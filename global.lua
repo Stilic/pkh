@@ -12,7 +12,9 @@ for _, module in ipairs({ "lfs", "system", "neld.config" }) do
 end
 local function secure_require(module)
     ---@diagnostic disable-next-line: undefined-global)
-    if module == "tools" or allowrequire then
+    if module == "tools" then
+        return require("tools")
+    elseif allowrequire then
         if require_whitelist[module] then
             return require(module)
         end
