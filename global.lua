@@ -12,10 +12,13 @@ for _, module in ipairs({ "lfs", "system", "neld.config" }) do
 end
 local function secure_require(module)
     ---@diagnostic disable-next-line: undefined-global)
-    if module == "tools" or (allowrequire and not require_whitelist[module]) then
-        return require(module)
+    if module == "tools" or allowrequire then
+        if require_whitelist[module] then
+            return require(module)
+        end
+        error("blacklisted module: " .. module)
     end
-    error("blacklisted module: " .. module)
+    return nil
 end
 
 local package_cache = {}
