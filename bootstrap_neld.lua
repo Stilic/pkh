@@ -9,10 +9,10 @@ local config = require "neld.config"
 lfs.mkdir("neld/.build")
 lfs.chdir("neld/.build")
 
-for _, package in ipairs(config.user_development) do
+for _, package in ipairs(config.development) do
     repos.download(package)
 end
-for _, package in ipairs(config.user_production) do
+for _, package in ipairs(config.production) do
     repos.download(package)
 end
 
