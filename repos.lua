@@ -31,7 +31,7 @@ for line in llby.net.srequest(config.repository .. "/packages/available.txt").co
 end
 
 local installed_packages = {}
-function self.download(repository, name, directory, skip_dependencies)
+function self.download(name, directory, skip_dependencies)
     if installed_packages[name] then
         return
     end
@@ -42,7 +42,7 @@ function self.download(repository, name, directory, skip_dependencies)
     if versions then
         local file_name = tools.get_file(name, versions[1])
         if not lfs.attributes(file_name) then
-            local req = llby.net.srequest(config.repository .. "/packages/" .. repository .. "/" .. file_name)
+            local req = llby.net.srequest(config.repository .. "/packages/" .. file_name)
             if req.code == 200 then
                 req.content:file(file_name)
             else
@@ -56,10 +56,10 @@ function self.download(repository, name, directory, skip_dependencies)
         installed_packages[name] = true
 
         if not skip_dependencies then
-            local package = pkg(repository .. "." .. name)
+            local package = pkg(name)
             if package.dependencies then
                 for _, dep in ipairs(package.dependencies) do
-                    self.download(dep.repository, dep.name, directory)
+                    self.download(dep.name, directory)
                 end
             end
         end

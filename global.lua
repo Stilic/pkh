@@ -44,22 +44,16 @@ local package_environment = {
     tonumber = tonumber,
 }
 
-function pkg(module)
-    local i, repository, name = module:match(".*%.()")
-    if i ~= nil then
-        repository = module:sub(1, i - 2)
-        name = module:sub(i)
-    end
-
-    local package = package_cache[module]
+function pkg(name)
+    local package = package_cache[name]
     if package then
         return package
     end
 
-    package = { repository = repository, name = name }
-    loadfile(current_directory .. "/pickle-linux/" .. repository .. "/" .. name .. "/init.lua", "t",
+    package = { name = name }
+    loadfile(current_directory .. "/pickle-linux/" .. name .. "/init.lua", "t",
         setmetatable(package, { __index = package_environment }))()
-    package_cache[module] = package
+    package_cache[name] = package
     return package
 end
 

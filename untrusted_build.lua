@@ -46,10 +46,10 @@ local function pack(package, variant)
     os.execute("mksquashfs " .. filesystem .. " " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
 end
 
-local package = pkg(arg[1] .. "." .. arg[2])
+local package = pkg(arg[1])
 
 -- only build if the package image doesn't exist
-if arg[3] == "1" then
+if arg[2] == "1" then
     local build = package.build
     if build then
         lfs.chdir(build_path)

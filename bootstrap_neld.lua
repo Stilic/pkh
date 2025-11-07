@@ -10,10 +10,10 @@ lfs.mkdir("neld/.build")
 lfs.chdir("neld/.build")
 
 for _, package in ipairs(config.user_development) do
-    repos.download("user", package)
+    repos.download(package)
 end
 for _, package in ipairs(config.user_production) do
-    repos.download("user", package)
+    repos.download(package)
 end
 
 os.execute("rm -rf work")
@@ -25,9 +25,9 @@ llby.net.srequest(config.repository .. "/rootfs.sqsh").content:file("rootfs.sqsh
 
 print("EXTRACTING KERNEL")
 lfs.mkdir("linux")
-repos.download("main", "linux", "linux", true)
+repos.download("linux", "linux", true)
 lfs.link("linux/lib/modules/" .. repos.available_packages["linux"][1] .. "/vmlinuz", "vmlinuz", true)
 
 print("CONFIGURING RAMDISK")
 lfs.mkdir("ram_root")
-repos.download("user", "busybox-static", "ram_root", true)
+repos.download("busybox-static", "ram_root", true)

@@ -8,6 +8,11 @@ local config = require "neld.config"
 
 local self = {}
 local built_packages = {}
+local rootfs = {}
+for _, package in ipairs(config.rootfs) do
+    rootfs[package] = package
+end
+
 local cwd = lfs.currentdir()
 local mnt_path = cwd .. "/neld/.build/work/mnt"
 local root_path = mnt_path .. "/root"
@@ -20,34 +25,31 @@ local function prepare_mounts(overlay, packages, prebuilt)
         return
     end
 
-    for _, p in ipairs(packages) do
-        if p.repository == "main" then
+    for _, package in ipairs(packages) do
+        if rootfs[package] then
             return
         end
 
-        if type(p) == "string" then
-            p = pkg("user." .. p)
-        end
-        local mountpoint = mnt_path .. "/" .. p.name
-        overlay[p.name] = mountpoint
+        local mountpoint = mnt_path .. "/" .. package.name
+        overlay[package.name] = mountpoint
 
         local pkg_base = "/.build/"
         if prebuilt then
             pkg_base = "neld" .. pkg_base
         else
-            pkg_base = "pickle-linux/" .. p.repository .. "/" .. p.name .. pkg_base
+            pkg_base = "pickle-linux/" .. package.name .. pkg_base
         end
 
-        if not mountpoints[p.name] then
+        if not mountpoints[package.name] then
             lfs.mkdir(mountpoint)
-            if os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint) then
-                mountpoints[p.name] = mountpoint
+            if os.execute("mount " .. pkg_base .. tools.get_file(package.name, package.version) .. " " .. mountpoint) then
+                mountpoints[package.name] = mountpoint
             elseif not prebuilt then
-                prepare_mounts(overlay, p.dev_dependencies)
+                prepare_mounts(overlay, package.dev_dependencies)
             end
         end
 
-        prepare_mounts(overlay, p.dependencies, prebuilt)
+        prepare_mounts(overlay, package.dependencies, prebuilt)
     end
 end
 
@@ -60,15 +62,15 @@ function self.close()
     end
 end
 
-function self.build(repository, name, skip_dependencies)
-    local rebuild, package = true, pkg(repository .. "." .. name)
+function self.build(name, skip_dependencies)
+    local rebuild, package = true, pkg(name)
 
     if not skip_dependencies then
         if package.dev_dependencies then
             for _, p in ipairs(package.dev_dependencies) do
                 local name = p.name
                 if not built_packages[name] then
-                    self.build(p.repository, name)
+                    self.build(name)
                 end
             end
         end
@@ -76,7 +78,7 @@ function self.build(repository, name, skip_dependencies)
             for _, p in ipairs(package.dependencies) do
                 local name = p.name
                 if not built_packages[name] then
-                    self.build(p.repository, name)
+                    self.build(name)
                 end
             end
         end
@@ -95,7 +97,7 @@ function self.build(repository, name, skip_dependencies)
     end
     os.execute("fuse-overlayfs -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
 
-    local build_suffix = "pickle-linux/" .. repository .. "/" .. name
+    local build_suffix = "pickle-linux/" .. name
     lfs.chdir(build_suffix)
     local pkg_path = lfs.currentdir()
     if not lfs.attributes(".build") then
@@ -162,7 +164,7 @@ function self.build(repository, name, skip_dependencies)
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind "
         .. root_path ..
         " / --dev /dev --tmpfs /tmp --ro-bind " .. overlay_path .. " /usr --bind " .. build_path .. " /root/" ..
-        build_suffix .. " /bin/lua untrusted_build.lua " .. repository .. " " .. name .. " " .. rebuild_option)
+        build_suffix .. " /bin/lua untrusted_build.lua " .. name .. " " .. rebuild_option)
 
     if package.variants then
         for index, _ in pairs(package.variants) do
@@ -174,11 +176,11 @@ function self.build(repository, name, skip_dependencies)
     os.execute("umount " .. overlay_path)
 end
 
-function self.unpack(path, repository, name, variant)
+function self.unpack(path, name, variant)
     return os.execute("unsquashfs -d " ..
         path ..
         " -f pickle-linux/" ..
-        repository .. "/" .. name .. "/.build/" .. tools.get_file(name, pkg(repository .. "." .. name).version, variant))
+        name .. "/.build/" .. tools.get_file(name, pkg(name).version, variant))
 end
 
 lfs.mkdir(mnt_path)

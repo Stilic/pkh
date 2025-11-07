@@ -7,8 +7,6 @@ local config = require "neld.config"
 lfs.mkdir("neld/.rootfs")
 lfs.chdir("neld/.rootfs")
 
-for layer, list in pairs(config.rootfs) do
-    for _, package in ipairs(list) do
-        repos.download(layer, package, nil, true)
-    end
+for _, package in ipairs(config.rootfs) do
+    repos.download(package, nil, true)
 end

@@ -2,87 +2,85 @@ return {
     gnu_site = "https://mirror.cyberbits.eu/gnu",
     repository = "https://pickle.stilic.net",
     rootfs = {
-        main = {
-            "base",
-            "linux",
-            "musl",
-            "musl-fts",
-            "musl-obstack",
-            "libiconv",
-            "argp",
-            "readline",
-            "curses",
-            "gperf",
+        "base",
+        "linux",
+        "musl",
+        "musl-fts",
+        "musl-obstack",
+        "gcc.libs",
+        "libiconv",
+        "argp",
+        "readline",
+        "curses",
+        "gperf",
 
-            "libxml2",
-            "libxslt",
+        "libxml2",
+        "libxslt",
 
-            "sqlite3",
+        "sqlite3",
 
-            -- for file
-            "libseccomp",
-            "zstd",
+        -- for file
+        "libseccomp",
+        "zstd",
 
-            "openssl",
-            "libxcrypt",
-            "toybox",
-            "file",
-            "diffutils",
-            "awk",
-            "util-linux",
+        "openssl",
+        "libxcrypt",
+        "toybox",
+        "file",
+        "diffutils",
+        "awk",
+        "util-linux",
 
-            "pcre2",
-            "grep",
+        "pcre2",
+        "grep",
 
-            "libmd",
-            "dhcpcd",
-            "ifupdown-ng",
+        "libmd",
+        "dhcpcd",
+        "ifupdown-ng",
 
-            "sh",
+        "sh",
 
-            "xz",
-            "zlib",
-            "libunistring",
-            "gettext",
+        "xz",
+        "zlib",
+        "libunistring",
+        "gettext",
 
-            "unzip",
-            "zip",
-            "bzip2",
+        "unzip",
+        "zip",
+        "bzip2",
 
-            "libcap",
-            "udev",
+        "libcap",
+        "udev",
 
-            "acl",
-            "attr",
-            "openpam",
-            "shadow",
+        "acl",
+        "attr",
+        "openpam",
+        "shadow",
 
-            "expat",
-            "dbus",
-            "turnstile",
+        "expat",
+        "dbus",
+        "turnstile",
 
-            "e2fsprogs",
-            "sysklogd",
-            "dinit",
+        "e2fsprogs",
+        "sysklogd",
+        "dinit",
 
-            -- for gcc and gawk
-            "gmp",
-            "mpfr",
-            "mpc",
+        -- for gcc and gawk
+        "gmp",
+        "mpfr",
+        "mpc",
 
-            -- TODO: package pkh itself
-            "lzo",
-            "squashfs-tools",
-            "lua",
-            "luafilesystem",
-            "lullaby",
-            "libfuse",
-            "fuse-overlayfs"
-        },
-        user = { "gcc.libs" }
+        -- TODO: package pkh itself
+        "lzo",
+        "squashfs-tools",
+        "lua",
+        "luafilesystem",
+        "lullaby",
+        "libfuse",
+        "fuse-overlayfs"
     },
     -- final set of packages required to kickstart the process
-    user_development = {
+    development = {
         "gcc",
 
         "binutils",
@@ -99,7 +97,7 @@ return {
         -- for pkh sandbox
         "bubblewrap"
     },
-    user_production = {
+    production = {
         "cottonfetch",
         "curl",
         "nano",
