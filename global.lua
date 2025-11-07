@@ -6,16 +6,12 @@ package.path = package.path
     .. ";" .. current_directory .. "/?.lua"
     .. ";" .. current_directory .. "/?/init.lua"
 
-local require_whitelist = {}
-for _, module in ipairs({ "lfs", "system" }) do
-    require_whitelist[module] = module
-end
 local function secure_require(module)
     if module == "tools" or module == "neld.config" then
         return require(module)
         ---@diagnostic disable-next-line: undefined-global
     elseif buildmode then
-        if require_whitelist[module] then
+        if module == "lfs" or module == "system" then
             return require(module)
         end
         error("blacklisted module: " .. module)
