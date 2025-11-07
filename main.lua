@@ -94,6 +94,7 @@ function self.build(name, skip_dependencies)
     local lowerdir = ro_path .. ":"
     for _, m in pairs(overlay) do
         lowerdir = lowerdir .. m .. ":"
+        print("MOUNTING: " .. m)
     end
     os.execute("fuse-overlayfs -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
 
