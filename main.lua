@@ -21,10 +21,6 @@ local ro_path = mnt_path .. "/ro"
 local mountpoints = {}
 
 local function prepare_mounts(overlay, packages, prebuilt)
-    if not packages then
-        return
-    end
-
     for _, package in ipairs(packages) do
         if rootfs[package] then
             return
@@ -87,14 +83,17 @@ function self.build(name, skip_dependencies)
     local overlay = {}
 
     -- TODO: add support for variants
-    prepare_mounts(overlay, config.user_development, true)
-    prepare_mounts(overlay, package.dev_dependencies)
-    prepare_mounts(overlay, package.dependencies)
+    prepare_mounts(overlay, config.development, true)
+    if package.dev_dependencies then
+        prepare_mounts(overlay, package.dev_dependencies)
+    end
+    if package.dependencies then
+        prepare_mounts(overlay, package.dependencies)
+    end
 
     local lowerdir = ro_path .. ":"
     for _, m in pairs(overlay) do
         lowerdir = lowerdir .. m .. ":"
-        print("MOUNTING: " .. m)
     end
     os.execute("fuse-overlayfs -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
 
