@@ -26,20 +26,20 @@ local function prepare_mounts(overlay, packages, prebuilt)
             return
         end
 
-        local mountpoint = mnt_path .. "/" .. package.name
-        overlay[package.name] = mountpoint
+        local mountpoint = mnt_path .. "/" .. package
+        overlay[package] = mountpoint
 
         local pkg_base = "/.build/"
         if prebuilt then
             pkg_base = "neld" .. pkg_base
         else
-            pkg_base = "pickle-linux/" .. package.name .. pkg_base
+            pkg_base = "pickle-linux/" .. package .. pkg_base
         end
 
-        if not mountpoints[package.name] then
+        if not mountpoints[package] then
             lfs.mkdir(mountpoint)
-            if os.execute("mount " .. pkg_base .. tools.get_file(package.name, package.version) .. " " .. mountpoint) then
-                mountpoints[package.name] = mountpoint
+            if os.execute("mount " .. pkg_base .. tools.get_file(package, package.version) .. " " .. mountpoint) then
+                mountpoints[package] = mountpoint
             elseif not prebuilt then
                 prepare_mounts(overlay, package.dev_dependencies)
             end
