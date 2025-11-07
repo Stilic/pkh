@@ -1,4 +1,5 @@
 pcall(require, "luarocks.loader")
+
 local lfs = require "lfs"
 local repos = require "repos"
 local config = require "neld.config"

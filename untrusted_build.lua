@@ -48,6 +48,7 @@ end
 
 local package = pkg(arg[1] .. "." .. arg[2])
 
+-- only build if the package image doesn't exist
 if arg[3] == "1" then
     local build = package.build
     if build then

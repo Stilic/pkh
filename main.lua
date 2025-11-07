@@ -7,15 +7,15 @@ local tools = require "tools"
 local config = require "neld.config"
 
 local self = {}
-local cwd = lfs.currentdir()
 local built_packages = {}
+local cwd = lfs.currentdir()
 local mnt_path = cwd .. "/neld/.build/work/mnt"
 local root_path = mnt_path .. "/root"
 local overlay_path = mnt_path .. "/usr"
 local ro_path = mnt_path .. "/ro"
 local mountpoints = {}
 
-local function prepare_mount(overlay, packages, prebuilt)
+local function prepare_mounts(overlay, packages, prebuilt)
     if not packages then
         return
     end
@@ -43,11 +43,11 @@ local function prepare_mount(overlay, packages, prebuilt)
             if os.execute("mount " .. pkg_base .. tools.get_file(p.name, p.version) .. " " .. mountpoint) then
                 mountpoints[p.name] = mountpoint
             elseif not prebuilt then
-                prepare_mount(overlay, p.dev_dependencies)
+                prepare_mounts(overlay, p.dev_dependencies)
             end
         end
 
-        prepare_mount(overlay, p.dependencies, prebuilt)
+        prepare_mounts(overlay, p.dependencies, prebuilt)
     end
 end
 
@@ -85,13 +85,12 @@ function self.build(repository, name, skip_dependencies)
     local overlay = {}
 
     -- TODO: add support for variants
-    prepare_mount(overlay, config.user_development, true)
-    prepare_mount(overlay, package.dev_dependencies)
-    prepare_mount(overlay, package.dependencies)
+    prepare_mounts(overlay, config.user_development, true)
+    prepare_mounts(overlay, package.dev_dependencies)
+    prepare_mounts(overlay, package.dependencies)
 
     local lowerdir = ro_path .. ":"
     for _, m in pairs(overlay) do
-        print("MOUNTING: " .. m)
         lowerdir = lowerdir .. m .. ":"
     end
     os.execute("fuse-overlayfs -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
@@ -158,6 +157,7 @@ function self.build(repository, name, skip_dependencies)
     if rebuild then
         rebuild_option = " 1"
     end
+    -- TODO: remove the gcc libexec workaround
     os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind "
         .. root_path ..

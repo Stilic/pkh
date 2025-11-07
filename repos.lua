@@ -3,7 +3,6 @@ pcall(require, "luarocks.loader")
 local lfs = require "lfs"
 local llby = require "lullaby"
 local tools = require "tools"
-
 local config = require "neld.config"
 
 local self = { available_packages = {} }
