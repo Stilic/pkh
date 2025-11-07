@@ -24,7 +24,29 @@ local function secure_require(module)
 end
 
 local package_cache = {}
-local package_environment = {}
+local package_environment = {
+    require = secure_require,
+    string = setmetatable({}, {
+        __index = function(_, key)
+            if key == "dump" then
+                return nil
+            end
+            return string[key]
+        end,
+        __newindex = function()
+            error("attempt to modify read-only table 'string'")
+        end,
+    }),
+    math = math,
+    table = table,
+    print = print,
+    pairs = pairs,
+    ipairs = ipairs,
+    type = type,
+    error = error,
+    tostring = tostring,
+    tonumber = tonumber,
+}
 
 function pkg(module)
     local i, repository, name = module:match(".*%.()")
@@ -49,5 +71,4 @@ end
 if buildmode then
     package_environment.os = os
 end
-package_environment.require = secure_require
 package_environment.pkg = pkg
