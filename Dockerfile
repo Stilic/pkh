@@ -10,6 +10,7 @@ COPY --from=stagex/core-openssl . /
 # Basis for PKH build
 COPY --from=stagex/core-git . /
 COPY --from=stagex/user-lzo . /
+COPY --from=stagex/user-fuse-overlayfs . /
 
 # Install LuaFileSystem
 RUN ["luarocks", "install", "luafilesystem"]
