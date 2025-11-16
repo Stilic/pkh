@@ -1,2 +1,2 @@
 #!/bin/sh
-exec docker run -it --privileged --mount type=bind,src=.,dst=/pkh "$@"
+exec docker run -it --privileged --mount type=bind,src=.,dst=/pkh local/pickle

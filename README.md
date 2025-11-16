@@ -1,20 +1,39 @@
-# pkh
+# PKH
+
 The PacK Head package manager.
 
 ## Status
 
-This is currently a **Proof Of Concept**. The goal is to demonstrate the viability of a self-hosting distribution built with a package manager written in Lua.
+This is currently a **Work In Progress**. The goal is to demonstrate the viability of a self-hosting distribution built with a package manager written in Lua.
 
-## Bootstraping Pickle Linux
+## Pickle Linux
 
-You will need basic build tooling, [Lua](https://www.lua.org), [LuaFileSystem](https://lunarmodules.github.io/luafilesystem), [Lullaby](https://github.com/ameliasquires/lullaby), [Squashfs-tools](https://github.com/plougher/squashfs-tools) and [QEMU](https://www.qemu.org).
+### Bootstrap
 
-**NOTE: They're all included (except QEMU) in the VM.**
+Requirements:
+* Docker with [`containerd` snapshotters enabled](https://docs.docker.com/engine/storage/containerd/#enable-containerd-image-store-on-docker-engine)
+* QEMU (*optional*)
 
 ```
-# Bootstrap the environment
-lua bootstrap_neld.lua
+# Set up the builder image
+./docker_build.sh
+# Run it
+./docker_run.sh
+```
 
+The following steps have to be done inside the Docker container:
+```
+# Move to the source directory
+cd /pkh
+# Set up the bootstrap environment
+lua bootstrap_neld.lua
+# Build all the packages
+lua build.lua
+```
+
+### Run
+
+```
 # Go inside the `neld` folder
 cd neld
 # Build the ramdisk
