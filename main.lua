@@ -42,7 +42,8 @@ local function prepare_mounts(overlay, packages, prebuilt)
 
         if not mountpoints[package.name] then
             lfs.mkdir(mountpoint)
-            if os.execute("mount " .. pkg_base .. tools.get_file(package.name, package.version) .. " " .. mountpoint) then
+            print(pkg_base .. tools.get_file(package.name, package.version))
+            if os.execute("squashfuse " .. pkg_base .. tools.get_file(package.name, package.version) .. " " .. mountpoint) then
                 mountpoints[package.name] = mountpoint
             elseif package.dev_dependencies and not prebuilt then
                 prepare_mounts(overlay, package.dev_dependencies)
@@ -193,7 +194,7 @@ lfs.mkdir(mnt_path)
 lfs.mkdir(root_path)
 lfs.mkdir(overlay_path)
 
-os.execute("mount neld/.build/work/rootfs.sqsh " .. root_path)
+os.execute("squashfuse neld/.build/work/rootfs.sqsh " .. root_path)
 os.execute("mount --bind . " .. root_path .. "/root")
 
 lfs.mkdir(ro_path)
