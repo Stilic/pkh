@@ -10,9 +10,7 @@ This is currently a **Work In Progress**. The goal is to demonstrate the viabili
 
 ### Bootstrap
 
-Requirements:
-* Docker with [`containerd` snapshotters enabled](https://docs.docker.com/engine/storage/containerd/#enable-containerd-image-store-on-docker-engine)
-* QEMU (*optional*)
+You will need Docker with [`containerd` snapshotters enabled](https://docs.docker.com/engine/storage/containerd/#enable-containerd-image-store-on-docker-engine).
 
 ```
 # Set up the builder image
@@ -32,6 +30,8 @@ lua build.lua
 ```
 
 ### Run
+
+You will need QEMU.
 
 ```
 # Go inside the `neld` folder
