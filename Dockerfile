@@ -8,14 +8,27 @@ COPY --from=stagex/core-curl . /
 COPY --from=stagex/core-openssl . /
 COPY --from=stagex/core-git . /
 
+# PKH dependencies
 COPY --from=stagex/user-patch . /
 COPY --from=stagex/user-lzo . /
 COPY --from=stagex/user-fuse3 . /
 COPY --from=stagex/user-fuse-overlayfs . /
 COPY --from=stagex/user-libcap . /
 
-# Install LuaFileSystem
-RUN ["luarocks", "install", "luafilesystem"]
+# Bootstrap dependencies
+COPY --from=stagex/core-gmp . /
+COPY --from=stagex/user-mpfr . /
+
+# Install MPC
+ADD https://ftp.gnu.org/gnu/mpc/mpc-1.3.1.tar.gz /tmp/mpc.tar.gz
+RUN --network=none <<-EOF
+set -eux
+tar xf /tmp/mpc.tar.gz
+cd mpc-1.3.1
+./configure
+make
+make install
+EOF
 
 # Install Lullaby
 ADD https://github.com/Stilic/lullaby/archive/refs/tags/v0.0.2.tar.gz /tmp/lullaby.tar.gz
@@ -58,5 +71,8 @@ meson setup -Dtests=false . output
 meson compile -C output
 meson install -C output
 EOF
+
+# Install LuaFileSystem
+RUN ["luarocks", "install", "luafilesystem"]
 
 ENTRYPOINT ["/bin/sh"]

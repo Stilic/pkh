@@ -58,8 +58,9 @@ end
 
 function self.close()
     lfs.chdir(cwd)
-    os.execute("umount " .. root_path .. "/root")
-    os.execute("umount " .. root_path)
+    if not hostfs then
+        os.execute("umount " .. root_path)
+    end
     for _, m in pairs(mountpoints) do
         os.execute("umount " .. m)
     end
@@ -90,7 +91,9 @@ function self.build(name, skip_dependencies)
     local overlay = {}
 
     -- TODO: add support for variants
-    prepare_mounts(overlay, config.development, true)
+    if not hostfs then
+        prepare_mounts(overlay, config.development, true)
+    end
     if package.dev_dependencies then
         prepare_mounts(overlay, package.dev_dependencies)
     end
@@ -98,11 +101,18 @@ function self.build(name, skip_dependencies)
         prepare_mounts(overlay, package.dependencies)
     end
 
-    local lowerdir = ro_path .. ":"
+    local lowerdir, mount_overlay = ""
     for _, m in pairs(overlay) do
         lowerdir = lowerdir .. m .. ":"
+        mount_overlay = true
     end
-    os.execute("fuse-overlayfs -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
+    if not hostfs then
+        lowerdir = ro_path .. ":" .. lowerdir
+        mount_overlay = true
+    end
+    if mount_overlay then
+        os.execute("fuse-overlayfs -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
+    end
 
     local build_suffix = "pickle-linux/" .. name
     lfs.chdir(build_suffix)
@@ -168,9 +178,9 @@ function self.build(name, skip_dependencies)
     end
     -- TODO: remove the gcc libexec workaround
     os.execute(
-        "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind "
-        .. root_path ..
-        " / --dev /dev --tmpfs /tmp --ro-bind " .. overlay_path .. " /usr --bind " .. build_path .. " /root/" ..
+        "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind / / --dev /dev --tmpfs /tmp " ..
+        (hostfs and "" or "--ro-bind overlay_path /usr ") ..
+        "--bind " .. cwd .. " /root --bind " .. build_path .. " /root/" ..
         build_suffix .. " /bin/lua untrusted_build.lua " .. name .. " " .. rebuild_option)
 
     if package.variants then
@@ -180,7 +190,9 @@ function self.build(name, skip_dependencies)
     end
     built_packages[name] = true
 
-    os.execute("umount " .. overlay_path)
+    if mount_overlay then
+        os.execute("umount " .. overlay_path)
+    end
 end
 
 function self.unpack(path, name, variant)
@@ -190,12 +202,17 @@ function self.unpack(path, name, variant)
         name .. "/.build/" .. tools.get_file(name, pkg(name).version, variant))
 end
 
+lfs.mkdir("neld/.build")
+lfs.mkdir("neld/.build/work")
 lfs.mkdir(mnt_path)
-lfs.mkdir(root_path)
 lfs.mkdir(overlay_path)
 
-os.execute("squashfuse neld/.build/work/rootfs.sqsh " .. root_path)
-os.execute("mount --bind . " .. root_path .. "/root")
+if hostfs then
+    root_path = "/"
+else
+    lfs.mkdir(root_path)
+    os.execute("squashfuse neld/.build/work/rootfs.sqsh " .. root_path)
+end
 
 lfs.mkdir(ro_path)
 lfs.mkdir(ro_path .. "/bin")
