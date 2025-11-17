@@ -66,51 +66,42 @@ function self.close()
     end
 end
 
-function self.build(name, skip_dependencies)
+function self.build(name)
     local rebuild, package = true, pkg(name)
 
-    if not skip_dependencies then
-        if package.dev_dependencies then
-            for _, p in ipairs(package.dev_dependencies) do
-                local name = p.name
-                if not built_packages[name] then
-                    self.build(name)
-                end
+    if package.dev_dependencies then
+        for _, p in ipairs(package.dev_dependencies) do
+            local name = p.name
+            if not built_packages[name] then
+                self.build(name)
             end
         end
-        if package.dependencies then
-            for _, p in ipairs(package.dependencies) do
-                local name = p.name
-                if not built_packages[name] then
-                    self.build(name)
-                end
+    end
+    if package.dependencies then
+        for _, p in ipairs(package.dependencies) do
+            local name = p.name
+            if not built_packages[name] then
+                self.build(name)
             end
         end
     end
 
     local overlay = {}
 
-    -- TODO: add support for variants
     if not hostfs then
+        -- TODO: add support for variants
         prepare_mounts(overlay, config.development, true)
-    end
-    if package.dev_dependencies then
-        prepare_mounts(overlay, package.dev_dependencies)
-    end
-    if package.dependencies then
-        prepare_mounts(overlay, package.dependencies)
-    end
+        if package.dev_dependencies then
+            prepare_mounts(overlay, package.dev_dependencies)
+        end
+        if package.dependencies then
+            prepare_mounts(overlay, package.dependencies)
+        end
 
-    local lowerdir, mount_overlay = ""
-    for _, m in pairs(overlay) do
-        lowerdir = lowerdir .. m .. ":"
-        mount_overlay = true
-    end
-    if not hostfs then
-        lowerdir = ro_path .. ":" .. lowerdir
-        mount_overlay = true
-    end
-    if mount_overlay then
+        local lowerdir = ro_path .. ":"
+        for _, m in pairs(overlay) do
+            lowerdir = lowerdir .. m .. ":"
+        end
         os.execute("fuse-overlayfs -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
     end
 
@@ -190,7 +181,7 @@ function self.build(name, skip_dependencies)
     end
     built_packages[name] = true
 
-    if mount_overlay then
+    if not hostfs then
         os.execute("umount " .. overlay_path)
     end
 end
