@@ -20,11 +20,22 @@ COPY --from=stagex/core-gmp . /
 COPY --from=stagex/user-mpfr . /
 
 # Install MPC
-ADD https://ftp.gnu.org/gnu/mpc/mpc-1.3.1.tar.gz /tmp/mpc.tar.gz
+ADD https://gcc.gnu.org/pub/gcc/infrastructure/mpc-1.3.1.tar.gz /tmp/mpc.tar.gz
 RUN --network=none <<-EOF
 set -eux
 tar xf /tmp/mpc.tar.gz
 cd mpc-1.3.1
+./configure
+make
+make install
+EOF
+
+# Install ISL
+ADD https://gcc.gnu.org/pub/gcc/infrastructure/isl-0.24.tar.bz2 /tmp/isl.tar.bz2
+RUN --network=none <<-EOF
+set -eux
+tar xf /tmp/isl.tar.bz2
+cd isl-0.24
 ./configure
 make
 make install
