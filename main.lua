@@ -170,7 +170,7 @@ function self.build(name)
     -- TODO: remove the gcc libexec workaround
     os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind / / --dev /dev --tmpfs /tmp " ..
-        (hostfs and "" or "--ro-bind overlay_path /usr ") ..
+        (hostfs and "" or ("--ro-bind " .. overlay_path .. " /usr ")) ..
         "--bind " .. cwd .. " /root --bind " .. build_path .. " /root/" ..
         build_suffix .. " /bin/lua untrusted_build.lua " .. name .. " " .. rebuild_option)
 
