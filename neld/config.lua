@@ -77,6 +77,7 @@ return {
         "luafilesystem",
         "lullaby",
         "libfuse",
+        "squashfuse",
         "fuse-overlayfs"
     },
     -- final set of packages required to kickstart the process
