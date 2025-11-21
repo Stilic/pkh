@@ -42,7 +42,6 @@ local function prepare_mounts(overlay, packages, prebuilt)
 
         if not mountpoints[package.name] then
             lfs.mkdir(mountpoint)
-            print(pkg_base .. tools.get_file(package.name, package.version))
             if os.execute("squashfuse " .. pkg_base .. tools.get_file(package.name, package.version) .. " " .. mountpoint) then
                 mountpoints[package.name] = mountpoint
             elseif package.dev_dependencies and not prebuilt then
@@ -168,11 +167,13 @@ function self.build(name)
         rebuild_option = " 1"
     end
     -- TODO: remove the gcc libexec workaround
-    os.execute(
+    local command =
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind / / --dev /dev --tmpfs /tmp " ..
-        (hostfs and "" or ("--ro-bind " .. overlay_path .. " /usr ")) ..
-        "--bind " .. cwd .. " /root --bind " .. build_path .. " /root/" ..
-        build_suffix .. " /bin/lua untrusted_build.lua " .. name .. " " .. rebuild_option)
+        (hostfs and ("--ro-bind " .. overlay_path .. " /usr ") or "") ..
+        "--bind " .. cwd .. " /root --bind " .. build_path .. " /root/" .. build_suffix ..
+        " /bin/lua untrusted_build.lua " .. name .. rebuild_option
+    print(command)
+    os.execute(command)
 
     if package.variants then
         for index, _ in pairs(package.variants) do
