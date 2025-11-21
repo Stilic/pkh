@@ -95,6 +95,27 @@ function self.build_meson(options, source, cflags, cppflags)
     end
 end
 
+function self.build_cmake(options, source, cflags, cppflags)
+    if options then
+        options = " " .. options
+    else
+        options = ""
+    end
+    if not source then
+        source = "source"
+    end
+
+    return function()
+        if source ~= "" then
+            lfs.chdir(source)
+        end
+
+        os.execute(self.get_flags(cflags, cppflags) ..
+            " cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
+        os.execute("cmake --build build --config Release --target install" .. system.get_make_jobs())
+    end
+end
+
 function self.build_python(source, env)
     if not source then
         source = "source"
