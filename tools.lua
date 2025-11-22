@@ -111,7 +111,7 @@ function self.build_cmake(options, source, cflags, cppflags)
         end
 
         os.execute(self.get_flags(cflags, cppflags) ..
-            " CMAKE_SYSROOT=/ cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
+            " cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
         os.execute("cmake --build build --config Release --target install" .. system.get_make_jobs())
     end
 end
