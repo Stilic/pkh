@@ -1,3 +1,4 @@
+hostfs = true
 require "global"
 pcall(require, "luarocks.loader")
 

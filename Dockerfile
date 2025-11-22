@@ -1,6 +1,9 @@
 FROM stagex/pallet-gcc-meson-busybox
 
 COPY --from=stagex/pallet-lua . /
+COPY --from=stagex/core-perl . /
+COPY --from=stagex/core-autoconf . /
+COPY --from=stagex/core-automake . /
 COPY --from=stagex/core-make . /
 COPY --from=stagex/core-luarocks . /
 COPY --from=stagex/core-ca-certificates . /

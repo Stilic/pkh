@@ -65,22 +65,24 @@ function self.close()
     end
 end
 
-function self.build(name)
+function self.build(name, skip_dependencies)
     local rebuild, package = true, pkg(name)
 
-    if package.dev_dependencies then
-        for _, p in ipairs(package.dev_dependencies) do
-            local name = p.name
-            if not built_packages[name] then
-                self.build(name)
+    if not skip_dependencies then
+        if package.dev_dependencies then
+            for _, p in ipairs(package.dev_dependencies) do
+                local name = p.name
+                if not built_packages[name] then
+                    self.build(name)
+                end
             end
         end
-    end
-    if package.dependencies then
-        for _, p in ipairs(package.dependencies) do
-            local name = p.name
-            if not built_packages[name] then
-                self.build(name)
+        if package.dependencies then
+            for _, p in ipairs(package.dependencies) do
+                local name = p.name
+                if not built_packages[name] then
+                    self.build(name)
+                end
             end
         end
     end
@@ -90,11 +92,14 @@ function self.build(name)
     if not hostfs then
         -- TODO: add support for variants
         prepare_mounts(overlay, config.development, true)
-        if package.dev_dependencies then
-            prepare_mounts(overlay, package.dev_dependencies)
-        end
-        if package.dependencies then
-            prepare_mounts(overlay, package.dependencies)
+
+        if not skip_dependencies then
+            if package.dev_dependencies then
+                prepare_mounts(overlay, package.dev_dependencies)
+            end
+            if package.dependencies then
+                prepare_mounts(overlay, package.dependencies)
+            end
         end
 
         local lowerdir = ro_path .. ":"
@@ -168,8 +173,9 @@ function self.build(name)
     end
     -- TODO: remove the gcc libexec workaround
     local command =
-        "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind / / --dev /dev --tmpfs /tmp " ..
-        (hostfs and ("--ro-bind " .. overlay_path .. " /usr ") or "") ..
+        "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind / " ..
+        root_path .. " --dev /dev --tmpfs /tmp " ..
+        (hostfs and "" or "--ro-bind " .. overlay_path .. " /usr ") ..
         "--bind " .. cwd .. " /root --bind " .. build_path .. " /root/" .. build_suffix ..
         " /bin/lua untrusted_build.lua " .. name .. rebuild_option
     print(command)
