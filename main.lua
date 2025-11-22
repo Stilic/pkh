@@ -16,7 +16,7 @@ end
 local cwd = lfs.currentdir()
 local mnt_path = cwd .. "/neld/.build/work/mnt"
 local root_path = mnt_path .. "/root"
-local overlay_path = mnt_path .. "/usr"
+local overlay_path = root_path .. "/usr"
 local ro_path = mnt_path .. "/ro"
 local mountpoints = {}
 
@@ -175,7 +175,6 @@ function self.build(name, skip_dependencies)
     local command =
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind / " ..
         root_path .. " --dev /dev --tmpfs /tmp " ..
-        (hostfs and "" or "--ro-bind " .. overlay_path .. " /usr ") ..
         "--bind " .. cwd .. " /root --bind " .. build_path .. " /root/" .. build_suffix ..
         " /bin/lua untrusted_build.lua " .. name .. rebuild_option
     print(command)
@@ -203,7 +202,6 @@ end
 lfs.mkdir("neld/.build")
 lfs.mkdir("neld/.build/work")
 lfs.mkdir(mnt_path)
-lfs.mkdir(overlay_path)
 
 if hostfs then
     root_path = "/"
