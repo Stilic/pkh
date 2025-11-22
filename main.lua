@@ -92,14 +92,11 @@ function self.build(name, skip_dependencies)
     if not hostfs then
         -- TODO: add support for variants
         prepare_mounts(overlay, config.development, true)
-
-        if not skip_dependencies then
-            if package.dev_dependencies then
-                prepare_mounts(overlay, package.dev_dependencies)
-            end
-            if package.dependencies then
-                prepare_mounts(overlay, package.dependencies)
-            end
+        if package.dev_dependencies then
+            prepare_mounts(overlay, package.dev_dependencies)
+        end
+        if package.dependencies then
+            prepare_mounts(overlay, package.dependencies)
         end
 
         local lowerdir = ro_path .. ":"
