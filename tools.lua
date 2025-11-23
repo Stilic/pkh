@@ -123,7 +123,7 @@ function self.build_cmake(options, source, project, cflags, cppflags)
             " cmake" ..
             project_command ..
             "-B " .. build_dir .. " -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
-        os.execute("cmake" .. project_command .. "-B " .. build_dir .. " build --config Release --target install")
+        os.execute("ninja -C " .. build_dir)
     end
 end
 
