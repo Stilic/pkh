@@ -95,7 +95,7 @@ function self.build_meson(options, source, cflags, cppflags)
     end
 end
 
-function self.build_cmake(options, source, cflags, cppflags)
+function self.build_cmake(options, source, project, cflags, cppflags)
     if options then
         options = " " .. options
     else
@@ -104,6 +104,15 @@ function self.build_cmake(options, source, cflags, cppflags)
     if not source then
         source = "source"
     end
+    if not project then
+        project = ""
+    end
+
+    local project_command, build_dir = "", "build"
+    if project ~= "" then
+        project_command = " -S " .. project .. " "
+        build_dir = build_dir .. "-" .. project
+    end
 
     return function()
         if source ~= "" then
@@ -111,7 +120,9 @@ function self.build_cmake(options, source, cflags, cppflags)
         end
 
         os.execute(self.get_flags(cflags, cppflags) ..
-            " cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
+            " cmake" ..
+            project_command ..
+            "-B " .. build_dir .. " -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
         os.execute("cmake --build build --config Release --target install" .. system.get_make_jobs())
     end
 end
