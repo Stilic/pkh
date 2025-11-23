@@ -122,8 +122,9 @@ function self.build_cmake(options, source, project, cflags, cppflags)
         os.execute(self.get_flags(cflags, cppflags) ..
             " cmake" ..
             project_command ..
-            "-B " .. build_dir .. " -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
-        os.execute("cmake --build build --config Release --target install" .. system.get_make_jobs())
+            "-B " .. build_dir .. " -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
+        os.execute("cmake" .. project_command .. "-B " ..
+            build_dir .. " build --config Release --target install" .. system.get_make_jobs())
     end
 end
 
