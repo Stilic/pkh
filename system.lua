@@ -2,13 +2,18 @@ local self = {}
 
 -- from https://stackoverflow.com/a/326715
 function self.capture(cmd)
-    local f = assert(io.popen(cmd, "r"))
-    local s = assert(f:read("*a"))
-    f:close()
-    s = s:gsub("^%s+", "")
-        :gsub("%s+$", "")
-    return s
+    local f = io.popen(cmd, "r")
+    if f then
+        local s = assert(f:read("*a"))
+        f:close()
+        s = s:gsub("^%s+", "")
+            :gsub("%s+$", "")
+        return s
+    end
+    return nil
 end
+
+self.architecture = self.capture("uname -m") or "unknown"
 
 self.build_cores = math.max(math.floor(tonumber(self.capture("nproc")) / 1.25), 1)
 
