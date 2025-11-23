@@ -17,7 +17,7 @@ function self.get_make_jobs()
     if self.build_cores == 1 then
         return ""
     else
-        return " -j" .. self.build_cores
+        return " -j " .. self.build_cores
     end
 end
 
