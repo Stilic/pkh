@@ -127,10 +127,7 @@ function self.build_cmake(options, source, project, targets, cflags, cppflags)
             project_command ..
             "-B " .. build_dir .. " -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
 
-        local jobs = system.get_make_jobs()
-        for _, target in ipairs(targets) do
-            os.execute("cmake --build " .. build_dir .. " --config Release --target " .. target .. jobs)
-        end
+        os.execute("cmake --build " .. build_dir .. " --config Release --target install" .. system.get_make_jobs())
     end
 end
 
