@@ -59,6 +59,7 @@ end
 
 ---@diagnostic disable-next-line: undefined-global
 if buildmode then
+    package_environment.buildmode = true
     package_environment.os = os
 end
 package_environment.pkg = pkg
