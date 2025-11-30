@@ -66,7 +66,7 @@ function self.close()
 end
 
 function self.build(name, skip_dependencies)
-    local package = pkg(name)
+    local package, process_main = pkg(name), true
 
     if not skip_dependencies then
         if package.dev_dependencies then
