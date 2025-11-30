@@ -46,14 +46,18 @@ local function pack(package, variant)
     os.execute("mksquashfs " .. filesystem .. " " .. file .. " -comp lzo -force-uid 0 -force-gid 0")
 end
 
-local package = pkg(arg[1])
+local package, build = pkg(arg[1])
 
-local build = package.build
-if build then
-    lfs.chdir(build_path)
-    build()
+-- only build the package if it wasn't done before
+if arg[2] == "1" then
+    build = package.build
+    if build then
+        lfs.chdir(build_path)
+        build()
+    end
+
+    pack(package)
 end
-pack(package)
 
 if package.variants then
     for index, variant in pairs(package.variants) do

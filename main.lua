@@ -113,45 +113,47 @@ function self.build(name, skip_dependencies)
     if not lfs.attributes(build_path) then
         lfs.mkdir(build_path)
     elseif lfs.attributes(build_path .. "/" .. tools.get_file(name, package.version)) then
-        return
+        process_main = false
     end
 
-    lfs.chdir(build_path)
-    if package.sources then
-        for _, source in ipairs(package.sources) do
-            local path, url = source[1], source[2]
-            if not lfs.attributes(path) then
-                local req = llby.net.srequest(url)
-                while req.Location ~= nil do
-                    url = req.Location
-                    req = llby.net.srequest(url)
-                end
-                req.content:file("S" .. path)
-                os.execute("rm -rf " .. path)
-                lfs.mkdir(path)
+    if not process_main then
+        lfs.chdir(build_path)
+        if package.sources then
+            for _, source in ipairs(package.sources) do
+                local path, url = source[1], source[2]
+                if not lfs.attributes(path) then
+                    local req = llby.net.srequest(url)
+                    while req.Location ~= nil do
+                        url = req.Location
+                        req = llby.net.srequest(url)
+                    end
+                    req.content:file("S" .. path)
+                    os.execute("rm -rf " .. path)
+                    lfs.mkdir(path)
 
-                local extension = string.sub(url, -4)
-                if extension == ".zip" or extension == ".whl" then
-                    os.execute("unzip S" .. path .. " -d " .. path)
-                else
-                    os.execute("tar xf S" .. path .. " --strip-components=1 -C " .. path)
-                end
-
-                local patch_dir = pkg_path .. "/" .. path
-                if not lfs.attributes(patch_dir) then
-                    if path == "source" then
-                        patch_dir = nil
+                    local extension = string.sub(url, -4)
+                    if extension == ".zip" or extension == ".whl" then
+                        os.execute("unzip S" .. path .. " -d " .. path)
                     else
-                        patch_dir = pkg_path .. "/source"
-                        if not lfs.attributes(patch_dir) then
+                        os.execute("tar xf S" .. path .. " --strip-components=1 -C " .. path)
+                    end
+
+                    local patch_dir = pkg_path .. "/" .. path
+                    if not lfs.attributes(patch_dir) then
+                        if path == "source" then
                             patch_dir = nil
+                        else
+                            patch_dir = pkg_path .. "/source"
+                            if not lfs.attributes(patch_dir) then
+                                patch_dir = nil
+                            end
                         end
                     end
-                end
-                if patch_dir then
-                    for file in lfs.dir(patch_dir) do
-                        if file ~= "." and file ~= ".." then
-                            os.execute("patch -d " .. path .. " -p1 -i " .. patch_dir .. "/" .. file)
+                    if patch_dir then
+                        for file in lfs.dir(patch_dir) do
+                            if file ~= "." and file ~= ".." then
+                                os.execute("patch -d " .. path .. " -p1 -i " .. patch_dir .. "/" .. file)
+                            end
                         end
                     end
                 end
@@ -161,12 +163,16 @@ function self.build(name, skip_dependencies)
 
     lfs.chdir(cwd)
 
+    local process_main_arg = "0"
+    if process_main then
+        process_main_arg = "1"
+    end
     -- TODO: remove the gcc libexec workaround
     os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind " ..
         root_path .. " / --dev /dev --tmpfs /tmp " ..
         "--bind " .. cwd .. " /root --bind " .. build_path .. " /root/" .. relative_build_path ..
-        " /bin/lua untrusted_build.lua " .. name)
+        " /bin/lua untrusted_build.lua " .. name .. " " .. process_main_arg)
 
     if package.variants then
         for index, _ in pairs(package.variants) do
