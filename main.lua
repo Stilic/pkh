@@ -66,7 +66,7 @@ function self.close()
 end
 
 function self.build(name, skip_dependencies)
-    local rebuild, package = true, pkg(name)
+    local package = pkg(name)
 
     if not skip_dependencies then
         if package.dev_dependencies then
@@ -106,55 +106,52 @@ function self.build(name, skip_dependencies)
         os.execute("fuse-overlayfs -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
     end
 
-    local build_suffix = "pickle-linux/" .. name
-    lfs.chdir(build_suffix)
-    local pkg_path = lfs.currentdir()
-    if not lfs.attributes(".build") then
-        lfs.mkdir(".build")
-    elseif lfs.attributes(".build/" .. tools.get_file(name, package.version)) then
-        rebuild = false
+    local base_path, relative_build_path = lfs.currentdir() .. "/", "pickle-linux/" .. name
+    local pkg_path = base_path .. relative_build_path
+    relative_build_path = relative_build_path .. "/.build"
+    local build_path = base_path .. relative_build_path
+    if not lfs.attributes(build_path) then
+        lfs.mkdir(build_path)
+    elseif lfs.attributes(build_path .. "/" .. tools.get_file(name, package.version)) then
+        return
     end
-    lfs.chdir(".build")
-    build_suffix = build_suffix .. "/.build"
-    local build_path = lfs.currentdir()
 
-    if rebuild then
-        if package.sources then
-            for _, source in ipairs(package.sources) do
-                local path, url = source[1], source[2]
-                if not lfs.attributes(path) then
-                    local req = llby.net.srequest(url)
-                    while req.Location ~= nil do
-                        url = req.Location
-                        req = llby.net.srequest(url)
-                    end
-                    req.content:file("S" .. path)
-                    os.execute("rm -rf " .. path)
-                    lfs.mkdir(path)
+    lfs.chdir(build_path)
+    if package.sources then
+        for _, source in ipairs(package.sources) do
+            local path, url = source[1], source[2]
+            if not lfs.attributes(path) then
+                local req = llby.net.srequest(url)
+                while req.Location ~= nil do
+                    url = req.Location
+                    req = llby.net.srequest(url)
+                end
+                req.content:file("S" .. path)
+                os.execute("rm -rf " .. path)
+                lfs.mkdir(path)
 
-                    local extension = string.sub(url, -4)
-                    if extension == ".zip" or extension == ".whl" then
-                        os.execute("unzip S" .. path .. " -d " .. path)
+                local extension = string.sub(url, -4)
+                if extension == ".zip" or extension == ".whl" then
+                    os.execute("unzip S" .. path .. " -d " .. path)
+                else
+                    os.execute("tar xf S" .. path .. " --strip-components=1 -C " .. path)
+                end
+
+                local patch_dir = pkg_path .. "/" .. path
+                if not lfs.attributes(patch_dir) then
+                    if path == "source" then
+                        patch_dir = nil
                     else
-                        os.execute("tar xf S" .. path .. " --strip-components=1 -C " .. path)
-                    end
-
-                    local patch_dir = pkg_path .. "/" .. path
-                    if not lfs.attributes(patch_dir) then
-                        if path == "source" then
+                        patch_dir = pkg_path .. "/source"
+                        if not lfs.attributes(patch_dir) then
                             patch_dir = nil
-                        else
-                            patch_dir = pkg_path .. "/source"
-                            if not lfs.attributes(patch_dir) then
-                                patch_dir = nil
-                            end
                         end
                     end
-                    if patch_dir then
-                        for file in lfs.dir(patch_dir) do
-                            if file ~= "." and file ~= ".." then
-                                os.execute("patch -d " .. path .. " -p1 -i " .. patch_dir .. "/" .. file)
-                            end
+                end
+                if patch_dir then
+                    for file in lfs.dir(patch_dir) do
+                        if file ~= "." and file ~= ".." then
+                            os.execute("patch -d " .. path .. " -p1 -i " .. patch_dir .. "/" .. file)
                         end
                     end
                 end
@@ -164,18 +161,12 @@ function self.build(name, skip_dependencies)
 
     lfs.chdir(cwd)
 
-    local rebuild_option = " 0"
-    if rebuild then
-        rebuild_option = " 1"
-    end
     -- TODO: remove the gcc libexec workaround
-    local command =
+    os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind " ..
         root_path .. " / --dev /dev --tmpfs /tmp " ..
-        "--bind " .. cwd .. " /root --bind " .. build_path .. " /root/" .. build_suffix ..
-        " /bin/lua untrusted_build.lua " .. name .. rebuild_option
-    print(command)
-    os.execute(command)
+        "--bind " .. cwd .. " /root --bind " .. build_path .. " /root/" .. relative_build_path ..
+        " /bin/lua untrusted_build.lua " .. name)
 
     if package.variants then
         for index, _ in pairs(package.variants) do

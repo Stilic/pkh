@@ -48,13 +48,10 @@ end
 
 local package = pkg(arg[1])
 
--- only build if the package image doesn't exist
-if arg[2] == "1" then
-    local build = package.build
-    if build then
-        lfs.chdir(build_path)
-        build()
-    end
+local build = package.build
+if build then
+    lfs.chdir(build_path)
+    build()
 end
 pack(package)
 
@@ -62,7 +59,7 @@ if package.variants then
     for index, variant in pairs(package.variants) do
         variant.name = index
 
-        local build = variant.build
+        build = variant.build
         if build then
             lfs.chdir(build_path)
             build()
