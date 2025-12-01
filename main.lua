@@ -164,16 +164,19 @@ function self.build(name, skip_dependencies)
 
     lfs.chdir(cwd)
 
-    local process_main_option = "0"
+    local process_main_option, variants_first_option = "0", "0"
     if process_main then
         process_main_option = "1"
+    end
+    if package.variants_first then
+        variants_first_option = "1"
     end
     -- TODO: remove the gcc libexec workaround
     os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/libexec/gcc/x86_64-pc-linux-musl/14.2.0:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --chdir /root --ro-bind " ..
         root_path .. " / --dev /dev --tmpfs /tmp " ..
         "--bind " .. cwd .. " /root --bind " .. build_path .. " /root/" .. build_suffix ..
-        " /bin/lua untrusted_build.lua " .. name .. " " .. process_main_option)
+        " /bin/lua untrusted_build.lua " .. name .. " " .. process_main_option .. " " .. variants_first_option)
 
     if package.variants then
         for index, _ in pairs(package.variants) do
