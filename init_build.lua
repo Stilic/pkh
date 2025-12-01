@@ -4,6 +4,6 @@ pcall(require, "luarocks.loader")
 
 local pkh = require "main"
 
-pkh.build("gcc")
+pkh.build("llvm")
 
 pkh.close()

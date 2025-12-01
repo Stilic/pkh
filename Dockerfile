@@ -2,8 +2,9 @@ FROM stagex/pallet-clang-gnu-busybox
 
 COPY --from=stagex/pallet-lua . /
 COPY --from=stagex/pallet-python . /
+COPY --from=stagex/core-samurai . /
 COPY --from=stagex/core-meson . /
-COPY --from=stagex/user-ninja . /
+COPY --from=stagex/core-cmake . /
 COPY --from=stagex/core-perl . /
 COPY --from=stagex/core-autoconf . /
 COPY --from=stagex/core-automake . /
@@ -14,6 +15,9 @@ COPY --from=stagex/core-curl . /
 COPY --from=stagex/core-openssl . /
 COPY --from=stagex/core-git . /
 
+# For Python
+COPY --from=stagex/core-expat . /
+
 # PKH dependencies
 COPY --from=stagex/user-patch . /
 COPY --from=stagex/user-lzo . /
@@ -21,13 +25,24 @@ COPY --from=stagex/user-fuse3 . /
 COPY --from=stagex/user-fuse-overlayfs . /
 COPY --from=stagex/user-libcap . /
 
+# ENV CC=clang
+# ENV CXX=clang++
+
+# RUN --network=none <<-EOF
+# cd /usr/bin
+# rm cc c++
+# ln -s clang cc
+# ln -s clang++ c++
+# find /usr/include -type f -exec sed -i 's/#include_next/#include/g' {} +
+# EOF
+
 # Install Lullaby
 ADD https://github.com/Stilic/lullaby/archive/refs/tags/v0.0.2.tar.gz /tmp/lullaby.tar.gz
 RUN --network=none <<-EOF
 set -eux
 tar xf /tmp/lullaby.tar.gz
 cd lullaby-0.0.2
-make CC=gcc
+make
 make install
 EOF
 
@@ -63,7 +78,46 @@ meson compile -C output
 meson install -C output
 EOF
 
+# Provide a libexecinfo stub
+# RUN cat <<EOF > /usr/include/execinfo.h
+# #ifndef _EXECINFO_H_
+# #define _EXECINFO_H_
+# #ifdef __cplusplus
+# extern "C" {
+# #endif
+
+# int     backtrace(void **, int);
+# char ** backtrace_symbols(void *const *, int);
+# void    backtrace_symbols_fd(void *const *, int, int);
+
+# #include <stddef.h>
+
+# int backtrace(void **buffer, int size) {
+#     (void)buffer;
+#     (void)size;
+#     return 0;
+# }
+
+# char **backtrace_symbols(void *const *buffer, int size) {
+#     (void)buffer;
+#     (void)size;
+#     return NULL;
+# }
+
+# void backtrace_symbols_fd(void *const *buffer, int size, int fd) {
+#     (void)buffer;
+#     (void)size;
+#     (void)fd;
+# }
+
+# #ifdef __cplusplus
+# }
+# #endif
+# #endif
+# EOF
+
 # Install LuaFileSystem
 RUN ["luarocks", "install", "luafilesystem"]
 
+WORKDIR /pkh
 ENTRYPOINT ["/bin/sh"]

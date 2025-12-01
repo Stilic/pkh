@@ -15,7 +15,7 @@ function self.get_file(name, version, variant)
 end
 
 function self.get_flags(cflags, cppflags)
-    return 'CC=gcc CPATH=/usr/include CFLAGS="' ..
+    return (hostfs and "CC=gcc CXX=g++" or "CC=clang CXX=clang++") .. ' CPATH=/usr/include CFLAGS="' ..
         self.DEFAULT_CFLAGS ..
         (cflags and (" " .. cflags) or "") ..
         '" CPPFLAGS="' .. self.DEFAULT_CPPFLAGS .. (cppflags and (" " .. cppflags) or "") .. '"'
