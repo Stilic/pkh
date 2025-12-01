@@ -20,32 +20,6 @@ COPY --from=stagex/user-fuse3 . /
 COPY --from=stagex/user-fuse-overlayfs . /
 COPY --from=stagex/user-libcap . /
 
-# Bootstrap dependencies
-COPY --from=stagex/core-gmp . /
-COPY --from=stagex/user-mpfr . /
-
-# Install MPC
-ADD https://gcc.gnu.org/pub/gcc/infrastructure/mpc-1.3.1.tar.gz /tmp/mpc.tar.gz
-RUN --network=none <<-EOF
-set -eux
-tar xf /tmp/mpc.tar.gz
-cd mpc-1.3.1
-./configure
-make
-make install
-EOF
-
-# Install ISL
-ADD https://gcc.gnu.org/pub/gcc/infrastructure/isl-0.24.tar.bz2 /tmp/isl.tar.bz2
-RUN --network=none <<-EOF
-set -eux
-tar xf /tmp/isl.tar.bz2
-cd isl-0.24
-./configure
-make
-make install
-EOF
-
 # Install Lullaby
 ADD https://github.com/Stilic/lullaby/archive/refs/tags/v0.0.2.tar.gz /tmp/lullaby.tar.gz
 RUN --network=none <<-EOF
