@@ -3,6 +3,7 @@ FROM stagex/pallet-clang-gnu-busybox
 COPY --from=stagex/pallet-lua . /
 COPY --from=stagex/pallet-python . /
 COPY --from=stagex/core-meson . /
+COPY --from=stagex/user-ninja . /
 COPY --from=stagex/core-perl . /
 COPY --from=stagex/core-autoconf . /
 COPY --from=stagex/core-automake . /
