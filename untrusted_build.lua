@@ -47,39 +47,28 @@ local function pack(package, variant)
 end
 
 local package = pkg(arg[1])
-local function build()
-    -- only build the package if it wasn't done before
-    if arg[2] == "1" then
-        local build = package.build
+
+-- only build this if it wasn't done before
+if arg[2] == "1" then
+    local build = package.build
+    if build then
+        lfs.chdir(build_path)
+        build()
+    end
+
+    pack(package)
+end
+
+if package.variants then
+    for index, variant in pairs(package.variants) do
+        variant.name = index
+
+        local build = variant.build
         if build then
             lfs.chdir(build_path)
             build()
         end
 
-        pack(package)
+        pack(package, variant)
     end
-end
-local function build_variants()
-    if package.variants then
-        for index, variant in pairs(package.variants) do
-            variant.name = index
-
-            local build = variant.build
-            if build then
-                lfs.chdir(build_path)
-                build()
-            end
-
-            pack(package, variant)
-        end
-    end
-end
-
--- build variants first if true
-if arg[3] == "1" then
-    build_variants()
-    build()
-else
-    build()
-    build_variants()
 end

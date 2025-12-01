@@ -28,13 +28,13 @@ COPY --from=stagex/user-libcap . /
 # ENV CC=clang
 # ENV CXX=clang++
 
-# RUN --network=none <<-EOF
+RUN --network=none <<-EOF
 # cd /usr/bin
 # rm cc c++
 # ln -s clang cc
 # ln -s clang++ c++
-# find /usr/include -type f -exec sed -i 's/#include_next/#include/g' {} +
-# EOF
+find /usr/include -type f -exec sed -i 's/#include_next/#include/g' {} +
+EOF
 
 # Install Lullaby
 ADD https://github.com/Stilic/lullaby/archive/refs/tags/v0.0.2.tar.gz /tmp/lullaby.tar.gz
@@ -79,42 +79,42 @@ meson install -C output
 EOF
 
 # Provide a libexecinfo stub
-# RUN cat <<EOF > /usr/include/execinfo.h
-# #ifndef _EXECINFO_H_
-# #define _EXECINFO_H_
-# #ifdef __cplusplus
-# extern "C" {
-# #endif
+RUN cat <<EOF > /usr/include/execinfo.h
+#ifndef _EXECINFO_H_
+#define _EXECINFO_H_
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-# int     backtrace(void **, int);
-# char ** backtrace_symbols(void *const *, int);
-# void    backtrace_symbols_fd(void *const *, int, int);
+int     backtrace(void **, int);
+char ** backtrace_symbols(void *const *, int);
+void    backtrace_symbols_fd(void *const *, int, int);
 
-# #include <stddef.h>
+#include <stddef.h>
 
-# int backtrace(void **buffer, int size) {
-#     (void)buffer;
-#     (void)size;
-#     return 0;
-# }
+int backtrace(void **buffer, int size) {
+    (void)buffer;
+    (void)size;
+    return 0;
+}
 
-# char **backtrace_symbols(void *const *buffer, int size) {
-#     (void)buffer;
-#     (void)size;
-#     return NULL;
-# }
+char **backtrace_symbols(void *const *buffer, int size) {
+    (void)buffer;
+    (void)size;
+    return NULL;
+}
 
-# void backtrace_symbols_fd(void *const *buffer, int size, int fd) {
-#     (void)buffer;
-#     (void)size;
-#     (void)fd;
-# }
+void backtrace_symbols_fd(void *const *buffer, int size, int fd) {
+    (void)buffer;
+    (void)size;
+    (void)fd;
+}
 
-# #ifdef __cplusplus
-# }
-# #endif
-# #endif
-# EOF
+#ifdef __cplusplus
+}
+#endif
+#endif
+EOF
 
 # Install LuaFileSystem
 RUN ["luarocks", "install", "luafilesystem"]
