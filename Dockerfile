@@ -1,4 +1,4 @@
-FROM stagex/pallet-clang-gnu-busybox
+FROM stagex/pallet-gcc-gnu-busybox
 
 COPY --from=stagex/pallet-lua . /
 COPY --from=stagex/pallet-python . /
@@ -6,8 +6,6 @@ COPY --from=stagex/core-samurai . /
 COPY --from=stagex/core-meson . /
 COPY --from=stagex/core-cmake . /
 COPY --from=stagex/core-perl . /
-COPY --from=stagex/core-autoconf . /
-COPY --from=stagex/core-automake . /
 COPY --from=stagex/core-make . /
 COPY --from=stagex/core-luarocks . /
 COPY --from=stagex/core-ca-certificates . /
@@ -15,7 +13,7 @@ COPY --from=stagex/core-curl . /
 COPY --from=stagex/core-openssl . /
 COPY --from=stagex/core-git . /
 
-# For Python
+# For Pickle's Python
 COPY --from=stagex/core-expat . /
 
 # PKH dependencies
@@ -25,14 +23,7 @@ COPY --from=stagex/user-fuse3 . /
 COPY --from=stagex/user-fuse-overlayfs . /
 COPY --from=stagex/user-libcap . /
 
-# ENV CC=clang
-# ENV CXX=clang++
-
-RUN --network=none <<-EOF
-# cd /usr/bin
-# rm cc c++
-# ln -s clang cc
-# ln -s clang++ c++
+RUN <<-EOF
 find /usr/include -type f -exec sed -i 's/#include_next/#include/g' {} +
 EOF
 
@@ -42,7 +33,7 @@ RUN --network=none <<-EOF
 set -eux
 tar xf /tmp/lullaby.tar.gz
 cd lullaby-0.0.2
-make
+make CC=cc
 make install
 EOF
 
@@ -79,42 +70,42 @@ meson install -C output
 EOF
 
 # Provide a libexecinfo stub
-RUN cat <<EOF > /usr/include/execinfo.h
-#ifndef _EXECINFO_H_
-#define _EXECINFO_H_
-#ifdef __cplusplus
-extern "C" {
-#endif
+# RUN cat <<EOF > /usr/include/execinfo.h
+# #ifndef _EXECINFO_H_
+# #define _EXECINFO_H_
+# #ifdef __cplusplus
+# extern "C" {
+# #endif
 
-int     backtrace(void **, int);
-char ** backtrace_symbols(void *const *, int);
-void    backtrace_symbols_fd(void *const *, int, int);
+# int     backtrace(void **, int);
+# char ** backtrace_symbols(void *const *, int);
+# void    backtrace_symbols_fd(void *const *, int, int);
 
-#include <stddef.h>
+# #include <stddef.h>
 
-int backtrace(void **buffer, int size) {
-    (void)buffer;
-    (void)size;
-    return 0;
-}
+# int backtrace(void **buffer, int size) {
+#     (void)buffer;
+#     (void)size;
+#     return 0;
+# }
 
-char **backtrace_symbols(void *const *buffer, int size) {
-    (void)buffer;
-    (void)size;
-    return NULL;
-}
+# char **backtrace_symbols(void *const *buffer, int size) {
+#     (void)buffer;
+#     (void)size;
+#     return NULL;
+# }
 
-void backtrace_symbols_fd(void *const *buffer, int size, int fd) {
-    (void)buffer;
-    (void)size;
-    (void)fd;
-}
+# void backtrace_symbols_fd(void *const *buffer, int size, int fd) {
+#     (void)buffer;
+#     (void)size;
+#     (void)fd;
+# }
 
-#ifdef __cplusplus
-}
-#endif
-#endif
-EOF
+# #ifdef __cplusplus
+# }
+# #endif
+# #endif
+# EOF
 
 # Install LuaFileSystem
 RUN ["luarocks", "install", "luafilesystem"]
