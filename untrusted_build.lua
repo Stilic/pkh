@@ -1,4 +1,7 @@
 buildmode = true
+if arg[3] == "1" then
+    hostfs = true
+end
 require "global"
 
 local lfs = require "lfs"
