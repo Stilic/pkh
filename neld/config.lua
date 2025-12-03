@@ -1,49 +1,48 @@
 return {
     gnu_site = "https://mirror.cyberbits.eu/gnu",
     repository = "https://pickle.stilic.net",
-    rootfs = {
+    bootstrap = {
         "base",
-        "linux",
         "musl",
         "musl-fts",
         "musl-obstack",
-        "gcc.libs",
+
         "libiconv",
         "argp",
         "readline",
         "curses",
         "gperf",
-
         "libxml2",
         "libxslt",
-
         "sqlite3",
-
-        -- for file
-        "libseccomp",
-        "zstd",
-
         "openssl",
         "libxcrypt",
+        "pcre2",
+        "zlib",
+        "libunistring",
+        "gettext",
+        "expat",
+
+        -- for gcc and gawk
+        "gmp",
+        "mpfr",
+        "mpc",
+
+        "sh",
         "toybox",
+        "awk",
+        "grep",
         "file",
         "diffutils",
-        "awk",
         "util-linux",
-
-        "pcre2",
-        "grep",
+        "xz",
+    },
+    rootfs = {
+        "linux",
 
         "libmd",
         "dhcpcd",
         "ifupdown-ng",
-
-        "sh",
-
-        "xz",
-        "zlib",
-        "libunistring",
-        "gettext",
 
         "unzip",
         "zip",
@@ -57,18 +56,12 @@ return {
         "openpam",
         "shadow",
 
-        "expat",
         "dbus",
         "turnstile",
 
         "e2fsprogs",
         "sysklogd",
         "dinit",
-
-        -- for gcc and gawk
-        "gmp",
-        "mpfr",
-        "mpc",
 
         -- TODO: package pkh itself
         "lzo",

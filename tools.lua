@@ -178,13 +178,18 @@ end
 
 -- pack templates
 
-function self.pack_default(path)
+function self.pack_default(path, variant)
     if not path then
         path = "source/_install"
     end
+    if variant then
+        variant = "-" .. variant
+    else
+        variant = ""
+    end
 
     return function()
-        os.execute("cp -ra " .. path .. "/* filesystem")
+        os.execute("cp -ra " .. path .. "/* filesystem" .. variant)
     end
 end
 
