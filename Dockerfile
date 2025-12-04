@@ -2,6 +2,7 @@ FROM stagex/pallet-gcc-gnu-busybox AS builder
 
 COPY --from=stagex/pallet-lua . /
 COPY --from=stagex/pallet-python . /
+COPY --from=stagex/core-bash . /
 COPY --from=stagex/core-samurai . /
 COPY --from=stagex/core-meson . /
 COPY --from=stagex/core-cmake . /
@@ -13,6 +14,7 @@ COPY --from=stagex/core-openssl . /
 COPY --from=stagex/core-git . /
 
 # Bootstrap dependencies
+COPY --from=stagex/core-libxml2 . /
 COPY --from=stagex/core-expat . /
 COPY --from=stagex/core-gmp . /
 COPY --from=stagex/user-mpfr . /
@@ -24,7 +26,12 @@ COPY --from=stagex/user-fuse3 . /
 COPY --from=stagex/user-fuse-overlayfs . /
 COPY --from=stagex/user-libcap . /
 
-RUN <<-EOF
+# Fix the ln command and C/C++ headers
+COPY --from=stagex/core-coreutils . /
+RUN --network=none <<-EOF
+ln -s coreutils /tmp/ln
+rm /usr/bin/ln
+mv /tmp/ln /usr/bin
 find /usr/include -type f -exec sed -i 's/#include_next/#include/g' {} +
 EOF
 
