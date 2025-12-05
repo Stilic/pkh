@@ -14,7 +14,8 @@ for _, package in ipairs(config.rootfs) do
 end
 
 local cwd = lfs.currentdir()
-local mnt_path = cwd .. "/neld/.build/work/mnt"
+local base_build_path = "." .. (hostfs and "bootstrap" or "build")
+local mnt_path = cwd .. "/neld/" .. base_build_path .. "/work/mnt"
 local root_path = mnt_path .. "/root"
 local overlay_path = root_path .. "/usr"
 local ro_path = mnt_path .. "/ro"
@@ -33,7 +34,7 @@ local function prepare_mounts(overlay, packages, prebuilt)
         local mountpoint = mnt_path .. "/" .. package.name
         overlay[package.name] = mountpoint
 
-        local mnt = "/.build/"
+        local mnt = "/" .. base_build_path .. "/"
         if prebuilt then
             mnt = "neld" .. mnt
         else
@@ -112,13 +113,13 @@ function self.build(name, skip_dependencies)
     local build_suffix = "pickle-linux/" .. name
     lfs.chdir(build_suffix)
     local package_path = lfs.currentdir()
-    if not lfs.attributes(".build") then
-        lfs.mkdir(".build")
-    elseif lfs.attributes(".build/" .. tools.get_file(name, package.version)) then
+    if not lfs.attributes(base_build_path) then
+        lfs.mkdir(base_build_path)
+    elseif lfs.attributes(base_build_path .. "/" .. tools.get_file(name, package.version)) then
         process_main = false
     end
-    lfs.chdir(".build")
-    build_suffix = build_suffix .. "/.build"
+    lfs.chdir(base_build_path)
+    build_suffix = build_suffix .. "/" .. base_build_path
     local build_path = lfs.currentdir()
 
     if process_main then
@@ -198,18 +199,18 @@ function self.unpack(path, name, variant)
     return os.execute("unsquashfs -d " ..
         path ..
         " -f pickle-linux/" ..
-        name .. "/.build/" .. tools.get_file(name, pkg(name).version, variant))
+        name .. "/" .. base_build_path .. "/" .. tools.get_file(name, pkg(name).version, variant))
 end
 
-lfs.mkdir("neld/.build")
-lfs.mkdir("neld/.build/work")
+lfs.mkdir("neld/" .. base_build_path)
+lfs.mkdir("neld/" .. base_build_path .. "/work")
 lfs.mkdir(mnt_path)
 
 if hostfs then
     root_path = "/"
 else
     lfs.mkdir(root_path)
-    os.execute("squashfuse neld/.build/work/rootfs.sqsh " .. root_path)
+    os.execute("squashfuse neld/" .. base_build_path .. "/work/rootfs.sqsh " .. root_path)
 end
 
 lfs.mkdir(ro_path)
