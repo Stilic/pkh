@@ -36,6 +36,8 @@ return {
         "diffutils",
         "util-linux",
         "xz",
+
+        "squashfs-tools",
     },
     rootfs = {
         "linux",
@@ -65,7 +67,6 @@ return {
 
         -- TODO: package pkh itself
         "lzo",
-        "squashfs-tools",
         "lua",
         "luafilesystem",
         "lullaby",

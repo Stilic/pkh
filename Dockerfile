@@ -14,6 +14,8 @@ COPY --from=stagex/core-openssl . /
 COPY --from=stagex/core-git . /
 
 # Bootstrap dependencies
+COPY --from=stagex/core-libzstd . /
+COPY --from=stagex/user-elfutils . /
 COPY --from=stagex/core-libxml2 . /
 COPY --from=stagex/core-expat . /
 COPY --from=stagex/core-gmp . /
