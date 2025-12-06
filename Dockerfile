@@ -22,7 +22,6 @@ COPY --from=stagex/core-gmp . /
 COPY --from=stagex/user-mpfr . /
 
 # PKH dependencies
-COPY --from=stagex/user-patch . /
 COPY --from=stagex/user-lzo . /
 COPY --from=stagex/user-fuse3 . /
 COPY --from=stagex/user-fuse-overlayfs . /
