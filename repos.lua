@@ -31,7 +31,7 @@ for line in llby.net.srequest(config.repository .. "/packages/available.txt").co
 end
 
 local installed_packages = {}
-function self.download(name, directory, skip_dependencies)
+function self.download(name, directory)
     if installed_packages[name] then
         return
     end
@@ -55,12 +55,10 @@ function self.download(name, directory, skip_dependencies)
         end
         installed_packages[name] = true
 
-        if not skip_dependencies then
-            local package = pkg(name)
-            if package.dependencies then
-                for _, dep in ipairs(package.dependencies) do
-                    self.download(dep.name, directory)
-                end
+        local package = pkg(name)
+        if package.dependencies then
+            for _, dep in ipairs(package.dependencies) do
+                self.download(dep.name, directory)
             end
         end
     else

@@ -3,6 +3,7 @@
     "unbalanced-assignments",
     "lowercase-global",
     "need-check-nil",
-    "discard-returns"
+    "discard-returns",
+    "cast-local-type"
   ]
 }

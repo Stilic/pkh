@@ -6,8 +6,7 @@ local llby = require "lullaby"
 local tools = require "tools"
 local config = require "neld.config"
 
-local self = {}
-local built_packages = {}
+local self = { built_packages = {} }
 local rootfs = {}
 for _, package in ipairs(config.rootfs) do
     rootfs[package] = package
@@ -73,10 +72,10 @@ function self.build(name, skip_dependencies)
     local package, process_main = pkg(name), true
 
     if not skip_dependencies then
-        if package.dev_dependencies then
+        if not hostfs and package.dev_dependencies then
             for _, p in ipairs(package.dev_dependencies) do
                 local name = p.name
-                if not built_packages[name] then
+                if not self.built_packages[name] then
                     self.build(name)
                 end
             end
@@ -84,7 +83,7 @@ function self.build(name, skip_dependencies)
         if package.dependencies then
             for _, p in ipairs(package.dependencies) do
                 local name = p.name
-                if not built_packages[name] then
+                if not self.built_packages[name] then
                     self.build(name)
                 end
             end
@@ -185,10 +184,10 @@ function self.build(name, skip_dependencies)
 
     if package.variants then
         for index, _ in pairs(package.variants) do
-            built_packages[name .. "-" .. index] = true
+            self.built_packages[name .. "-" .. index] = true
         end
     end
-    built_packages[name] = true
+    self.built_packages[name] = true
 
     if not hostfs then
         os.execute("umount " .. overlay_path)
