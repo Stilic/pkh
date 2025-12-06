@@ -9,7 +9,7 @@ local lfs = require "lfs"
 
 local BASE = "neld/"
 local ROOTFS_CACHE = BASE .. ".rootfs/"
-local BUILD_CACHE = BASE .. ".bootstrap/"
+local BUILD_CACHE = BASE .. ".build/"
 
 -- TODO: variant support?
 local function copy(name, path)
@@ -39,7 +39,6 @@ for _, package in ipairs(config.bootstrap) do
     build(package, ROOTFS_CACHE)
 end
 
-print("MAKING ROOTFS")
 os.execute("./pack_rootfs.sh")
 
 os.execute("rm -rf " .. BUILD_CACHE)
@@ -51,19 +50,5 @@ os.execute("cp " .. ROOTFS_CACHE .. "work/rootfs.sqsh " .. BUILD_CACHE .. "work"
 for _, package in ipairs(config.development) do
     build(package, BUILD_CACHE)
 end
-
-local function extract(package, directory)
-    package = pkg(package)
-    pkh.build(package.name)
-    os.execute("unsquashfs -d " ..
-        BUILD_CACHE .. "work/" .. directory .. " -f " .. tools.get_file(package.name, package.version))
-end
-
-print("COMPILING KERNEL")
-extract("linux", "linux")
-print(lfs.link("linux/lib/modules/" .. pkg("linux").version .. "/vmlinuz", ROOTFS_CACHE .. "work/vmlinuz", true))
-
-print("CONFIGURING RAMDISK")
-extract("busybox-static", "ram_root")
 
 pkh.close()

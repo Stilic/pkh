@@ -201,19 +201,19 @@ function self.unpack(path, name, variant)
         name .. "/" .. base_build_path .. "/" .. tools.get_file(name, pkg(name).version, variant))
 end
 
-lfs.mkdir("neld/" .. base_build_path)
-lfs.mkdir("neld/" .. base_build_path .. "/work")
-lfs.mkdir(mnt_path)
-
 if hostfs then
     root_path = "/"
 else
+    lfs.mkdir("neld/" .. base_build_path)
+    lfs.mkdir("neld/" .. base_build_path .. "/work")
+    lfs.mkdir(mnt_path)
+
     lfs.mkdir(root_path)
     os.execute("squashfuse neld/" .. base_build_path .. "/work/rootfs.sqsh " .. root_path)
-end
 
-lfs.mkdir(ro_path)
-lfs.mkdir(ro_path .. "/bin")
-lfs.link("../../bin/env", ro_path .. "/bin/env", true)
+    lfs.mkdir(ro_path)
+    lfs.mkdir(ro_path .. "/bin")
+    lfs.link("../../bin/env", ro_path .. "/bin/env", true)
+end
 
 return self
