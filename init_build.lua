@@ -22,7 +22,6 @@ lfs.mkdir(ROOTFS_CACHE)
 
 for _, package in ipairs(config.bootstrap) do
     pkh.build(package)
-    print(lfs.currentdir())
     copy(package, ROOTFS_CACHE)
 end
 
