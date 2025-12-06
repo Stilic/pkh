@@ -66,7 +66,6 @@ return {
         "dinit",
 
         -- TODO: package pkh itself
-        "lzo",
         "lullaby",
         "libfuse",
         "squashfuse",
