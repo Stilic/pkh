@@ -37,7 +37,7 @@ return {
         "util-linux",
         "xz",
 
-        "squashfs-tools",
+        "lua"
     },
     rootfs = {
         "linux",
@@ -67,12 +67,10 @@ return {
 
         -- TODO: package pkh itself
         "lzo",
-        "lua",
-        "luafilesystem",
         "lullaby",
         "libfuse",
         "squashfuse",
-        "fuse-overlayfs"
+        "fuse-overlayfs",
     },
     -- final set of packages required to kickstart the process
     development = {
@@ -89,7 +87,9 @@ return {
         "automake",
         "autoconf",
 
-        -- for pkh sandbox
+        -- for pkh
+        "luafilesystem",
+        "squashfs-tools",
         "bubblewrap"
     },
     production = {

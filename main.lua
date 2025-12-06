@@ -154,11 +154,13 @@ function self.build(name, skip_dependencies)
                         end
                     end
                     if patch_dir then
+                        lfs.chdir(path)
                         for file in lfs.dir(patch_dir) do
                             if file ~= "." and file ~= ".." then
-                                os.execute("patch -p 1 -i " .. path .. " " .. patch_dir .. "/" .. file)
+                                print(os.execute("patch -p 1 -i " .. patch_dir .. "/" .. file))
                             end
                         end
+                        lfs.chdir(build_path)
                     end
                 end
             end

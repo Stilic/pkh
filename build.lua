@@ -1,14 +1,20 @@
 require "global"
 pcall(require, "luarocks.loader")
 
-local lfs = require "lfs"
 local pkh = require "main"
+local config = require "neld.config"
 
-local repository = "pickle-linux/"
-for package in lfs.dir(repository) do
-    if package:sub(1, 1) ~= "." and lfs.attributes(repository .. package).mode == "directory" then
-        pkh.build(package)
-    end
+for _, package in ipairs(config.bootstrap) do
+    pkh.build(package)
+end
+for _, package in ipairs(config.rootfs) do
+    pkh.build(package)
+end
+for _, package in ipairs(config.development) do
+    pkh.build(package)
+end
+for _, package in ipairs(config.production) do
+    pkh.build(package)
 end
 
 pkh.close()
