@@ -16,7 +16,7 @@ end
 
 function self.get_flags(cflags, cppflags)
     return (hostfs and "CC=gcc CXX=g++" or "CC=clang CXX=clang++") ..
-        ' TARGET=' .. system.architecture .. '-pc-linux-musl CPATH=/usr/include CFLAGS="' ..
+        ' CPATH=/usr/include CFLAGS="' ..
         self.DEFAULT_CFLAGS ..
         (cflags and (" " .. cflags) or "") ..
         '" CPPFLAGS="' .. self.DEFAULT_CPPFLAGS .. (cppflags and (" " .. cppflags) or "") .. '"'
