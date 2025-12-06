@@ -41,6 +41,7 @@ return {
     },
     rootfs = {
         "linux",
+        "llvm.libs",
 
         "libmd",
         "dhcpcd",
@@ -75,7 +76,7 @@ return {
     development = {
         "llvm",
 
-        "binutils",
+        -- "binutils",
         "make",
         "pkgconf",
         "m4",

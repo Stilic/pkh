@@ -48,8 +48,6 @@ local function prepare_mounts(overlay, packages, prebuilt)
                 mountpoints[package.name] = mountpoint
             elseif package.dev_dependencies and not prebuilt then
                 prepare_mounts(overlay, package.dev_dependencies)
-            else
-                print(mnt)
             end
         end
 
@@ -158,7 +156,6 @@ function self.build(name, skip_dependencies)
                         lfs.chdir(path)
                         for file in lfs.dir(patch_dir) do
                             if file ~= "." and file ~= ".." then
-                                print("applying patch " .. file)
                                 os.execute("patch -p 1 -i " .. patch_dir .. "/" .. file)
                             end
                         end

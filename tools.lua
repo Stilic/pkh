@@ -54,6 +54,7 @@ function self.build_gnu_configure(options, source, cflags, cppflags, configure)
 
         self.make(options, cflags, cppflags, configure)
 
+        os.execute("rm -rf _install")
         lfs.mkdir("_install")
         os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
     end
@@ -92,6 +93,8 @@ function self.build_meson(options, source, cflags, cppflags)
         os.execute(self.get_flags(cflags, cppflags) ..
             " meson setup build --buildtype=release --prefix=/ --libdir=/lib" .. options)
         os.execute("meson compile -C build")
+
+        os.execute("rm -rf _install")
         os.execute('DESTDIR="' .. lfs.currentdir() .. '/_install" meson install -C build')
     end
 end
@@ -124,6 +127,8 @@ function self.build_cmake(options, source, project, cflags, cppflags)
             " cmake" ..
             project_command ..
             "-B " .. build_dir .. " -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
+
+        os.execute("rm -rf _install")
         os.execute("cmake --build " .. build_dir .. " --config Release --target install" .. system.get_make_jobs())
     end
 end
