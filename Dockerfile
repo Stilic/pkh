@@ -14,11 +14,9 @@ COPY --from=stagex/core-openssl . /
 COPY --from=stagex/core-git . /
 
 # Bootstrap dependencies
-COPY --from=stagex/core-gmp . /
 COPY --from=stagex/core-libzstd . /
 COPY --from=stagex/core-libxml2 . /
 COPY --from=stagex/core-expat . /
-COPY --from=stagex/user-mpfr . /
 COPY --from=stagex/user-elfutils . /
 
 # PKH dependencies
@@ -43,32 +41,10 @@ ENV DESTDIR=/build
 
 COPY --from=stagex/core-luarocks . /
 
-ADD https://gcc.gnu.org/pub/gcc/infrastructure/mpc-1.3.1.tar.gz /tmp/mpc.tar.gz
-ADD https://gcc.gnu.org/pub/gcc/infrastructure/isl-0.24.tar.bz2 /tmp/isl.tar.bz2
 ADD https://github.com/Stilic/lullaby/archive/refs/tags/v0.0.2.tar.gz /tmp/lullaby.tar.gz
 ADD https://github.com/plougher/squashfs-tools/releases/download/4.6.1/squashfs-tools-4.6.1.tar.gz /tmp/squashfs-tools.tar.gz
 ADD https://github.com/vasi/squashfuse/releases/download/0.6.1/squashfuse-0.6.1.tar.gz /tmp/squashfuse.tar.gz
 ADD https://github.com/containers/bubblewrap/releases/download/v0.11.0/bubblewrap-0.11.0.tar.xz /tmp/bubblewrap.tar.xz
-
-# Install MPC
-RUN --network=none <<-EOF
-set -eux
-tar xf /tmp/mpc.tar.gz
-cd mpc-1.3.1
-./configure
-make -j `nproc`
-make install
-EOF
-
-# Install ISL
-RUN --network=none <<-EOF
-set -eux
-tar xf /tmp/isl.tar.bz2
-cd isl-0.24
-./configure
-make -j `nproc`
-make install
-EOF
 
 # Install Lullaby
 RUN --network=none <<-EOF
@@ -119,42 +95,42 @@ FROM builder
 COPY --from=utils /build .
 
 # Provide a libexecinfo stub
-# RUN cat <<EOF > /usr/include/execinfo.h
-# #ifndef _EXECINFO_H_
-# #define _EXECINFO_H_
-# #ifdef __cplusplus
-# extern "C" {
-# #endif
+RUN cat <<EOF > /usr/include/execinfo.h
+#ifndef _EXECINFO_H_
+#define _EXECINFO_H_
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-# int     backtrace(void **, int);
-# char ** backtrace_symbols(void *const *, int);
-# void    backtrace_symbols_fd(void *const *, int, int);
+int     backtrace(void **, int);
+char ** backtrace_symbols(void *const *, int);
+void    backtrace_symbols_fd(void *const *, int, int);
 
-# #include <stddef.h>
+#include <stddef.h>
 
-# int backtrace(void **buffer, int size) {
-#     (void)buffer;
-#     (void)size;
-#     return 0;
-# }
+int backtrace(void **buffer, int size) {
+    (void)buffer;
+    (void)size;
+    return 0;
+}
 
-# char **backtrace_symbols(void *const *buffer, int size) {
-#     (void)buffer;
-#     (void)size;
-#     return NULL;
-# }
+char **backtrace_symbols(void *const *buffer, int size) {
+    (void)buffer;
+    (void)size;
+    return NULL;
+}
 
-# void backtrace_symbols_fd(void *const *buffer, int size, int fd) {
-#     (void)buffer;
-#     (void)size;
-#     (void)fd;
-# }
+void backtrace_symbols_fd(void *const *buffer, int size, int fd) {
+    (void)buffer;
+    (void)size;
+    (void)fd;
+}
 
-# #ifdef __cplusplus
-# }
-# #endif
-# #endif
-# EOF
+#ifdef __cplusplus
+}
+#endif
+#endif
+EOF
 
 WORKDIR /pkh
 ENTRYPOINT ["/bin/sh"]

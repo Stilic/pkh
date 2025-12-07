@@ -23,11 +23,6 @@ return {
         "gettext",
         "expat",
 
-        -- for gcc and gawk
-        "gmp",
-        "mpfr",
-        "mpc",
-
         "sh",
         "toybox",
         "awk",
@@ -41,7 +36,7 @@ return {
     },
     rootfs = {
         "linux",
-        "gcc.libs",
+        "llvm.libs",
 
         "libmd",
         "dhcpcd",
@@ -74,9 +69,9 @@ return {
     },
     -- final set of packages required to kickstart the process
     development = {
-        "gcc",
+        "llvm",
 
-        "binutils",
+        -- "binutils",
         "make",
         "pkgconf",
         "m4",

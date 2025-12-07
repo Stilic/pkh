@@ -16,7 +16,7 @@ end
 
 -- TODO: switch to LLVM once the StageX update is out
 function self.get_flags(cflags, cppflags)
-    return 'CC=gcc CXX=g++ CPATH=/usr/include CFLAGS="' ..
+    return (hostfs and "CC=gcc CXX=g++" or "CC=clang CXX=clang++") .. ' CPATH=/usr/include CFLAGS="' ..
         self.DEFAULT_CFLAGS ..
         (cflags and (" " .. cflags) or "") ..
         '" CPPFLAGS="' .. self.DEFAULT_CPPFLAGS .. (cppflags and (" " .. cppflags) or "") .. '"'
@@ -99,7 +99,7 @@ function self.build_meson(options, source, cflags, cppflags)
     end
 end
 
-function self.build_cmake(options, source, cache, project, targets, cflags, cppflags)
+function self.build_cmake(options, source, project, cflags, cppflags)
     if options then
         options = " " .. options
     else
@@ -111,31 +111,23 @@ function self.build_cmake(options, source, cache, project, targets, cflags, cppf
     if not project then
         project = ""
     end
-    if not targets then
-        targets = "install"
-    end
 
-    local build_dir = "build"
+    local project_command, build_dir = "", "build"
     if project ~= "" then
+        project_command = " -S " .. project .. " "
         build_dir = build_dir .. "-" .. project
     end
 
     return function()
         if source ~= "" then
             lfs.chdir(source)
-            lfs.mkdir(build_dir)
-            lfs.chdir(build_dir)
         end
 
-        local install_dir = "../_install"
-
-        os.execute("rm -rf " .. install_dir)
-
         os.execute(self.get_flags(cflags, cppflags) ..
-            " cmake" .. (cache and (" -C ../" .. cache .. ".cmake") or "") .. " .." ..
-            (project ~= "" and ("/" .. project) or "") ..
-            " -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=" .. install_dir .. options)
-        os.execute("ninja" .. system.get_make_jobs() .. " " .. targets)
+            " cmake" ..
+            project_command ..
+            "-B " .. build_dir .. " -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
+        os.execute("cmake --build " .. build_dir .. " --config Release --target install" .. system.get_make_jobs())
     end
 end
 
