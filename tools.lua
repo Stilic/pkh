@@ -128,6 +128,8 @@ function self.build_cmake(options, source, project, targets, cflags, cppflags)
             lfs.chdir(source)
         end
 
+        os.execute("rm -rf _install")
+
         os.execute(self.get_flags(cflags, cppflags) ..
             " cmake" ..
             project_command ..
