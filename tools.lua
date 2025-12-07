@@ -15,11 +15,16 @@ function self.get_file(name, version, variant)
 end
 
 -- TODO: switch to LLVM once the StageX update is out
-function self.get_flags(cflags, cppflags)
+function self.get_flags(cflags, cppflags, ldflags)
+    if ldflags then
+        ldflags = ' LDFLAGS="' .. ldflags .. '"'
+    else
+        ldflags = ""
+    end
     return (hostfs and "CC=gcc CXX=g++" or "CC=clang CXX=clang++") .. ' CPATH=/usr/include CFLAGS="' ..
         self.DEFAULT_CFLAGS ..
         (cflags and (" " .. cflags) or "") ..
-        '" CPPFLAGS="' .. self.DEFAULT_CPPFLAGS .. (cppflags and (" " .. cppflags) or "") .. '"'
+        '" CPPFLAGS="' .. self.DEFAULT_CPPFLAGS .. (cppflags and (" " .. cppflags) or "") .. '"' .. ldflags
 end
 
 function self.make(options, cflags, cppflags, configure)
@@ -99,7 +104,7 @@ function self.build_meson(options, source, cflags, cppflags)
     end
 end
 
-function self.build_cmake(options, source, project, targets, cflags, cppflags)
+function self.build_cmake(options, source, project, targets, cflags, cppflags, ldflags)
     if options then
         options = " " .. options
     else
@@ -130,7 +135,7 @@ function self.build_cmake(options, source, project, targets, cflags, cppflags)
 
         os.execute("rm -rf _install")
 
-        os.execute(self.get_flags(cflags, cppflags) ..
+        os.execute(self.get_flags(cflags, cppflags, ldflags) ..
             " cmake" ..
             project_command ..
             "-B " .. build_dir .. " -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
