@@ -41,7 +41,7 @@ return {
     },
     rootfs = {
         "linux",
-        "llvm.libs",
+        "gcc.libs",
 
         "libmd",
         "dhcpcd",
@@ -74,9 +74,9 @@ return {
     },
     -- final set of packages required to kickstart the process
     development = {
-        "llvm",
+        "gcc",
 
-        -- "binutils",
+        "binutils",
         "make",
         "pkgconf",
         "m4",
