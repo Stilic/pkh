@@ -20,10 +20,8 @@ You will need Docker.
 
 The following steps have to be done inside the Docker container:
 ```
-# Move to the source directory
-cd /pkh
-# Set up the bootstrap environment
-lua bootstrap_neld.lua
+# Bootstrap the initial environment
+lua init_build.lua
 # Build all the packages
 lua build.lua
 ```
