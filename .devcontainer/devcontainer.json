@@ -1,15 +1,6 @@
 {
-    "remoteUser": "root",
-    "build": {
-        "dockerfile": "Dockerfile"
-    },
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "sumneko.lua"
-            ]
-        }
-    },
-    "workspaceFolder": "./",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/pkh,type=bind"
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/prulloac/devcontainer-features/lua:1": {}
+    }
 }
