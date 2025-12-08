@@ -2,5 +2,6 @@
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/prulloac/devcontainer-features/lua:1": {}
-    }
+    },
+    "postStartCommand": "./docker_build.sh"
 }
