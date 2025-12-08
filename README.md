@@ -10,8 +10,7 @@ This is currently a **Work In Progress**. The goal is to demonstrate the viabili
 
 ### Bootstrap
 
-You will need Docker with [`containerd` snapshotters enabled](https://docs.docker.com/engine/storage/containerd/#enable-containerd-image-store-on-docker-engine).
-
+You will need Docker.
 ```
 # Set up the builder image
 ./docker_build.sh
