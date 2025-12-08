@@ -1,5 +1,14 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "features": {},
-  "build": { "dockerfile": "Dockerfile" }
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "sumneko.lua"
+            ]
+        }
+    },
+    "workspaceFolder": "./",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/pkh,type=bind"
 }
