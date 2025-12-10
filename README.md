@@ -2,6 +2,8 @@
 
 The PacK Head package manager.
 
+Join the Matrix room over at `#pickle-linux:matrix.org` if you need support, want to contribute or talk about the project!
+
 ## Status
 
 This is currently a **Work In Progress**. The goal is to demonstrate the viability of a self-hosting distribution built with a package manager written in Lua.
