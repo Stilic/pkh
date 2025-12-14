@@ -69,9 +69,10 @@ return {
     },
     -- final set of packages required to kickstart the process
     development = {
+        "gcc",
         "llvm",
 
-        -- "binutils",
+        "binutils",
         "make",
         "pkgconf",
         "m4",

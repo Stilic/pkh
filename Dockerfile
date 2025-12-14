@@ -17,6 +17,8 @@ COPY --from=stagex/core-git . /
 COPY --from=stagex/core-libzstd . /
 COPY --from=stagex/core-libxml2 . /
 COPY --from=stagex/core-expat . /
+COPY --from=stagex/core-gmp . /
+COPY --from=stagex/user-mpfr . /
 COPY --from=stagex/user-elfutils . /
 
 # PKH dependencies
@@ -41,10 +43,32 @@ ENV DESTDIR=/build
 
 COPY --from=stagex/core-luarocks . /
 
+ADD https://gcc.gnu.org/pub/gcc/infrastructure/mpc-1.3.1.tar.gz /tmp/mpc.tar.gz
+ADD https://gcc.gnu.org/pub/gcc/infrastructure/isl-0.24.tar.bz2 /tmp/isl.tar.bz2
 ADD https://github.com/Stilic/lullaby/archive/refs/tags/v0.0.2.tar.gz /tmp/lullaby.tar.gz
 ADD https://github.com/plougher/squashfs-tools/releases/download/4.6.1/squashfs-tools-4.6.1.tar.gz /tmp/squashfs-tools.tar.gz
 ADD https://github.com/vasi/squashfuse/releases/download/0.6.1/squashfuse-0.6.1.tar.gz /tmp/squashfuse.tar.gz
 ADD https://github.com/containers/bubblewrap/releases/download/v0.11.0/bubblewrap-0.11.0.tar.xz /tmp/bubblewrap.tar.xz
+
+# Install MPC
+RUN --network=none <<-EOF
+set -eux
+tar xf /tmp/mpc.tar.gz
+cd mpc-1.3.1
+./configure
+make -j `nproc`
+make install
+EOF
+
+# Install ISL
+RUN --network=none <<-EOF
+set -eux
+tar xf /tmp/isl.tar.bz2
+cd isl-0.24
+./configure
+make -j `nproc`
+make install
+EOF
 
 # Install Lullaby
 RUN --network=none <<-EOF

@@ -3,7 +3,6 @@ require "global"
 pcall(require, "luarocks.loader")
 
 local pkh = require "main"
-local tools = require "tools"
 local config = require "neld.config"
 local lfs = require "lfs"
 
@@ -15,7 +14,7 @@ local BUILD_CACHE = BASE .. ".build/"
 local function copy(name, path)
     local package = pkg(name)
     os.execute("cp pickle-linux/" ..
-        package.name .. "/.bootstrap/" .. tools.get_file(package.name, package.version) .. " " .. path)
+        package.name .. "/.bootstrap/*.sqsh " .. path)
 end
 local function build(package, path)
     pkh.build(package)
