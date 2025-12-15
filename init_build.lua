@@ -34,6 +34,7 @@ end
 os.execute("rm -rf " .. ROOTFS_CACHE)
 lfs.mkdir(ROOTFS_CACHE)
 
+build("gcc", ROOTFS_CACHE)
 for _, package in ipairs(config.bootstrap) do
     build(package, ROOTFS_CACHE)
 end
@@ -47,7 +48,9 @@ lfs.mkdir(BUILD_CACHE .. "work")
 os.execute("cp " .. ROOTFS_CACHE .. "work/rootfs.sqsh " .. BUILD_CACHE .. "work")
 
 for _, package in ipairs(config.development) do
-    build(package, BUILD_CACHE)
+    if package ~= "gcc" then
+        build(package, BUILD_CACHE)
+    end
 end
 
 pkh.close()
