@@ -15,5 +15,10 @@ do
     unsquashfs -f -d . "$package"
 done
 
+if [ "$1" -eq 1 ]; then
+    cp /usr/lib/libgmp* lib
+    rm lib/libgmp.la
+fi
+
 unsquashfs -f -d . ../../base,1.sqsh
 mksquashfs . ../rootfs.sqsh -comp lzo -force-uid 0 -force-gid 0

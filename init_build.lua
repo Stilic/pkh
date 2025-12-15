@@ -39,7 +39,7 @@ for _, package in ipairs(config.bootstrap) do
     build(package, ROOTFS_CACHE)
 end
 
-os.execute("./pack_rootfs.sh")
+os.execute("./pack_rootfs.sh 1")
 
 os.execute("rm -rf " .. BUILD_CACHE)
 lfs.mkdir(BUILD_CACHE)
