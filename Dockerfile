@@ -34,7 +34,7 @@ cd /usr/bin
 ln -s coreutils /tmp/ln
 rm ln
 mv /tmp/ln .
-find /usr/include -type f -exec sed -i 's/#include_next/#include/g' {} +
+find filesystem-libs -type f -exec sed -i 's/# *include_next/#include/g' {} +
 EOF
 
 FROM builder AS utils

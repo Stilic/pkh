@@ -13,8 +13,5 @@ end
 for _, package in ipairs(config.development) do
     pkh.build(package)
 end
-for _, package in ipairs(config.production) do
-    pkh.build(package)
-end
 
 pkh.close()

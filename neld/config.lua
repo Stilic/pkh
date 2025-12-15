@@ -2,7 +2,9 @@ return {
     gnu_site = "https://mirror.cyberbits.eu/gnu",
     repository = "https://pickle.stilic.net",
     bootstrap = {
+        "linux",
         "base",
+
         "musl",
         "musl-fts",
         "musl-obstack",
@@ -35,7 +37,6 @@ return {
         "lua"
     },
     rootfs = {
-        "linux",
         "gcc.libs",
 
         "libmd",
