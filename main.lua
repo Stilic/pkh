@@ -68,6 +68,10 @@ function self.close()
 end
 
 function self.build(name, skip_dependencies)
+    if name:find("%.") then
+        return
+    end
+
     local package, process_main = pkg(name), true
 
     if not skip_dependencies then

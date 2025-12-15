@@ -21,7 +21,7 @@ function self.get_flags(cflags, cppflags, ldflags)
     else
         ldflags = ""
     end
-    return 'CC=gcc CXX=g++ CPATH=/usr/include CFLAGS="' ..
+    return 'CC=gcc CXX=g++ CPATH=/usr/include:/include CFLAGS="' ..
         self.DEFAULT_CFLAGS ..
         (cflags and (" " .. cflags) or "") ..
         '" CPPFLAGS="' .. self.DEFAULT_CPPFLAGS .. (cppflags and (" " .. cppflags) or "") .. '"' .. ldflags
@@ -39,7 +39,7 @@ function self.make(options, cflags, cppflags, configure)
 
     if lfs.attributes(configure) then
         os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. " --prefix=" .. options)
-        os.execute("CPATH=/usr/include make" .. system.get_make_jobs())
+        os.execute("CPATH=/usr/include:/include make" .. system.get_make_jobs())
     else
         os.execute(self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs() .. options)
     end

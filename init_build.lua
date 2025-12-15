@@ -34,7 +34,7 @@ end
 os.execute("rm -rf " .. ROOTFS_CACHE)
 lfs.mkdir(ROOTFS_CACHE)
 
-build("gcc", ROOTFS_CACHE)
+build("gcc-bootstrap", ROOTFS_CACHE)
 for _, package in ipairs(config.bootstrap) do
     build(package, ROOTFS_CACHE)
 end
