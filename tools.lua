@@ -38,8 +38,14 @@ function self.make(options, cflags, cppflags, configure)
     end
 
     if lfs.attributes(configure) then
-        os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. " --prefix=" .. options)
+        lfs.mkdir("_build")
+        lfs.chdir("_build")
+
+        os.execute(self.get_flags(cflags, cppflags) .. " ../" .. configure .. " --prefix=" .. options)
+
         os.execute("CPATH=/usr/include make" .. system.get_make_jobs())
+
+        lfs.chdir("..")
     else
         os.execute(self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs() .. options)
     end
@@ -57,11 +63,15 @@ function self.build_gnu_configure(options, source, cflags, cppflags, configure)
             lfs.chdir(source)
         end
 
+        local source_dir = lfs.currentdir()
+
         self.make(options, cflags, cppflags, configure)
 
-        os.execute("rm -rf _install")
-        lfs.mkdir("_install")
-        os.execute('make install DESTDIR="' .. lfs.currentdir() .. '/_install"')
+        os.execute('rm -rf "' .. source_dir .. '/_install"')
+        lfs.mkdir(source_dir .. "/_install")
+        os.execute('make install DESTDIR="' .. source_dir .. '/_install"')
+
+        lfs.chdir(source_dir)
     end
 end
 
