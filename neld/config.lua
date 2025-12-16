@@ -99,6 +99,7 @@ local self = {
 
 if stage < 2 then
     table.insert(self.development, "gcc-bootstrap")
+    table.insert(self.development, "gcc-bootstrap.libs")
 else
     table.insert(self.development, "gcc")
 end

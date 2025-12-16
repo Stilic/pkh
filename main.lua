@@ -23,16 +23,28 @@ local mountpoints = {}
 
 local function prepare_mounts(overlay, packages, prebuilt)
     for _, package in ipairs(packages) do
-        if rootfs[package] then
+        local is_string = type(package) == "string"
+
+        if rootfs[is_string and package or package.name] then
             return
         end
 
-        if type(package) == "string" then
-            package = pkg(package)
+        local mount_name
+        if is_string then
+            mount_name = package
+
+            local i = package:find("%.")
+            if i then
+                package = pkg(package:sub(1, i - 1))
+            else
+                package = pkg(package)
+            end
+        else
+            mount_name = package.name
         end
 
-        local mountpoint = mnt_path .. "/" .. package.name
-        overlay[package.name] = mountpoint
+        local mountpoint = mnt_path .. "/" .. mount_name
+        overlay[mount_name] = mountpoint
 
         local mnt = "/" .. base_build_path .. "/"
         if prebuilt then
@@ -40,12 +52,12 @@ local function prepare_mounts(overlay, packages, prebuilt)
         else
             mnt = "pickle-linux/" .. package.name .. mnt
         end
-        mnt = mnt .. tools.get_file(package.name, package.version)
+        mnt = mnt .. tools.get_file(mount_name, package.version)
 
-        if not mountpoints[package.name] then
+        if not mountpoints[mount_name] then
             lfs.mkdir(mountpoint)
             if os.execute("squashfuse " .. mnt .. " " .. mountpoint) then
-                mountpoints[package.name] = mountpoint
+                mountpoints[mount_name] = mountpoint
             elseif package.dev_dependencies and not prebuilt then
                 prepare_mounts(overlay, package.dev_dependencies)
             end
@@ -108,6 +120,7 @@ function self.build(name, skip_dependencies)
         local lowerdir = ro_path .. ":"
         for _, m in pairs(overlay) do
             lowerdir = lowerdir .. m .. ":"
+            print("MOUNTING: " .. m)
         end
         os.execute("fuse-overlayfs -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
     end
