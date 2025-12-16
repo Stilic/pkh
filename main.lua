@@ -192,7 +192,7 @@ function self.build(name, skip_dependencies)
     -- TODO: remove the gcc libexec workaround
     os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --setenv TARGET " ..
-        system.architecture .. "-pc-linux-musl --chdir /root --ro-bind " ..
+        system.architecture .. "-pc-linux-musl --setenv CPATH /include --chdir /root --ro-bind " ..
         root_path .. " / --dev /dev --tmpfs /tmp " ..
         "--bind " .. cwd .. " /root --bind " .. build_path .. " /root/" .. build_suffix ..
         " /bin/lua untrusted_build.lua " .. name .. process_main_option .. " " .. stage)

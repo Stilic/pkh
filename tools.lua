@@ -4,11 +4,6 @@ local system = require "system"
 local self = {}
 
 self.DEFAULT_CFLAGS = "-O2 -fPIC"
--- the rootfs stores its header files in /include, which is a non-standard location
-if stage == 1 then
-    self.DEFAULT_CFLAGS = self.DEFAULT_CFLAGS .. " -I/include"
-end
-
 self.DEFAULT_CPPFLAGS = self.DEFAULT_CFLAGS
 
 function self.get_file(name, version, variant)
