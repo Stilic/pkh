@@ -1,4 +1,4 @@
-return {
+local self = {
     gnu_site = "https://mirror.cyberbits.eu/gnu",
     repository = "https://pickle.stilic.net",
     bootstrap = {
@@ -70,8 +70,6 @@ return {
     },
     -- final set of packages required to kickstart the process
     development = {
-        "gcc",
-
         "binutils",
         "make",
         "pkgconf",
@@ -98,3 +96,11 @@ return {
         "git",
     }
 }
+
+if stage < 2 then
+    table.insert(self.development, "gcc-bootstrap")
+else
+    table.insert(self.development, "gcc")
+end
+
+return self

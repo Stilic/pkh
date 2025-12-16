@@ -58,7 +58,7 @@ function pkg(name)
 end
 
 ---@diagnostic disable-next-line: undefined-global
-package_environment.hostfs = hostfs
+package_environment.stage = stage
 package_environment.buildmode = buildmode
 if buildmode then
     package_environment.os = os

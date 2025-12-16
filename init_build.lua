@@ -1,4 +1,4 @@
-hostfs = true
+stage = 0
 require "global"
 pcall(require, "luarocks.loader")
 
@@ -10,7 +10,6 @@ local BASE = "neld/"
 local ROOTFS_CACHE = BASE .. ".rootfs/"
 local BUILD_CACHE = BASE .. ".build/"
 
--- TODO: variant support?
 local function copy(name, path)
     local package = pkg(name)
     os.execute("cp pickle-linux/" ..
@@ -47,10 +46,7 @@ lfs.mkdir(BUILD_CACHE .. "work")
 os.execute("cp " .. ROOTFS_CACHE .. "work/rootfs.sqsh " .. BUILD_CACHE .. "work")
 
 for _, package in ipairs(config.development) do
-    if package ~= "gcc" then
-        build(package, BUILD_CACHE)
-    end
+    build(package, BUILD_CACHE)
 end
-build("gcc-bootstrap", BUILD_CACHE)
 
 pkh.close()

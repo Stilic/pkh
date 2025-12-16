@@ -1,13 +1,11 @@
 buildmode = true
-if arg[3] == "1" then
-    hostfs = true
-end
+stage = tonumber(arg[3])
 require "global"
 
 local lfs = require "lfs"
 local tools = require "tools"
 
-local build_path = lfs.currentdir() .. "/pickle-linux/" .. arg[1] .. "/." .. (hostfs and "bootstrap" or "build")
+local build_path = lfs.currentdir() .. "/pickle-linux/" .. arg[1] .. "/." .. (stage == 0 and "bootstrap" or "build")
 
 local function pack(package, variant)
     lfs.chdir(build_path)

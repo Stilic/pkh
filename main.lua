@@ -14,7 +14,7 @@ for _, package in ipairs(config.rootfs) do
 end
 
 local cwd = lfs.currentdir()
-local base_build_path = "." .. (hostfs and "bootstrap" or "build")
+local base_build_path = "." .. (stage == 0 and "bootstrap" or "build")
 local mnt_path = cwd .. "/neld/" .. base_build_path .. "/work/mnt"
 local root_path = mnt_path .. "/root"
 local overlay_path = root_path .. "/usr"
@@ -59,7 +59,7 @@ end
 
 function self.close()
     lfs.chdir(cwd)
-    if not hostfs then
+    if stage ~= 0 then
         os.execute("umount " .. root_path)
     end
     for _, m in pairs(mountpoints) do
@@ -75,7 +75,7 @@ function self.build(name, skip_dependencies)
     local package, process_main = pkg(name), true
 
     if not skip_dependencies then
-        if not hostfs and package.dev_dependencies then
+        if stage ~= 0 and package.dev_dependencies then
             for _, p in ipairs(package.dev_dependencies) do
                 local name = p.name
                 if not self.built_packages[name] then
@@ -95,7 +95,7 @@ function self.build(name, skip_dependencies)
 
     local overlay = {}
 
-    if not hostfs then
+    if stage ~= 0 then
         -- TODO: add support for variants
         prepare_mounts(overlay, config.development, true)
         if package.dev_dependencies then
@@ -176,17 +176,13 @@ function self.build(name, skip_dependencies)
     if process_main then
         process_main_option = " 1"
     end
-    local hostfs_option = " 0"
-    if hostfs then
-        hostfs_option = " 1"
-    end
     -- TODO: remove the gcc libexec workaround
     os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --setenv TARGET " ..
         system.architecture .. "-pc-linux-musl --chdir /root --ro-bind " ..
         root_path .. " / --dev /dev --tmpfs /tmp " ..
         "--bind " .. cwd .. " /root --bind " .. build_path .. " /root/" .. build_suffix ..
-        " /bin/lua untrusted_build.lua " .. name .. process_main_option .. hostfs_option)
+        " /bin/lua untrusted_build.lua " .. name .. process_main_option .. " " .. stage)
 
     if package.variants then
         for index, _ in pairs(package.variants) do
@@ -195,7 +191,7 @@ function self.build(name, skip_dependencies)
     end
     self.built_packages[name] = true
 
-    if not hostfs then
+    if stage ~= 0 then
         os.execute("umount " .. overlay_path)
     end
 end
@@ -207,7 +203,7 @@ function self.unpack(path, name, variant)
         name .. "/" .. base_build_path .. "/" .. tools.get_file(name, pkg(name).version, variant))
 end
 
-if hostfs then
+if stage == 0 then
     root_path = "/"
 else
     lfs.mkdir("neld/" .. base_build_path)
