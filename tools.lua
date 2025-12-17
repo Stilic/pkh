@@ -14,16 +14,15 @@ function self.get_file(name, version, variant)
     return file .. "," .. version .. ".sqsh"
 end
 
--- TODO: switch to LLVM once the StageX update is out
 function self.get_flags(cflags, cppflags, ldflags)
     if ldflags then
         ldflags = ' LDFLAGS="' .. ldflags .. '"'
     else
         ldflags = ""
     end
-    return 'CC=gcc CXX=g++ CFLAGS="' ..
-        self.DEFAULT_CFLAGS ..
-        (cflags and (" " .. cflags) or "") ..
+    return 'CC=' .. (stage == 0 and 'gcc' or 'clang') ..
+        ' CXX=' .. (stage == 0 and 'g++' or 'clang++') ..
+        ' CFLAGS="' .. self.DEFAULT_CFLAGS .. (cflags and (" " .. cflags) or "") ..
         '" CPPFLAGS="' .. self.DEFAULT_CPPFLAGS .. (cppflags and (" " .. cppflags) or "") .. '"' .. ldflags
 end
 
