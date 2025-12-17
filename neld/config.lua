@@ -11,7 +11,6 @@ local self = {
 
         "libiconv",
         "argp",
-        "readline",
         "curses",
         "gperf",
         "libxml2",
@@ -39,6 +38,7 @@ local self = {
     rootfs = {
         "gcc.libs",
 
+        "readline",
         "libmd",
         "dhcpcd",
         "ifupdown-ng",
