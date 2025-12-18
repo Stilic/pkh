@@ -118,43 +118,5 @@ FROM builder
 
 COPY --from=utils /build .
 
-# Provide a libexecinfo stub
-# RUN cat <<EOF > /usr/include/execinfo.h
-# #ifndef _EXECINFO_H_
-# #define _EXECINFO_H_
-# #ifdef __cplusplus
-# extern "C" {
-# #endif
-
-# int     backtrace(void **, int);
-# char ** backtrace_symbols(void *const *, int);
-# void    backtrace_symbols_fd(void *const *, int, int);
-
-# #include <stddef.h>
-
-# int backtrace(void **buffer, int size) {
-#     (void)buffer;
-#     (void)size;
-#     return 0;
-# }
-
-# char **backtrace_symbols(void *const *buffer, int size) {
-#     (void)buffer;
-#     (void)size;
-#     return NULL;
-# }
-
-# void backtrace_symbols_fd(void *const *buffer, int size, int fd) {
-#     (void)buffer;
-#     (void)size;
-#     (void)fd;
-# }
-
-# #ifdef __cplusplus
-# }
-# #endif
-# #endif
-# EOF
-
 WORKDIR /pkh
 ENTRYPOINT ["/bin/sh"]

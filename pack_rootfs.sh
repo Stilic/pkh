@@ -28,6 +28,43 @@ if [ "$1" -eq 1 ]; then
         find ${BASE} -maxdepth 1 \( -type f -o -type l \) -name "${lib}*" ! -name "*.la" -exec cp -P {} lib \;
     done
 
+    cat <<EOF > include/execinfo.h
+#ifndef _EXECINFO_H_
+#define _EXECINFO_H_
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int     backtrace(void **, int);
+char ** backtrace_symbols(void *const *, int);
+void    backtrace_symbols_fd(void *const *, int, int);
+
+#include <stddef.h>
+
+int backtrace(void **buffer, int size) {
+    (void)buffer;
+    (void)size;
+    return 0;
+}
+
+char **backtrace_symbols(void *const *buffer, int size) {
+    (void)buffer;
+    (void)size;
+    return NULL;
+}
+
+void backtrace_symbols_fd(void *const *buffer, int size, int fd) {
+    (void)buffer;
+    (void)size;
+    (void)fd;
+}
+
+#ifdef __cplusplus
+}
+#endif
+#endif
+EOF
+
     rm -rf *linux*
 
     # this is required since the host executables might be reliant on a libc in this location

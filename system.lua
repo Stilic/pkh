@@ -14,6 +14,7 @@ function self.capture(cmd)
 end
 
 self.architecture = self.capture("uname -m") or "unknown"
+self.target = self.architecture .. "-linux-musl"
 
 self.build_cores = math.max(math.floor(tonumber(self.capture("nproc")) / 1.25), 1)
 

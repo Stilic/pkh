@@ -15,6 +15,6 @@ local config = require "neld.config"
 --     pkh.build(package)
 -- end
 
-pkh.build("llvm")
+pkh.build("gcc")
 
 pkh.close()

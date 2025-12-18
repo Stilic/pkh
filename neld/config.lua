@@ -36,7 +36,7 @@ local self = {
         "lua"
     },
     rootfs = {
-        "llvm.libs",
+        "gcc.libs",
 
         "readline",
         "libmd",
@@ -70,8 +70,6 @@ local self = {
     },
     -- final set of packages required to kickstart the process
     development = {
-        "llvm",
-
         "make",
         "pkgconf",
         "m4",
@@ -100,6 +98,10 @@ local self = {
 
 if stage == 0 then
     table.insert(self.bootstrap, "binutils")
+    table.insert(self.bootstrap, "llvm")
+else
+    table.insert(self.development, "binutils")
+    table.insert(self.development, "gcc")
 end
 
 return self

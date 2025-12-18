@@ -14,14 +14,29 @@ function self.get_file(name, version, variant)
     return file .. "," .. version .. ".sqsh"
 end
 
-function self.get_flags(cflags, cppflags, ldflags)
+function self.get_flags(cflags, cppflags, ldflags, cc, cxx)
+    if not cc then
+        if stage == 1 then
+            cc = "clang"
+        else
+            cc = "gcc"
+        end
+    end
+    if not cxx then
+        if stage == 1 then
+            cxx = "clang++"
+        else
+            cxx = "g++"
+        end
+    end
+
     if ldflags then
         ldflags = ' LDFLAGS="' .. ldflags .. '"'
     else
         ldflags = ""
     end
-    return 'CC=' .. (stage == 0 and 'gcc' or 'clang') ..
-        ' CXX=' .. (stage == 0 and 'g++' or 'clang++') ..
+    return 'CC=' .. cc ..
+        ' CXX=' .. cxx ..
         ' CFLAGS="' .. self.DEFAULT_CFLAGS .. (cflags and (" " .. cflags) or "") ..
         '" CPPFLAGS="' .. self.DEFAULT_CPPFLAGS .. (cppflags and (" " .. cppflags) or "") .. '"' .. ldflags
 end
@@ -103,7 +118,7 @@ function self.build_meson(options, source, cflags, cppflags)
     end
 end
 
-function self.build_cmake(options, source, project, targets, cflags, cppflags, ldflags)
+function self.build_cmake(options, source, project, targets, cflags, cppflags, ldflags, cc, cxx)
     if options then
         options = " " .. options
     else
@@ -134,7 +149,7 @@ function self.build_cmake(options, source, project, targets, cflags, cppflags, l
 
         os.execute("rm -rf _install")
 
-        os.execute(self.get_flags(cflags, cppflags, ldflags) ..
+        os.execute(self.get_flags(cflags, cppflags, ldflags, cc, cxx) ..
             " cmake" ..
             project_command ..
             "-B " .. build_dir .. " -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
