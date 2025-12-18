@@ -99,7 +99,7 @@ local self = {
 }
 
 if stage == 0 then
-    table.insert(self.development, "binutils")
+    table.insert(self.bootstrap, "binutils")
 end
 
 return self
