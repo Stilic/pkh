@@ -70,6 +70,8 @@ local self = {
     },
     -- final set of packages required to kickstart the process
     development = {
+        "binutils",
+
         "make",
         "pkgconf",
         "m4",
@@ -96,12 +98,6 @@ local self = {
     }
 }
 
-if stage == 0 then
-    table.insert(self.bootstrap, "binutils")
-    table.insert(self.bootstrap, "llvm")
-else
-    table.insert(self.development, "binutils")
-    table.insert(self.development, "gcc")
-end
+table.insert(self.development, stage == 1 and "llvm" or "gcc")
 
 return self

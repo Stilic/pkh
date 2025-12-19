@@ -71,7 +71,7 @@ end
 
 function self.close()
     lfs.chdir(cwd)
-    if stage ~= 0 then
+    if stage ~= 1 then
         os.execute("umount " .. root_path)
     end
     for _, m in pairs(mountpoints) do
@@ -87,7 +87,7 @@ function self.build(name, skip_dependencies)
     local package, process_main = pkg(name), true
 
     if not skip_dependencies then
-        if stage ~= 0 and package.dev_dependencies then
+        if stage ~= 1 and package.dev_dependencies then
             for _, p in ipairs(package.dev_dependencies) do
                 local name = p.name
                 if not self.built_packages[name] then
@@ -107,7 +107,7 @@ function self.build(name, skip_dependencies)
 
     local overlay = {}
 
-    if stage ~= 0 then
+    if stage ~= 1 then
         -- TODO: add support for variants
         prepare_mounts(overlay, config.development, true)
         if package.dev_dependencies then
@@ -186,7 +186,7 @@ function self.build(name, skip_dependencies)
     lfs.chdir(cwd)
 
     local stage1_option = " --setenv CPLUS_INCLUDE_PATH /include/c++:/include/c++/" .. system.target
-    if stage ~= 1 then
+    if stage ~= 2 then
         stage1_option = ""
     end
     local process_main_option = " 0"
@@ -207,7 +207,7 @@ function self.build(name, skip_dependencies)
     end
     self.built_packages[name] = true
 
-    if stage ~= 0 then
+    if stage ~= 1 then
         os.execute("umount " .. overlay_path)
     end
 end
@@ -219,7 +219,7 @@ function self.unpack(path, name, variant)
         name .. "/" .. base_build_path .. "/" .. tools.get_file(name, pkg(name).version, variant))
 end
 
-if stage == 0 then
+if stage == 1 then
     root_path = "/"
 else
     lfs.mkdir("neld/" .. base_build_path)

@@ -16,14 +16,14 @@ end
 
 function self.get_flags(cflags, cppflags, ldflags, cc, cxx)
     if not cc then
-        if stage == 1 then
+        if stage == 2 then
             cc = "clang"
         else
             cc = "gcc"
         end
     end
     if not cxx then
-        if stage == 1 then
+        if stage == 2 then
             cxx = "clang++"
         else
             cxx = "g++"
