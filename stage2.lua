@@ -6,6 +6,7 @@ local pkh = require "main"
 local tools = require "tools"
 
 local BASE = "neld/"
+local ROOTFS_CACHE = BASE .. ".rootfs/"
 local BUILD_CACHE = BASE .. ".build/"
 
 local built_packages = {}
@@ -44,6 +45,7 @@ local function build(package, path)
 end
 
 build("gcc", BUILD_CACHE)
+copy("gcc.libs", ROOTFS_CACHE)
 
 os.execute("./pack_rootfs.sh 0")
 
