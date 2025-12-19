@@ -47,6 +47,6 @@ end
 build("gcc", BUILD_CACHE)
 copy("gcc.libs", ROOTFS_CACHE)
 
-os.execute("./pack_rootfs.sh 0")
+os.execute("./pack_rootfs.sh 2")
 
 pkh.close()

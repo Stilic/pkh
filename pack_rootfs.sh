@@ -66,7 +66,9 @@ void backtrace_symbols_fd(void *const *buffer, int size, int fd) {
 EOF
 
     rm -rf *linux*
+fi
 
+if [ "$1" -eq 1 ] || [ "$1" -eq 2 ]; then
     # this is required since the host executables might be reliant on a libc in this location
     mkdir lib64
     ln -s ../lib/libc.so lib64/ld-linux-x86-64.so.2
