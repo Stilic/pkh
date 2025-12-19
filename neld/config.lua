@@ -1,4 +1,4 @@
-local self = {
+return {
     gnu_site = "https://mirror.cyberbits.eu/gnu",
     repository = "https://pickle.stilic.net",
     bootstrap = {
@@ -70,12 +70,11 @@ local self = {
     },
     -- final set of packages required to kickstart the process
     development = {
-        "binutils",
+        "gcc",
 
         "make",
         "pkgconf",
         "m4",
-        -- "bison",
         "yacc",
 
         "libtool",
@@ -97,12 +96,3 @@ local self = {
         "git",
     }
 }
-
-if stage ~= 1 then
-    table.insert(self.development, "gcc")
-end
-if stage < 3 then
-    table.insert(self.development, "llvm")
-end
-
-return self
