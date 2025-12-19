@@ -14,8 +14,9 @@ for _, package in ipairs(config.rootfs) do
 end
 
 local cwd = lfs.currentdir()
-local base_build_path = ".stage" .. stage
-local mnt_path = cwd .. "/neld/" .. base_build_path .. "/work/mnt"
+local base_build_path = "neld/.build"
+local base_stage_path = ".stage" .. stage
+local mnt_path = cwd .. "/" .. base_build_path .. "/work/mnt"
 local root_path = mnt_path .. "/root"
 local overlay_path = root_path .. "/usr"
 local ro_path = mnt_path .. "/ro"
@@ -46,13 +47,8 @@ local function prepare_mounts(overlay, packages, prebuilt)
         local mountpoint = mnt_path .. "/" .. mount_name
         overlay[mount_name] = mountpoint
 
-        local mnt = "/" .. base_build_path .. "/"
-        if prebuilt then
-            mnt = "neld" .. mnt
-        else
-            mnt = "pickle-linux/" .. package.name .. mnt
-        end
-        mnt = mnt .. tools.get_file(mount_name, package.version)
+        local mnt = (prebuilt and base_build_path or ("pickle-linux/" .. package.name .. "/" .. base_stage_path)) ..
+            "/" .. tools.get_file(mount_name, package.version)
 
         if not mountpoints[mount_name] then
             lfs.mkdir(mountpoint)
@@ -128,13 +124,13 @@ function self.build(name, skip_dependencies)
     local build_suffix = "pickle-linux/" .. name
     lfs.chdir(build_suffix)
     local package_path = lfs.currentdir()
-    if not lfs.attributes(base_build_path) then
-        lfs.mkdir(base_build_path)
-    elseif lfs.attributes(base_build_path .. "/" .. tools.get_file(name, package.version)) then
+    if not lfs.attributes(base_stage_path) then
+        lfs.mkdir(base_stage_path)
+    elseif lfs.attributes(base_stage_path .. "/" .. tools.get_file(name, package.version)) then
         process_main = false
     end
-    lfs.chdir(base_build_path)
-    build_suffix = build_suffix .. "/" .. base_build_path
+    lfs.chdir(base_stage_path)
+    build_suffix = build_suffix .. "/" .. base_stage_path
     local build_path = lfs.currentdir()
 
     if process_main then
@@ -216,18 +212,18 @@ function self.unpack(path, name, variant)
     return os.execute("unsquashfs -d " ..
         path ..
         " -f pickle-linux/" ..
-        name .. "/" .. base_build_path .. "/" .. tools.get_file(name, pkg(name).version, variant))
+        name .. "/" .. base_stage_path .. "/" .. tools.get_file(name, pkg(name).version, variant))
 end
 
 if stage == 1 then
     root_path = "/"
 else
-    lfs.mkdir("neld/" .. base_build_path)
-    lfs.mkdir("neld/" .. base_build_path .. "/work")
+    lfs.mkdir(base_build_path)
+    lfs.mkdir(base_build_path .. "/work")
     lfs.mkdir(mnt_path)
 
     lfs.mkdir(root_path)
-    os.execute("squashfuse neld/" .. base_build_path .. "/work/rootfs.sqsh " .. root_path)
+    os.execute("squashfuse " .. base_build_path .. "/work/rootfs.sqsh " .. root_path)
 
     lfs.mkdir(ro_path)
     lfs.mkdir(ro_path .. "/bin")

@@ -23,7 +23,7 @@ local function copy(name, path)
     end
 
     os.execute("cp pickle-linux/" ..
-        package.name .. "/.stage0/" .. tools.get_file(name, package.version) .. " " .. path)
+        package.name .. "/.stage1/" .. tools.get_file(name, package.version) .. " " .. path)
 
     return package
 end
@@ -40,7 +40,7 @@ local function build(package, path)
         package = copy(package, path)
         if package.dependencies then
             for _, dep in ipairs(package.dependencies) do
-                build(dep.name, path)
+                copy(dep.name, path)
             end
         end
     end
@@ -59,7 +59,7 @@ os.execute("rm -rf " .. BUILD_CACHE)
 lfs.mkdir(BUILD_CACHE)
 lfs.mkdir(BUILD_CACHE .. "work")
 
-os.execute("cp " .. ROOTFS_CACHE .. "work/rootfs.sqsh " .. BUILD_CACHE .. "work")
+lfs.link("../../../" .. ROOTFS_CACHE .. "work/rootfs.sqsh", BUILD_CACHE .. "work/rootfs.sqsh", true)
 
 for _, package in ipairs(config.development) do
     build(package, BUILD_CACHE)
