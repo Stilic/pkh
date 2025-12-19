@@ -42,4 +42,4 @@ luac.out
 # NELD
 .rootfs
 .build
-.bootstrap
+.stage*

@@ -5,7 +5,7 @@ require "global"
 local lfs = require "lfs"
 local tools = require "tools"
 
-local build_path = lfs.currentdir() .. "/pickle-linux/" .. arg[1] .. "/." .. (stage == 0 and "bootstrap" or "build")
+local build_path = lfs.currentdir() .. "/pickle-linux/" .. arg[1] .. "/.stage" .. stage
 
 local function pack(package, variant)
     lfs.chdir(build_path)

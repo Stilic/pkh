@@ -14,7 +14,7 @@ for _, package in ipairs(config.rootfs) do
 end
 
 local cwd = lfs.currentdir()
-local base_build_path = "." .. (stage == 0 and "bootstrap" or "build")
+local base_build_path = ".stage" .. stage
 local mnt_path = cwd .. "/neld/" .. base_build_path .. "/work/mnt"
 local root_path = mnt_path .. "/root"
 local overlay_path = root_path .. "/usr"

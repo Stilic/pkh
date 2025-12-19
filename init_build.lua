@@ -23,7 +23,7 @@ local function copy(name, path)
     end
 
     os.execute("cp pickle-linux/" ..
-        package.name .. "/.bootstrap/" .. tools.get_file(name, package.version) .. " " .. path)
+        package.name .. "/.stage0/" .. tools.get_file(name, package.version) .. " " .. path)
 
     return package
 end
