@@ -22,10 +22,9 @@ You will need Docker.
 
 The following steps have to be done inside the Docker container:
 ```
-# Bootstrap the initial environment
-lua init_build.lua
-# Build all the packages
-lua build.lua
+# Do the full-source bootstrap
+lua stage1.lua
+lua stage2.lua
 ```
 
 ### Run

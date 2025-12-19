@@ -1,4 +1,4 @@
-stage = 0
+stage = 1
 require "global"
 pcall(require, "luarocks.loader")
 
