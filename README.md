@@ -25,6 +25,7 @@ The following steps have to be done inside the Docker container:
 # Do the full-source bootstrap
 lua stage1.lua
 lua stage2.lua
+lua stage3.lua
 ```
 
 ### Run
