@@ -98,6 +98,11 @@ local self = {
     }
 }
 
-table.insert(self.development, stage == 1 and "llvm" or "gcc")
+if stage ~= 1 then
+    table.insert(self.development, "gcc")
+end
+if stage < 3 then
+    table.insert(self.development, "llvm")
+end
 
 return self
