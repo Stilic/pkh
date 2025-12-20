@@ -186,7 +186,12 @@ function self.build_flit(source)
     end
 end
 
-function self.build_kconfig(source, cflags, cppflags)
+function self.build_kconfig(options, source, cflags, cppflags)
+    if options then
+        options = " " .. options
+    else
+        options = ""
+    end
     if not source then
         source = "source"
     end
@@ -198,7 +203,8 @@ function self.build_kconfig(source, cflags, cppflags)
 
         os.execute("cp ../../config .config")
         os.execute("make olddefconfig")
-        os.execute("KCONFIG_NOTIMESTAMP=1 " .. self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs())
+        os.execute("KCONFIG_NOTIMESTAMP=1 " ..
+            self.get_flags(cflags, cppflags) .. " make" .. options .. system.get_make_jobs())
     end
 end
 
