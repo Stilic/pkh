@@ -182,7 +182,7 @@ function self.build(name, skip_dependencies)
     lfs.chdir(cwd)
 
     local include_options = ""
-    if stage == 2 then
+    if stage ~= 1 then
         local cpp_path = "/include/c++"
         include_options = " --setenv CPATH /include --setenv CPLUS_INCLUDE_PATH " ..
             cpp_path .. ":" .. cpp_path .. "/" .. system.target
