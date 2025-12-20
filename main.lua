@@ -181,17 +181,13 @@ function self.build(name, skip_dependencies)
 
     lfs.chdir(cwd)
 
-    local cpp_include_option = ""
-    -- if stage == 2 then
-    --     cpp_include_option = " --setenv CPLUS_INCLUDE_PATH /include/c++:/include/c++/" .. system.target
-    -- end
     local process_main_option = " 0"
     if process_main then
         process_main_option = " 1"
     end
     os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --setenv TARGET " ..
-        system.target .. cpp_include_option .. " --chdir /root --ro-bind " ..
+        system.target .. " --chdir /root --ro-bind " ..
         root_path .. " / --dev /dev --tmpfs /tmp " ..
         "--ro-bind " .. cwd .. " /root --bind " .. build_path .. " /root/" .. build_suffix ..
         " /bin/lua untrusted_build.lua " .. name .. process_main_option .. " " .. stage)
