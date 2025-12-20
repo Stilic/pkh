@@ -119,7 +119,7 @@ function self.build_meson(options, source, cflags, cppflags)
     end
 end
 
-function self.build_cmake(options, source, project, targets, cflags, cppflags, ldflags, cc, cxx)
+function self.build_cmake(options, source, project, cflags, cppflags, ldflags, cc, cxx)
     if options then
         options = " " .. options
     else
@@ -130,11 +130,6 @@ function self.build_cmake(options, source, project, targets, cflags, cppflags, l
     end
     if not project then
         project = ""
-    end
-    if targets then
-        targets = targets .. " "
-    else
-        targets = "install "
     end
 
     local project_command, build_dir = "", "build"
@@ -154,7 +149,7 @@ function self.build_cmake(options, source, project, targets, cflags, cppflags, l
             " cmake" ..
             project_command ..
             "-B " .. build_dir .. " -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install" .. options)
-        os.execute("cmake --build " .. build_dir .. " --config Release --target " .. targets .. system.get_make_jobs())
+        os.execute("cmake --build " .. build_dir .. " --target install" .. system.get_make_jobs())
     end
 end
 
