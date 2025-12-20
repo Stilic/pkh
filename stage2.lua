@@ -44,8 +44,8 @@ local function build(package, path)
     end
 end
 
-build("gcc", BUILD_CACHE)
-copy("gcc.libs", ROOTFS_CACHE)
+build("llvm", BUILD_CACHE)
+copy("llvm.libs", ROOTFS_CACHE)
 
 os.execute("./pack_rootfs.sh 2")
 
