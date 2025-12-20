@@ -46,15 +46,6 @@ local function build(package, path)
     end
 end
 
-os.execute("rm -rf " .. ROOTFS_CACHE)
-lfs.mkdir(ROOTFS_CACHE)
-
-for _, package in ipairs(config.bootstrap) do
-    build(package, ROOTFS_CACHE)
-end
-
-os.execute("./pack_rootfs.sh 1")
-
 os.execute("rm -rf " .. BUILD_CACHE)
 lfs.mkdir(BUILD_CACHE)
 lfs.mkdir(BUILD_CACHE .. "work")
@@ -64,5 +55,16 @@ lfs.link("../../../" .. ROOTFS_CACHE .. "work/rootfs.sqsh", BUILD_CACHE .. "work
 for _, package in ipairs(config.development) do
     build(package, BUILD_CACHE)
 end
+
+---------------------------------------------
+
+os.execute("rm -rf " .. ROOTFS_CACHE)
+lfs.mkdir(ROOTFS_CACHE)
+
+for _, package in ipairs(config.bootstrap) do
+    build(package, ROOTFS_CACHE)
+end
+
+os.execute("./pack_rootfs.sh 1")
 
 pkh.close()
