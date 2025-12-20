@@ -100,6 +100,7 @@ end
 
 if stage < 3 then
     table.insert(self.development, "gcc")
+    table.insert(self.development, "cmake")
 end
 
 return self
