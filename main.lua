@@ -181,12 +181,18 @@ function self.build(name, skip_dependencies)
 
     lfs.chdir(cwd)
 
+    local include_option = ""
+    if stage == 2 then
+        include_option = " --setenv CPATH /include"
+    end
     local process_main_option = " 0"
     if process_main then
         process_main_option = " 1"
     end
     os.execute(
-        "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --setenv TARGET " ..
+        "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" ..
+        include_option ..
+        " --setenv TARGET " ..
         system.target .. " --chdir /root --ro-bind " ..
         root_path .. " / --dev /dev --tmpfs /tmp " ..
         "--ro-bind " .. cwd .. " /root --bind " .. build_path .. " /root/" .. build_suffix ..
