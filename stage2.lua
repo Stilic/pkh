@@ -42,6 +42,6 @@ pkh.build("llvm")
 copy("gcc-libs", ROOTFS_CACHE)
 copy("llvm", BUILD_CACHE)
 
--- os.execute("./pack_rootfs.sh 2")
+os.execute("./pack_rootfs.sh 2")
 
 pkh.close()
