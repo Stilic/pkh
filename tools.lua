@@ -202,7 +202,7 @@ function self.build_kconfig(options, source, cflags, cppflags)
         end
 
         os.execute("cp ../../config .config")
-        os.execute("make olddefconfig")
+        os.execute("make olddefconfig" .. options)
         os.execute("KCONFIG_NOTIMESTAMP=1 " ..
             self.get_flags(cflags, cppflags) .. " make" .. options .. system.get_make_jobs())
     end

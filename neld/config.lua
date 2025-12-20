@@ -36,7 +36,7 @@ return {
         "lua"
     },
     rootfs = {
-        "gcc-libs",
+        "gcc.libs",
         "readline",
         "libmd",
         "dhcpcd",

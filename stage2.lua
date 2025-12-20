@@ -36,10 +36,10 @@ local function copy(name, path)
     end
 end
 
-pkh.build("gcc-libs")
+pkh.build("gcc")
 pkh.build("llvm")
 
-copy("gcc-libs", ROOTFS_CACHE)
+copy("gcc.libs", ROOTFS_CACHE)
 copy("llvm", BUILD_CACHE)
 
 os.execute("./pack_rootfs.sh 2")
