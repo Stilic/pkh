@@ -1,11 +1,10 @@
-local self = {
+return {
     gnu_site = "https://mirror.cyberbits.eu/gnu",
     repository = "https://pickle.stilic.net",
     bootstrap = {
         "base",
         "linux",
 
-        "gcc.libs",
         "musl",
         "musl-fts",
         "musl-obstack",
@@ -37,6 +36,7 @@ local self = {
         "lua"
     },
     rootfs = {
+        "gcc.libs",
         "readline",
         "libmd",
         "dhcpcd",
@@ -69,6 +69,8 @@ local self = {
     },
     -- final set of packages required to kickstart the process
     development = {
+        "llvm",
+
         "make",
         "pkgconf",
         "m4",
@@ -93,14 +95,3 @@ local self = {
         "git",
     }
 }
-
-if stage ~= 1 then
-    table.insert(self.development, "llvm")
-end
-
-if stage < 3 then
-    table.insert(self.development, "gcc")
-    table.insert(self.development, "cmake")
-end
-
-return self

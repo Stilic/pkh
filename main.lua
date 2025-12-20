@@ -183,7 +183,7 @@ function self.build(name, skip_dependencies)
 
     local include_options = ""
     if stage == 2 then
-        local cpp_path = "/usr/include/c++/" .. pkg("gcc").version
+        local cpp_path = "/include/c++"
         include_options = " --setenv CPATH /include --setenv CPLUS_INCLUDE_PATH " ..
             cpp_path .. ":" .. cpp_path .. "/" .. system.target
     end

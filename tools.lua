@@ -16,17 +16,17 @@ end
 
 function self.get_flags(cflags, cppflags, ldflags, cc, cxx)
     if not cc then
-        if stage == 3 then
-            cc = "clang"
-        else
+        if stage == 1 then
             cc = "gcc"
+        else
+            cc = "clang"
         end
     end
     if not cxx then
-        if stage == 3 then
-            cxx = "clang++"
-        else
+        if stage == 1 then
             cxx = "g++"
+        else
+            cxx = "clang++"
         end
     end
 
@@ -52,7 +52,8 @@ function self.make(options, cflags, cppflags, configure)
     end
 
     if lfs.attributes(configure) then
-        os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. " --prefix=" .. options)
+        os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. " --host=" ..
+            system.target .. " --build=" .. system.target .. " --prefix=" .. options)
         os.execute("make" .. system.get_make_jobs())
     else
         os.execute(self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs() .. options)
