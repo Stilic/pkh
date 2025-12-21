@@ -56,8 +56,6 @@ for _, package in ipairs(config.development) do
     build(package, BUILD_CACHE)
 end
 
----------------------------------------------
-
 os.execute("rm -rf " .. ROOTFS_CACHE)
 lfs.mkdir(ROOTFS_CACHE)
 

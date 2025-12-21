@@ -20,10 +20,10 @@ local function copy(name, path)
         package = pkg(name)
     end
 
-    if copied_packages[package.name] then
+    if copied_packages[name] then
         return
     else
-        copied_packages[package.name] = true
+        copied_packages[name] = true
     end
 
     os.execute("cp pickle-linux/" ..
@@ -37,10 +37,9 @@ local function copy(name, path)
 end
 
 pkh.build("gcc")
-pkh.build("llvm")
 
 copy("gcc.libs", ROOTFS_CACHE)
-copy("llvm", BUILD_CACHE)
+copy("gcc", BUILD_CACHE)
 
 os.execute("./pack_rootfs.sh 2")
 
