@@ -17,7 +17,6 @@ local self = {
         "libxslt",
         "sqlite3",
         "openssl",
-        "libxcrypt",
         "pcre2",
         "zlib",
         "libunistring",
@@ -33,7 +32,10 @@ local self = {
         "util-linux",
         "xz",
 
-        "lua"
+        "lua",
+
+        -- TODO: remove this once we figured out how to add it to stage4
+        "gmp"
     },
     rootfs = {
         "gcc.libs",

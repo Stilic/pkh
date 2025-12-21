@@ -8,4 +8,8 @@ gcc runtimes are taken from the host
 build a proper gcc toolchain
 
 # 3
-build `bootstrap` + `rootfs` + `development` packages with the gcc toolchain
+build `bootstrap` + `development` packages
+provide a clean build environment
+
+# 4
+build `bootstrap` + `rootfs` + `development` packages
