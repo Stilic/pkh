@@ -188,7 +188,7 @@ end
 
 function self.build_kconfig(options, source, cflags, cppflags)
     if options then
-        options = " " .. options
+        options = options .. " "
     else
         options = ""
     end
@@ -202,9 +202,10 @@ function self.build_kconfig(options, source, cflags, cppflags)
         end
 
         os.execute("cp ../../config .config")
+
+        options = " " .. options .. self.get_flags(cflags, cppflags) .. system.get_make_jobs()
         os.execute("make olddefconfig" .. options)
-        os.execute("KCONFIG_NOTIMESTAMP=1 " ..
-            self.get_flags(cflags, cppflags) .. " make" .. options .. system.get_make_jobs())
+        os.execute("KCONFIG_NOTIMESTAMP=1 make" .. options)
     end
 end
 
