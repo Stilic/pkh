@@ -51,8 +51,7 @@ function self.make(options, cflags, cppflags, configure)
     end
 
     if lfs.attributes(configure) then
-        os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. " --host=" ..
-            system.target .. " --build=" .. system.target .. " --prefix=" .. options)
+        os.execute(self.get_flags(cflags, cppflags) .. " ./" .. configure .. " --prefix=" .. options)
         os.execute("make" .. system.get_make_jobs())
     else
         os.execute(self.get_flags(cflags, cppflags) .. " make" .. system.get_make_jobs() .. options)
