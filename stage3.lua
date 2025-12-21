@@ -2,8 +2,9 @@ stage = 3
 require "global"
 pcall(require, "luarocks.loader")
 
-local pkh = require "main"
 local config = require "neld.config"
+local pkh = require "main"
+pkh.init()
 
 for _, package in ipairs(config.bootstrap) do
     pkh.build(package)

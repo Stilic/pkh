@@ -2,8 +2,10 @@ stage = 2
 require "global"
 pcall(require, "luarocks.loader")
 
-local pkh = require "main"
 local tools = require "tools"
+local config = require "neld.config"
+local pkh = require "main"
+pkh.init()
 
 local BASE = "neld/"
 local ROOTFS_CACHE = BASE .. ".rootfs/"
@@ -40,6 +42,26 @@ pkh.build("gcc")
 
 copy("gcc.libs", ROOTFS_CACHE)
 copy("gcc", BUILD_CACHE)
+
+os.execute("./pack_rootfs.sh 2")
+
+pkh.close()
+
+--------------------------------
+
+pkh.init()
+
+for _, package in ipairs(config.development) do
+    if package ~= "gcc" then
+        pkh.build(package)
+        copy(package, BUILD_CACHE)
+    end
+end
+
+for _, package in ipairs(config.bootstrap) do
+    pkh.build(package)
+    copy(package, ROOTFS_CACHE)
+end
 
 os.execute("./pack_rootfs.sh 2")
 
