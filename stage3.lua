@@ -13,6 +13,7 @@ for _, package in ipairs(config.bootstrap) do
 end
 
 for _, package in ipairs(config.development) do
+    -- skip building the compiler since it hardly impacts the process
     if package ~= "gcc" then
         pkh.build(package)
         stageutils.copy(package, stageutils.BUILD_CACHE)

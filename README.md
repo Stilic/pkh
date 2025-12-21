@@ -26,6 +26,7 @@ The following steps have to be done inside the Docker container:
 lua stage1.lua
 lua stage2.lua
 lua stage3.lua
+lua stage4.lua
 ```
 
 ### Run
