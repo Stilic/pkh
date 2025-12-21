@@ -1,34 +1,34 @@
-FROM stagex/pallet-gcc-gnu-busybox AS builder
+FROM stagex/pallet-gcc-gnu-busybox:sx2025.10.0 AS builder
 
-COPY --from=stagex/pallet-lua . /
-COPY --from=stagex/pallet-python . /
-COPY --from=stagex/core-bash . /
-COPY --from=stagex/core-samurai . /
-COPY --from=stagex/core-meson . /
-COPY --from=stagex/core-cmake . /
-COPY --from=stagex/core-perl . /
-COPY --from=stagex/core-make . /
-COPY --from=stagex/core-ca-certificates . /
-COPY --from=stagex/core-curl . /
-COPY --from=stagex/core-openssl . /
-COPY --from=stagex/core-git . /
+COPY --from=stagex/pallet-lua:sx2025.10.0 . /
+COPY --from=stagex/pallet-python:sx2025.10.0 . /
+COPY --from=stagex/core-bash:sx2025.10.0 . /
+COPY --from=stagex/core-samurai:sx2025.10.0 . /
+COPY --from=stagex/core-meson:sx2025.10.0 . /
+COPY --from=stagex/core-cmake:sx2025.10.0 . /
+COPY --from=stagex/core-perl:sx2025.10.0 . /
+COPY --from=stagex/core-make:sx2025.10.0 . /
+COPY --from=stagex/core-ca-certificates:sx2025.10.0 . /
+COPY --from=stagex/core-curl:sx2025.10.0 . /
+COPY --from=stagex/core-openssl:sx2025.10.0 . /
+COPY --from=stagex/core-git:sx2025.10.0 . /
 
 # Bootstrap dependencies
-COPY --from=stagex/core-libzstd . /
-COPY --from=stagex/core-libxml2 . /
-COPY --from=stagex/core-expat . /
-COPY --from=stagex/core-gmp . /
-COPY --from=stagex/user-mpfr . /
-COPY --from=stagex/user-elfutils . /
+COPY --from=stagex/core-libzstd:sx2025.10.0 . /
+COPY --from=stagex/core-libxml2:sx2025.10.0 . /
+COPY --from=stagex/core-expat:sx2025.10.0 . /
+COPY --from=stagex/core-gmp:sx2025.10.0 . /
+COPY --from=stagex/user-mpfr:sx2025.10.0 . /
+COPY --from=stagex/user-elfutils:sx2025.10.0 . /
 
 # PKH dependencies
-COPY --from=stagex/user-lzo . /
-COPY --from=stagex/user-fuse3 . /
-COPY --from=stagex/user-fuse-overlayfs . /
-COPY --from=stagex/user-libcap . /
+COPY --from=stagex/user-lzo:sx2025.10.0 . /
+COPY --from=stagex/user-fuse3:sx2025.10.0 . /
+COPY --from=stagex/user-fuse-overlayfs:sx2025.10.0 . /
+COPY --from=stagex/user-libcap:sx2025.10.0 . /
 
 # Fix the ln command and C/C++ headers
-COPY --from=stagex/core-coreutils . /
+COPY --from=stagex/core-coreutils:sx2025.10.0 . /
 RUN --network=none <<-EOF
 cd /usr/bin
 ln -s coreutils /tmp/ln
@@ -41,7 +41,7 @@ FROM builder AS utils
 
 ENV DESTDIR=/build
 
-COPY --from=stagex/core-luarocks . /
+COPY --from=stagex/core-luarocks:sx2025.10.0 . /
 
 ADD https://gcc.gnu.org/pub/gcc/infrastructure/mpc-1.3.1.tar.gz /tmp/mpc.tar.gz
 ADD https://gcc.gnu.org/pub/gcc/infrastructure/isl-0.24.tar.bz2 /tmp/isl.tar.bz2
