@@ -4,7 +4,6 @@ pcall(require, "luarocks.loader")
 
 local config = require "neld.config"
 local pkh = require "main"
-pkh.init()
 
 for _, package in ipairs(config.bootstrap) do
     pkh.build(package)

@@ -7,12 +7,24 @@ local system = require "system"
 local tools = require "tools"
 local config = require "neld.config"
 
-local self, rootfs = { built_packages = {} }, {}
+local self = { built_packages = {} }
+local rootfs = {}
+for _, package in ipairs(config.bootstrap) do
+    rootfs[package] = package
+end
+if stage > 3 then
+    for _, package in ipairs(config.rootfs) do
+        rootfs[package] = package
+    end
+end
 
 local cwd = lfs.currentdir()
 local base_build_path = "neld/.build"
+local base_stage_path = ".stage" .. stage
 local mnt_path = cwd .. "/" .. base_build_path .. "/work/mnt"
-local ro_path, root_path, overlay_path, base_stage_path = mnt_path .. "/ro"
+local root_path = mnt_path .. "/root"
+local overlay_path = root_path .. "/usr"
+local ro_path = mnt_path .. "/ro"
 local mountpoints = {}
 
 local function prepare_mounts(overlay, packages, prebuilt)
@@ -49,36 +61,14 @@ local function prepare_mounts(overlay, packages, prebuilt)
                 mountpoints[mount_name] = mountpoint
             elseif package.dev_dependencies and not prebuilt then
                 prepare_mounts(overlay, package.dev_dependencies)
+            else
+                print("FAILED MOUNT: " .. mountpoint)
             end
         end
 
         if package.dependencies then
             prepare_mounts(overlay, package.dependencies, prebuilt)
         end
-    end
-end
-
-function self.init()
-    self.built_packages, rootfs, mountpoints = {}, {}, {}
-    for _, package in ipairs(config.rootfs) do
-        rootfs[package] = package
-    end
-
-    base_stage_path = ".stage" .. stage
-    root_path = stage == 1 and "/" or (mnt_path .. "/root")
-    overlay_path = root_path .. "/usr"
-
-    if stage ~= 1 then
-        lfs.mkdir(base_build_path)
-        lfs.mkdir(base_build_path .. "/work")
-        lfs.mkdir(mnt_path)
-
-        lfs.mkdir(root_path)
-        os.execute("squashfuse " .. base_build_path .. "/work/rootfs.sqsh " .. root_path)
-
-        lfs.mkdir(ro_path)
-        lfs.mkdir(ro_path .. "/bin")
-        lfs.link("../../bin/env", ro_path .. "/bin/env", true)
     end
 end
 
@@ -234,6 +224,21 @@ function self.unpack(path, name, variant)
         path ..
         " -f pickle-linux/" ..
         name .. "/" .. base_stage_path .. "/" .. tools.get_file(name, pkg(name).version, variant))
+end
+
+if stage == 1 then
+    root_path = "/"
+else
+    lfs.mkdir(base_build_path)
+    lfs.mkdir(base_build_path .. "/work")
+    lfs.mkdir(mnt_path)
+
+    lfs.mkdir(root_path)
+    os.execute("squashfuse " .. base_build_path .. "/work/rootfs.sqsh " .. root_path)
+
+    lfs.mkdir(ro_path)
+    lfs.mkdir(ro_path .. "/bin")
+    lfs.link("../../bin/env", ro_path .. "/bin/env", true)
 end
 
 return self

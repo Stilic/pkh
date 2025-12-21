@@ -4,7 +4,6 @@ pcall(require, "luarocks.loader")
 
 local stageutils = require "stageutils"
 local pkh = require "main"
-pkh.init()
 
 pkh.build("gcc")
 

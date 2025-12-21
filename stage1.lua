@@ -6,7 +6,6 @@ local tools = require "tools"
 local lfs = require "lfs"
 local config = require "neld.config"
 local pkh = require "main"
-pkh.init()
 
 local BASE = "neld/"
 local ROOTFS_CACHE = BASE .. ".rootfs/"
