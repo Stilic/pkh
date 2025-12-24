@@ -188,19 +188,19 @@ function self.build(name, skip_dependencies)
 
     lfs.chdir(cwd)
 
-    local include_options = ""
+    local cpp_paths = ""
     if stage == 2 then
-        local cpp_path = "/include/c++"
-        include_options = " --setenv CPLUS_INCLUDE_PATH " ..
-            cpp_path .. ":" .. cpp_path .. "/" .. system.target
+        cpp_paths = "/include/c++"
+        cpp_paths = ":" ..
+            cpp_paths .. ":" .. cpp_paths .. "/" .. system.target
     end
     local process_main_option = " 0"
     if process_main then
         process_main_option = " 1"
     end
     os.execute(
-        "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --setenv CPATH /include" ..
-        include_options ..
+        "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --setenv C_INCLUDE_PATH /include --setenv CPLUS_INCLUDE_PATH /include" ..
+        cpp_paths ..
         " --setenv TARGET " ..
         system.target .. " --chdir /root --ro-bind " ..
         root_path .. " / --dev /dev --tmpfs /tmp " ..
