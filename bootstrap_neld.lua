@@ -21,7 +21,7 @@ lfs.mkdir("work")
 lfs.chdir("work")
 
 print("DOWNLOADING ROOTFS")
-llby.net.srequest(config.repository .. "/rootfs.sqsh").content:file("rootfs.sqsh")
+llby.net.srequest(config.binhost .. "/rootfs.sqsh").content:file("rootfs.sqsh")
 
 print("EXTRACTING KERNEL")
 lfs.mkdir("linux")

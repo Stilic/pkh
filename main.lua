@@ -31,10 +31,6 @@ local function prepare_mounts(overlay, packages, prebuilt)
     for _, package in ipairs(packages) do
         local is_string = type(package) == "string"
 
-        if rootfs[is_string and package or package.name] then
-            return
-        end
-
         local mount_name
         if is_string then
             mount_name = package
@@ -49,25 +45,28 @@ local function prepare_mounts(overlay, packages, prebuilt)
             mount_name = package.name
         end
 
-        local mountpoint = mnt_path .. "/" .. mount_name
-        overlay[mount_name] = mountpoint
+        if not rootfs[mount_name] then
+            local mountpoint = mnt_path .. "/" .. mount_name
+            overlay[mount_name] = mountpoint
 
-        local mnt = (prebuilt and base_build_path or ("pickle-linux/" .. package.name .. "/" .. base_stage_path)) ..
-            "/" .. tools.get_file(mount_name, package.version)
+            local mnt = (prebuilt and base_build_path or (cwd .. "/" .. config.repository .. "/" .. package.name .. "/" .. base_stage_path)) ..
+                "/" .. tools.get_file(mount_name, package.version)
 
-        if not mountpoints[mount_name] then
-            lfs.mkdir(mountpoint)
-            if os.execute("squashfuse " .. mnt .. " " .. mountpoint) then
-                mountpoints[mount_name] = mountpoint
-            elseif package.dev_dependencies and not prebuilt then
-                prepare_mounts(overlay, package.dev_dependencies)
-            else
-                print("FAILED MOUNT: " .. mountpoint)
+            if not mountpoints[mount_name] then
+                lfs.mkdir(mountpoint)
+                if os.execute("squashfuse " .. mnt .. " " .. mountpoint) then
+                    mountpoints[mount_name] = mountpoint
+                else
+                    print(prebuilt, "FAILED MOUNT: " .. mnt)
+                    if package.dev_dependencies and not prebuilt then
+                        prepare_mounts(overlay, package.dev_dependencies)
+                    end
+                end
             end
-        end
 
-        if package.dependencies then
-            prepare_mounts(overlay, package.dependencies, prebuilt)
+            if package.dependencies then
+                prepare_mounts(overlay, package.dependencies, prebuilt)
+            end
         end
     end
 end
@@ -87,7 +86,21 @@ function self.build(name, skip_dependencies)
         return
     end
 
-    local package, process_main = pkg(name), true
+    local package, process_main, build_suffix = pkg(name), true, config.repository .. "/" .. name
+
+    if package.variants then
+        for index, _ in pairs(package.variants) do
+            self.built_packages[name .. "-" .. index] = true
+        end
+    end
+    self.built_packages[name] = true
+
+    if lfs.attributes(cwd .. "/" .. build_suffix .. "/" .. base_stage_path .. "/" .. tools.get_file(name, package.version)) then
+        if not package.variants then
+            return
+        end
+        process_main = false
+    end
 
     if not skip_dependencies then
         if stage ~= 1 and package.dev_dependencies then
@@ -127,59 +140,52 @@ function self.build(name, skip_dependencies)
         os.execute("fuse-overlayfs -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
     end
 
-    local build_suffix = "pickle-linux/" .. name
     lfs.chdir(build_suffix)
     local package_path = lfs.currentdir()
-    if not lfs.attributes(base_stage_path) then
-        lfs.mkdir(base_stage_path)
-    elseif lfs.attributes(base_stage_path .. "/" .. tools.get_file(name, package.version)) then
-        process_main = false
-    end
+    lfs.mkdir(base_stage_path)
     lfs.chdir(base_stage_path)
     build_suffix = build_suffix .. "/" .. base_stage_path
     local build_path = lfs.currentdir()
 
-    if process_main then
-        if package.sources then
-            for _, source in ipairs(package.sources) do
-                local path, url = source[1], source[2]
-                if not lfs.attributes(path) then
-                    local req = llby.net.srequest(url)
-                    while req.Location ~= nil do
-                        url = req.Location
-                        req = llby.net.srequest(url)
-                    end
-                    req.content:file("S" .. path)
-                    os.execute("rm -rf " .. path)
-                    lfs.mkdir(path)
+    if process_main and package.sources then
+        for _, source in ipairs(package.sources) do
+            local path, url = source[1], source[2]
+            if not lfs.attributes(path) then
+                local req = llby.net.srequest(url)
+                while req.Location ~= nil do
+                    url = req.Location
+                    req = llby.net.srequest(url)
+                end
+                req.content:file("S" .. path)
+                os.execute("rm -rf " .. path)
+                lfs.mkdir(path)
 
-                    local extension = string.sub(url, -4)
-                    if extension == ".zip" or extension == ".whl" then
-                        os.execute("unzip S" .. path .. " -d " .. path)
+                local extension = string.sub(url, -4)
+                if extension == ".zip" or extension == ".whl" then
+                    os.execute("unzip S" .. path .. " -d " .. path)
+                else
+                    os.execute("tar xf S" .. path .. " --strip-components=1 -C " .. path)
+                end
+
+                local patch_dir = package_path .. "/" .. path
+                if not lfs.attributes(patch_dir) then
+                    if path == "source" then
+                        patch_dir = nil
                     else
-                        os.execute("tar xf S" .. path .. " --strip-components=1 -C " .. path)
-                    end
-
-                    local patch_dir = package_path .. "/" .. path
-                    if not lfs.attributes(patch_dir) then
-                        if path == "source" then
+                        patch_dir = package_path .. "/source"
+                        if not lfs.attributes(patch_dir) then
                             patch_dir = nil
-                        else
-                            patch_dir = package_path .. "/source"
-                            if not lfs.attributes(patch_dir) then
-                                patch_dir = nil
-                            end
                         end
                     end
-                    if patch_dir then
-                        lfs.chdir(path)
-                        for file in lfs.dir(patch_dir) do
-                            if file ~= "." and file ~= ".." then
-                                os.execute("patch -p 1 -i " .. patch_dir .. "/" .. file)
-                            end
+                end
+                if patch_dir then
+                    lfs.chdir(path)
+                    for file in lfs.dir(patch_dir) do
+                        if file ~= "." and file ~= ".." then
+                            os.execute("patch -p 1 -i " .. patch_dir .. "/" .. file)
                         end
-                        lfs.chdir(build_path)
                     end
+                    lfs.chdir(build_path)
                 end
             end
         end
@@ -205,13 +211,6 @@ function self.build(name, skip_dependencies)
         "--ro-bind " .. cwd .. " /root --bind " .. build_path .. " /root/" .. build_suffix ..
         " /bin/lua untrusted_build.lua " .. name .. process_main_option .. " " .. stage)
 
-    if package.variants then
-        for index, _ in pairs(package.variants) do
-            self.built_packages[name .. "-" .. index] = true
-        end
-    end
-    self.built_packages[name] = true
-
     if stage ~= 1 then
         os.execute("umount " .. overlay_path)
     end
@@ -220,7 +219,7 @@ end
 function self.unpack(path, name, variant)
     return os.execute("unsquashfs -d " ..
         path ..
-        " -f pickle-linux/" ..
+        " -f " .. cwd .. "/" .. config.repository .. "/" ..
         name .. "/" .. base_stage_path .. "/" .. tools.get_file(name, pkg(name).version, variant))
 end
 

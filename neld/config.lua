@@ -1,6 +1,9 @@
 local self = {
+    repository = "pickle-linux",
+
+    binhost = "https://pickle.stilic.net",
     gnu_site = "https://mirror.cyberbits.eu/gnu",
-    repository = "https://pickle.stilic.net",
+
     bootstrap = {
         "base",
         "linux",

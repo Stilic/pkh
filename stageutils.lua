@@ -1,4 +1,5 @@
 local tools = require "tools"
+local config = require "neld.config"
 
 local self = { BASE = "neld/" }
 self.ROOTFS_CACHE = self.BASE .. ".rootfs/"
@@ -21,7 +22,7 @@ function self.copy(name, path)
         copied_packages[name] = true
     end
 
-    os.execute("cp pickle-linux/" ..
+    os.execute("cp " .. config.repository .. "/" ..
         package.name .. "/.stage" .. stage .. "/" .. tools.get_file(name, package.version) .. " " .. path)
 
     if package.dependencies then

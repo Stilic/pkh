@@ -1,5 +1,6 @@
 pcall(require, "luarocks.loader")
 local lfs = require "lfs"
+local config = require "neld.config"
 
 local current_directory = lfs.currentdir()
 package.path = package.path
@@ -51,7 +52,7 @@ function pkg(name)
     end
 
     package = { name = name }
-    loadfile(current_directory .. "/pickle-linux/" .. name .. "/init.lua", "t",
+    loadfile(current_directory .. "/" .. config.repository .. "/" .. name .. "/init.lua", "t",
         setmetatable(package, { __index = package_environment }))()
     package_cache[name] = package
     return package

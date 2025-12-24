@@ -7,7 +7,7 @@ local config = require "neld.config"
 
 local self = { available_packages = {} }
 
-for line in llby.net.srequest(config.repository .. "/packages/available.txt").content:read():gmatch("[^\r\n]+") do
+for line in llby.net.srequest(config.binhost .. "/packages/available.txt").content:read():gmatch("[^\r\n]+") do
     local i, name, version = 1
 
     for part in line:gmatch("([^,]+)") do
@@ -42,7 +42,7 @@ function self.download(name, directory)
     if versions then
         local file_name = tools.get_file(name, versions[1])
         if not lfs.attributes(file_name) then
-            local req = llby.net.srequest(config.repository .. "/packages/" .. file_name)
+            local req = llby.net.srequest(config.binhost .. "/packages/" .. file_name)
             if req.code == 200 then
                 req.content:file(file_name)
             else

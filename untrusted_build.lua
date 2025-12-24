@@ -4,8 +4,9 @@ require "global"
 
 local lfs = require "lfs"
 local tools = require "tools"
+local config = require "neld.config"
 
-local build_path = lfs.currentdir() .. "/pickle-linux/" .. arg[1] .. "/.stage" .. stage
+local build_path = lfs.currentdir() .. "/" .. config.repository .. "/" .. arg[1] .. "/.stage" .. stage
 
 local function pack(package, variant)
     lfs.chdir(build_path)
