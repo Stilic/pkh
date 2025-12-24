@@ -57,7 +57,7 @@ local function prepare_mounts(overlay, packages, prebuilt)
                 if os.execute("squashfuse " .. mnt .. " " .. mountpoint) then
                     mountpoints[mount_name] = mountpoint
                 else
-                    print(prebuilt, "FAILED MOUNT: " .. mnt)
+                    print("FAILED MOUNT: " .. mnt)
                     if package.dev_dependencies and not prebuilt then
                         prepare_mounts(overlay, package.dev_dependencies)
                     end
