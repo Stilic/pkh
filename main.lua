@@ -123,7 +123,6 @@ function self.build(name, skip_dependencies)
         local lowerdir = ro_path .. ":"
         for _, m in pairs(overlay) do
             lowerdir = lowerdir .. m .. ":"
-            print("MOUNTING: " .. m)
         end
         os.execute("fuse-overlayfs -o lowerdir=" .. lowerdir:sub(1, -2) .. " " .. overlay_path)
     end
@@ -188,16 +187,15 @@ function self.build(name, skip_dependencies)
 
     lfs.chdir(cwd)
 
-    local cpp_paths = ""
-    if stage == 2 then
-        cpp_paths = "/include/c++"
-        cpp_paths = ":" ..
-            cpp_paths .. ":" .. cpp_paths .. "/" .. system.target
-    end
+    -- especially required in stage 2 and for some packages that cannot find system c++ headers
+    local cpp_paths = "/include/c++"
+    cpp_paths = ":" .. cpp_paths .. ":" .. cpp_paths .. "/" .. system.target
+
     local process_main_option = " 0"
     if process_main then
         process_main_option = " 1"
     end
+
     os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --setenv C_INCLUDE_PATH /include --setenv CPLUS_INCLUDE_PATH /include" ..
         cpp_paths ..

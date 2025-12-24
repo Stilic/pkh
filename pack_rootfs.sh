@@ -7,7 +7,7 @@ cd work
 mkdir rootfs
 cd rootfs
 
-mkdir -p sys dev run proc var tmp usr root home etc include/c++
+mkdir -p sys dev run proc var tmp usr root home etc
 
 for package in ../../*.sqsh
 do
@@ -18,6 +18,8 @@ done
 unsquashfs -f -d . ../../base,1.sqsh
 
 if [ "$1" -eq 1 ]; then
+    mkdir -p include/c++
+
     BASE="/usr/lib/"
     LIBS="libgmp ibasan libatomic libgcc_s libgomp libitm libquadmath libstdc++ libtsan libubsan libssp"
 
