@@ -10,24 +10,12 @@ local repos = require "repos"
 local self = { built_packages = {} }
 
 local rootfs = {}
-local function add_to_rootfs(package)
-    rootfs[package] = package
-
-    if not package:find("%.") then
-        package = pkg(package)
-        if package.dependencies then
-            for _, p in ipairs(package.dependencies) do
-                add_to_rootfs(p.name)
-            end
-        end
-    end
-end
 for _, package in ipairs(config.bootstrap) do
-    add_to_rootfs(package)
+    rootfs[package] = package
 end
 if stage > 4 then
     for _, package in ipairs(config.rootfs) do
-        add_to_rootfs(package)
+        rootfs[package] = package
     end
 end
 
@@ -68,16 +56,16 @@ local function prepare_mounts(overlay, packages)
 
             if not mountpoints[mount_name] then
                 lfs.mkdir(mountpoint)
-                if os.execute("squashfuse " .. mnt .. " " .. mountpoint) then
+                if os.execute("squashfuse " .. mnt .. " " .. mountpoint) or os.execute("squashfuse " .. prebuilt_mnt .. " " .. mountpoint) then
                     mountpoints[mount_name] = mountpoint
-                    if package.dev_dependencies then
-                        prepare_mounts(overlay, package.dev_dependencies)
-                    end
-                elseif not os.execute("squashfuse " .. prebuilt_mnt .. " " .. mountpoint) then
+                else
                     print("FAILED MOUNT: " .. prebuilt_mnt)
                 end
             end
 
+            if package.dev_dependencies then
+                prepare_mounts(overlay, package.dev_dependencies)
+            end
             if package.dependencies then
                 prepare_mounts(overlay, package.dependencies)
             end
