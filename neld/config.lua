@@ -62,6 +62,7 @@ local self = {
         "dinit",
 
         -- TODO: package pkh itself
+        "curl",
         "squashfuse",
         "fuse-overlayfs",
     },
@@ -82,7 +83,6 @@ local self = {
         "bubblewrap"
     },
     sdk = {
-        "curl",
         "nano",
         "cpio",
         "git",
