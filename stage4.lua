@@ -17,6 +17,9 @@ end
 for _, package in ipairs(config.development) do
     pkh.build(package)
 end
+for _, package in ipairs(config.sdk) do
+    pkh.build(package)
+end
 pkh.build("busybox-static")
 
 pkh.close()
@@ -33,7 +36,9 @@ for _, package in ipairs(config.rootfs) do
     repos.copy(package, repos.ROOTFS_CACHE)
 end
 for _, package in ipairs(config.development) do
-    print(package)
+    repos.copy(package, repos.BUILD_CACHE)
+end
+for _, package in ipairs(config.sdk) do
     repos.copy(package, repos.BUILD_CACHE)
 end
 
