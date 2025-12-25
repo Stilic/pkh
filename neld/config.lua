@@ -49,7 +49,6 @@ local self = {
 
         "unzip",
         "zip",
-        "bzip2",
 
         "udev",
 
