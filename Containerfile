@@ -45,7 +45,7 @@ COPY --from=quay.io/stagex/core-luarocks:sx2025.10.0 . /
 
 ADD https://gcc.gnu.org/pub/gcc/infrastructure/mpc-1.3.1.tar.gz /tmp/mpc.tar.gz
 ADD https://gcc.gnu.org/pub/gcc/infrastructure/isl-0.24.tar.bz2 /tmp/isl.tar.bz2
-ADD https://github.com/Stilic/lullaby/archive/refs/tags/v0.0.2.tar.gz /tmp/lullaby.tar.gz
+ADD https://github.com/Stilic/lullaby/archive/refs/tags/1.0.0.tar.gz /tmp/lullaby.tar.gz
 ADD https://github.com/plougher/squashfs-tools/releases/download/4.6.1/squashfs-tools-4.6.1.tar.gz /tmp/squashfs-tools.tar.gz
 ADD https://github.com/vasi/squashfuse/releases/download/0.6.1/squashfuse-0.6.1.tar.gz /tmp/squashfuse.tar.gz
 ADD https://github.com/containers/bubblewrap/releases/download/v0.11.0/bubblewrap-0.11.0.tar.xz /tmp/bubblewrap.tar.xz
@@ -74,9 +74,9 @@ EOF
 RUN --network=none <<-EOF
 set -eux
 tar xf /tmp/lullaby.tar.gz
-cd lullaby-0.0.2
+cd lullaby-1.0.0
 make -j `nproc` CC=cc
-make install DESTDIR=/build/usr/local
+make install INSTALL=/build/usr/local/lib/lua/
 EOF
 
 # Install Squashfs-tools
