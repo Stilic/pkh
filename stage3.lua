@@ -3,7 +3,7 @@ require "global"
 pcall(require, "luarocks.loader")
 
 local config = require "neld.config"
-local stageutils = require "stageutils"
+local repos = require "repos"
 local pkh = require "main"
 
 for _, package in ipairs(config.bootstrap) do
@@ -16,15 +16,15 @@ for _, package in ipairs(config.development) do
     end
 end
 
+pkh.close()
+
 for _, package in ipairs(config.bootstrap) do
-    stageutils.copy(package, stageutils.ROOTFS_CACHE)
+    repos.copy(package, repos.ROOTFS_CACHE)
 end
 for _, package in ipairs(config.development) do
     if package ~= "gcc" then
-        stageutils.copy(package, stageutils.BUILD_CACHE)
+        repos.copy(package, repos.BUILD_CACHE)
     end
 end
 
 os.execute("./pack_rootfs.sh 2")
-
-pkh.close()

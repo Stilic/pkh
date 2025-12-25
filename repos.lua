@@ -5,9 +5,12 @@ local lfs = require "lfs"
 local tools = require "tools"
 local config = require "neld.config"
 
-local self = { available_packages = {} }
+local CWD = lfs.currentdir()
+local BASE = CWD .. "/neld/"
+local STAGE_DIRECTORY = ".stage" .. stage
+local self = { available_packages = {}, ROOTFS_CACHE = BASE .. ".rootfs/", BUILD_CACHE = BASE .. ".build/" }
 
-function self.init()
+function self.fetch()
     self.available_packages = {}
     for line in system.capture("curl -sL " .. config.binhost .. "/packages/available.txt"):gmatch("[^\r\n]+") do
         local i, name, version = 1
@@ -69,6 +72,40 @@ function self.download(name, directory)
         end
     else
         print("ERROR: Package `" .. name .. "` isn't available!")
+    end
+end
+
+function self.extract(path, name, variant)
+    return os.execute("unsquashfs -d " ..
+        path ..
+        " -f " .. CWD .. "/" .. config.repository .. "/" ..
+        name .. "/" .. STAGE_DIRECTORY .. "/" .. tools.get_file(name, pkg(name).version, variant))
+end
+
+local copied_packages = {}
+function self.copy(name, path)
+    local package
+
+    local i = name:find("%.")
+    if i then
+        package = pkg(name:sub(1, i - 1))
+    else
+        package = pkg(name)
+    end
+
+    if copied_packages[name] then
+        return
+    else
+        copied_packages[name] = true
+    end
+
+    os.execute("cp " .. config.repository .. "/" ..
+        package.name .. "/.stage" .. stage .. "/" .. tools.get_file(name, package.version) .. " " .. path)
+
+    if package.dependencies then
+        for _, dep in ipairs(package.dependencies) do
+            self.copy(dep.name, path)
+        end
     end
 end
 

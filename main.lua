@@ -236,13 +236,6 @@ function self.build(name, skip_dependencies)
     end
 end
 
-function self.unpack(path, name, variant)
-    return os.execute("unsquashfs -d " ..
-        path ..
-        " -f " .. cwd .. "/" .. config.repository .. "/" ..
-        name .. "/" .. base_stage_path .. "/" .. tools.get_file(name, pkg(name).version, variant))
-end
-
 if stage == 1 then
     root_path = "/"
 else
