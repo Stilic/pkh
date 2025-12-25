@@ -1,8 +1,8 @@
+stage = 4
 require "global"
 pcall(require, "luarocks.loader")
 
 local lfs = require "lfs"
-local llby = require "lullaby"
 local repos = require "repos"
 local config = require "neld.config"
 
@@ -21,7 +21,7 @@ lfs.mkdir("work")
 lfs.chdir("work")
 
 print("DOWNLOADING ROOTFS")
-llby.net.srequest(config.binhost .. "/rootfs.sqsh").content:file("rootfs.sqsh")
+os.execute("curl -Lo rootfs.sqsh " .. config.binhost .. "/rootfs.sqsh")
 
 print("EXTRACTING KERNEL")
 lfs.mkdir("linux")

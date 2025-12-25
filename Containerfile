@@ -9,7 +9,6 @@ COPY --from=quay.io/stagex/core-cmake:sx2025.10.0 . /
 COPY --from=quay.io/stagex/core-perl:sx2025.10.0 . /
 COPY --from=quay.io/stagex/core-make:sx2025.10.0 . /
 COPY --from=quay.io/stagex/core-ca-certificates:sx2025.10.0 . /
-COPY --from=quay.io/stagex/core-curl:sx2025.10.0 . /
 COPY --from=quay.io/stagex/core-openssl:sx2025.10.0 . /
 COPY --from=quay.io/stagex/core-git:sx2025.10.0 . /
 
@@ -22,6 +21,7 @@ COPY --from=quay.io/stagex/user-mpfr:sx2025.10.0 . /
 COPY --from=quay.io/stagex/user-elfutils:sx2025.10.0 . /
 
 # PKH dependencies
+COPY --from=quay.io/stagex/core-curl:sx2025.10.0 . /
 COPY --from=quay.io/stagex/user-lzo:sx2025.10.0 . /
 COPY --from=quay.io/stagex/user-fuse3:sx2025.10.0 . /
 COPY --from=quay.io/stagex/user-fuse-overlayfs:sx2025.10.0 . /
@@ -45,7 +45,6 @@ COPY --from=quay.io/stagex/core-luarocks:sx2025.10.0 . /
 
 ADD https://gcc.gnu.org/pub/gcc/infrastructure/mpc-1.3.1.tar.gz /tmp/mpc.tar.gz
 ADD https://gcc.gnu.org/pub/gcc/infrastructure/isl-0.24.tar.bz2 /tmp/isl.tar.bz2
-ADD https://github.com/Stilic/lullaby/archive/refs/tags/1.0.0.tar.gz /tmp/lullaby.tar.gz
 ADD https://github.com/plougher/squashfs-tools/releases/download/4.6.1/squashfs-tools-4.6.1.tar.gz /tmp/squashfs-tools.tar.gz
 ADD https://github.com/vasi/squashfuse/releases/download/0.6.1/squashfuse-0.6.1.tar.gz /tmp/squashfuse.tar.gz
 ADD https://github.com/containers/bubblewrap/releases/download/v0.11.0/bubblewrap-0.11.0.tar.xz /tmp/bubblewrap.tar.xz
@@ -68,15 +67,6 @@ cd isl-0.24
 ./configure
 make -j `nproc`
 make install
-EOF
-
-# Install Lullaby
-RUN --network=none <<-EOF
-set -eux
-tar xf /tmp/lullaby.tar.gz
-cd lullaby-1.0.0
-make -j `nproc` CC=cc
-make install INSTALL=/build/usr/local/lib/lua/
 EOF
 
 # Install Squashfs-tools

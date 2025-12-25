@@ -1,13 +1,13 @@
 pcall(require, "luarocks.loader")
+local system = require("system")
 
 local lfs = require "lfs"
-local llby = require "lullaby"
 local tools = require "tools"
 local config = require "neld.config"
 
 local self = { available_packages = {} }
 
-for line in llby.net.srequest(config.binhost .. "/packages/available.txt").content:read():gmatch("[^\r\n]+") do
+for line in system.capture("curl -sL " .. config.binhost .. "/packages/available.txt"):gmatch("[^\r\n]+") do
     local i, name, version = 1
 
     for part in line:gmatch("([^,]+)") do
@@ -42,10 +42,8 @@ function self.download(name, directory)
     if versions then
         local file_name = tools.get_file(name, versions[1])
         if not lfs.attributes(file_name) then
-            local req = llby.net.srequest(config.binhost .. "/packages/" .. file_name)
-            if req.code == 200 then
-                req.content:file(file_name)
-            else
+            local success = os.execute("curl -sSLo " .. file_name .. " " .. config.binhost .. "/packages/" .. file_name)
+            if not success then
                 print("ERROR: Package `" .. name .. "` isn't available!")
                 return
             end
@@ -55,7 +53,12 @@ function self.download(name, directory)
         end
         installed_packages[name] = true
 
-        local package = pkg(name)
+        local package, i = name:find("%.")
+        if i then
+            package = pkg(name:sub(1, i - 1))
+        else
+            package = pkg(name)
+        end
         if package.dependencies then
             for _, dep in ipairs(package.dependencies) do
                 self.download(dep.name, directory)

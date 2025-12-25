@@ -62,7 +62,6 @@ local self = {
         "dinit",
 
         -- TODO: package pkh itself
-        "lullaby",
         "squashfuse",
         "fuse-overlayfs",
     },

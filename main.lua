@@ -2,7 +2,6 @@ pcall(require, "luarocks.loader")
 require "global"
 
 local lfs = require "lfs"
-local llby = require "lullaby"
 local system = require "system"
 local tools = require "tools"
 local config = require "neld.config"
@@ -12,7 +11,7 @@ local rootfs = {}
 for _, package in ipairs(config.bootstrap) do
     rootfs[package] = package
 end
-if stage > 4 then
+if stage > 3 then
     for _, package in ipairs(config.rootfs) do
         rootfs[package] = package
     end
@@ -151,12 +150,7 @@ function self.build(name, skip_dependencies)
         for _, source in ipairs(package.sources) do
             local path, url = source[1], source[2]
             if not lfs.attributes(path) then
-                local req = llby.net.srequest(url)
-                while req.Location ~= nil do
-                    url = req.Location
-                    req = llby.net.srequest(url)
-                end
-                req.content:file("S" .. path)
+                os.execute("curl -sSLo S" .. path .. " " .. url)
                 os.execute("rm -rf " .. path)
                 lfs.mkdir(path)
 
