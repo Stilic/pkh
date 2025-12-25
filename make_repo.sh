@@ -4,5 +4,5 @@ mkdir repo
 
 for package in pickle-linux/*
 do
-	cp $package/.build/*.sqsh repo
+	cp $package/.stage4/*.sqsh repo
 done
