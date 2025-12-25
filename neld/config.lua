@@ -81,12 +81,9 @@ local self = {
         "squashfs-tools",
         "bubblewrap"
     },
-    production = {
-        "cottonfetch",
+    sdk = {
         "curl",
         "nano",
-
-        "rsync",
         "cpio",
         "git",
     }

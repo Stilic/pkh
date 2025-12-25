@@ -14,7 +14,7 @@ lfs.chdir("neld/.build")
 for _, package in ipairs(config.development) do
     repos.download(package)
 end
-for _, package in ipairs(config.production) do
+for _, package in ipairs(config.sdk) do
     repos.download(package)
 end
 
