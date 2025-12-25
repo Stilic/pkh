@@ -6,6 +6,8 @@ local lfs = require "lfs"
 local repos = require "repos"
 local config = require "neld.config"
 
+repos.init()
+
 lfs.mkdir("neld/.build")
 lfs.chdir("neld/.build")
 

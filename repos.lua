@@ -7,27 +7,30 @@ local config = require "neld.config"
 
 local self = { available_packages = {} }
 
-for line in system.capture("curl -sL " .. config.binhost .. "/packages/available.txt"):gmatch("[^\r\n]+") do
-    local i, name, version = 1
+function self.init()
+    self.available_packages = {}
+    for line in system.capture("curl -sL " .. config.binhost .. "/packages/available.txt"):gmatch("[^\r\n]+") do
+        local i, name, version = 1
 
-    for part in line:gmatch("([^,]+)") do
-        if i == 3 then
-            break
+        for part in line:gmatch("([^,]+)") do
+            if i == 3 then
+                break
+            end
+            if i == 1 then
+                name = part
+            else
+                version = part
+            end
+            i = i + 1
         end
-        if i == 1 then
-            name = part
-        else
-            version = part
-        end
-        i = i + 1
-    end
 
-    local available_versions = self.available_packages[name]
-    if not available_versions then
-        available_versions = {}
-        self.available_packages[name] = available_versions
+        local available_versions = self.available_packages[name]
+        if not available_versions then
+            available_versions = {}
+            self.available_packages[name] = available_versions
+        end
+        table.insert(available_versions, version)
     end
-    table.insert(available_versions, version)
 end
 
 local installed_packages = {}

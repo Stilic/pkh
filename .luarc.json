@@ -4,6 +4,7 @@
     "lowercase-global",
     "need-check-nil",
     "discard-returns",
-    "cast-local-type"
+    "cast-local-type",
+    "redefined-local"
   ]
 }

@@ -117,12 +117,12 @@ function self.build(name, skip_dependencies)
     end
 
     if not skip_dependencies then
-        local function install_package(p)
-            local name = p.name
+        local function install_package(package)
+            local name = package.name
             if stage < 5 or not rootfs[name] then
                 if stage > 4
                     and repos.available_packages[name] ~= nil
-                    and not lfs.attributes(cwd .. "/" .. config.repository .. "/" .. name .. "/" .. base_stage_path .. "/" .. tools.get_file(name, p.version)) then
+                    and not lfs.attributes(cwd .. "/" .. config.repository .. "/" .. name .. "/" .. base_stage_path .. "/" .. tools.get_file(name, package.version)) then
                     local old_cwd = lfs.currentdir()
 
                     lfs.mkdir(cwd .. "/" .. base_build_path)
@@ -136,13 +136,13 @@ function self.build(name, skip_dependencies)
             end
         end
         if stage ~= 1 and package.dev_dependencies then
-            for _, p in ipairs(package.dev_dependencies) do
-                install_package(p)
+            for _, package in ipairs(package.dev_dependencies) do
+                install_package(package)
             end
         end
         if package.dependencies then
-            for _, p in ipairs(package.dependencies) do
-                install_package(p)
+            for _, package in ipairs(package.dependencies) do
+                install_package(package)
             end
         end
     end
