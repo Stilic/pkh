@@ -12,7 +12,7 @@ local rootfs = {}
 for _, package in ipairs(config.bootstrap) do
     rootfs[package] = package
 end
-if stage > 3 then
+if stage > 4 then
     for _, package in ipairs(config.rootfs) do
         rootfs[package] = package
     end

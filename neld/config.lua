@@ -53,9 +53,6 @@ local self = {
 
         "udev",
 
-        "acl",
-        "attr",
-        "openpam",
         "shadow",
 
         "dbus",
