@@ -15,7 +15,7 @@ mount -t tmpfs ro /ro
 mkdir /ro/bin
 ln -s ../../bin/env /ro/bin/env
 
-for file in /mnt/usr/*; do 
+for file in /mnt/usr/*; do
    if [[ "$file" == *.sqsh ]]
    then
        mount_dir="/$(basename $file | cut -d "," -f 1)"
