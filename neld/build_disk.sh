@@ -13,9 +13,9 @@ mkdir mnt
 mount disk mnt
 cd mnt
 
-mkdir usr root home
-cp ../rootfs.sqsh .
-cp ../../*.sqsh usr
+mkdir -p boot/usr root home
+cp ../rootfs.sqsh boot
+cp ../../*.sqsh boot/usr
 
 cd ..
 umount mnt

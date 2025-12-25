@@ -6,16 +6,17 @@ mount -t devpts -o gid=5 devpts /dev/pts
 mount -t proc proc /proc
 
 mount $(sed -e 's/^.*root=//' -e 's/ .*$//' /proc/cmdline) /mnt
-mount /mnt/rootfs.sqsh /root
+mount /mnt/boot/rootfs.sqsh /root
 mount --bind /mnt/home /root/home
 mount --bind /mnt/root /root/root
+mount --bind /mnt/boot /root/boot
 mount -t overlay overlay -o lowerdir=/root/etc,upperdir=/etc,workdir=/work /root/etc
 
 mount -t tmpfs ro /ro
 mkdir /ro/bin
 ln -s ../../bin/env /ro/bin/env
 
-for file in /mnt/usr/*; do
+for file in /mnt/boot/usr/*; do
    if [[ "$file" == *.sqsh ]]
    then
        mount_dir="/$(basename $file | cut -d "," -f 1)"

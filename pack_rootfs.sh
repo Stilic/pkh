@@ -7,7 +7,7 @@ cd work
 mkdir rootfs
 cd rootfs
 
-mkdir -p sys dev run proc var tmp usr root home etc
+mkdir -p sys dev run proc var tmp usr root boot home etc
 
 for package in ../../*.sqsh
 do
