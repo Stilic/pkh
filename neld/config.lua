@@ -51,7 +51,6 @@ local self = {
         "zip",
         "bzip2",
 
-        "libcap",
         "udev",
 
         "acl",
