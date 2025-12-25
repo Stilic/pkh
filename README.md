@@ -12,12 +12,12 @@ This is currently a **Work In Progress**. The goal is to demonstrate the viabili
 
 ### Bootstrap
 
-You will need Docker.
+You will need Buildah and Podman.
 ```
 # Set up the builder image
-./docker_build.sh
+./container_build.sh
 # Run it
-./docker_run.sh
+./container_run.sh
 ```
 
 The following steps have to be done inside the Docker container:

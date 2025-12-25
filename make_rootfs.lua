@@ -8,5 +8,6 @@ lfs.mkdir("neld/.rootfs")
 lfs.chdir("neld/.rootfs")
 
 for _, package in ipairs(config.rootfs) do
+    print(package)
     repos.download(package)
 end

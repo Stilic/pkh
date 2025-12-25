@@ -1,34 +1,34 @@
-FROM stagex/pallet-gcc-gnu-busybox:sx2025.10.0 AS builder
+FROM quay.io/stagex/pallet-gcc-gnu-busybox:sx2025.10.0 AS builder
 
-COPY --from=stagex/pallet-lua:sx2025.10.0 . /
-COPY --from=stagex/pallet-python:sx2025.10.0 . /
-COPY --from=stagex/core-bash:sx2025.10.0 . /
-COPY --from=stagex/core-samurai:sx2025.10.0 . /
-COPY --from=stagex/core-meson:sx2025.10.0 . /
-COPY --from=stagex/core-cmake:sx2025.10.0 . /
-COPY --from=stagex/core-perl:sx2025.10.0 . /
-COPY --from=stagex/core-make:sx2025.10.0 . /
-COPY --from=stagex/core-ca-certificates:sx2025.10.0 . /
-COPY --from=stagex/core-curl:sx2025.10.0 . /
-COPY --from=stagex/core-openssl:sx2025.10.0 . /
-COPY --from=stagex/core-git:sx2025.10.0 . /
+COPY --from=quay.io/stagex/pallet-lua:sx2025.10.0 . /
+COPY --from=quay.io/stagex/pallet-python:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-bash:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-samurai:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-meson:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-cmake:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-perl:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-make:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-ca-certificates:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-curl:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-openssl:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-git:sx2025.10.0 . /
 
 # Bootstrap dependencies
-COPY --from=stagex/core-libzstd:sx2025.10.0 . /
-COPY --from=stagex/core-libxml2:sx2025.10.0 . /
-COPY --from=stagex/core-expat:sx2025.10.0 . /
-COPY --from=stagex/core-gmp:sx2025.10.0 . /
-COPY --from=stagex/user-mpfr:sx2025.10.0 . /
-COPY --from=stagex/user-elfutils:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-libzstd:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-libxml2:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-expat:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-gmp:sx2025.10.0 . /
+COPY --from=quay.io/stagex/user-mpfr:sx2025.10.0 . /
+COPY --from=quay.io/stagex/user-elfutils:sx2025.10.0 . /
 
 # PKH dependencies
-COPY --from=stagex/user-lzo:sx2025.10.0 . /
-COPY --from=stagex/user-fuse3:sx2025.10.0 . /
-COPY --from=stagex/user-fuse-overlayfs:sx2025.10.0 . /
-COPY --from=stagex/user-libcap:sx2025.10.0 . /
+COPY --from=quay.io/stagex/user-lzo:sx2025.10.0 . /
+COPY --from=quay.io/stagex/user-fuse3:sx2025.10.0 . /
+COPY --from=quay.io/stagex/user-fuse-overlayfs:sx2025.10.0 . /
+COPY --from=quay.io/stagex/user-libcap:sx2025.10.0 . /
 
 # Fix the ln command and C/C++ headers
-COPY --from=stagex/core-coreutils:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-coreutils:sx2025.10.0 . /
 RUN --network=none <<-EOF
 cd /usr/bin
 ln -s coreutils /tmp/ln
@@ -41,7 +41,7 @@ FROM builder AS utils
 
 ENV DESTDIR=/build
 
-COPY --from=stagex/core-luarocks:sx2025.10.0 . /
+COPY --from=quay.io/stagex/core-luarocks:sx2025.10.0 . /
 
 ADD https://gcc.gnu.org/pub/gcc/infrastructure/mpc-1.3.1.tar.gz /tmp/mpc.tar.gz
 ADD https://gcc.gnu.org/pub/gcc/infrastructure/isl-0.24.tar.bz2 /tmp/isl.tar.bz2
