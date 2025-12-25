@@ -5,15 +5,29 @@ local lfs = require "lfs"
 local system = require "system"
 local tools = require "tools"
 local config = require "neld.config"
+local repos = require "repos"
 
 local self = { built_packages = {} }
+
 local rootfs = {}
-for _, package in ipairs(config.bootstrap) do
+local function add_to_rootfs(package)
     rootfs[package] = package
+
+    if not package:find("%.") then
+        package = pkg(package)
+        if package.dependencies then
+            for _, p in ipairs(package.dependencies) do
+                add_to_rootfs(p.name)
+            end
+        end
+    end
 end
-if stage > 3 then
+for _, package in ipairs(config.bootstrap) do
+    add_to_rootfs(package)
+end
+if stage > 4 then
     for _, package in ipairs(config.rootfs) do
-        rootfs[package] = package
+        add_to_rootfs(package)
     end
 end
 
@@ -26,7 +40,7 @@ local overlay_path = root_path .. "/usr"
 local ro_path = mnt_path .. "/ro"
 local mountpoints = {}
 
-local function prepare_mounts(overlay, packages, prebuilt)
+local function prepare_mounts(overlay, packages)
     for _, package in ipairs(packages) do
         local is_string = type(package) == "string"
 
@@ -48,23 +62,24 @@ local function prepare_mounts(overlay, packages, prebuilt)
             local mountpoint = mnt_path .. "/" .. mount_name
             overlay[mount_name] = mountpoint
 
-            local mnt = (prebuilt and base_build_path or (cwd .. "/" .. config.repository .. "/" .. package.name .. "/" .. base_stage_path)) ..
-                "/" .. tools.get_file(mount_name, package.version)
+            local suffix = "/" .. tools.get_file(mount_name, package.version)
+            local mnt = cwd .. "/" .. config.repository .. "/" .. package.name .. "/" .. base_stage_path .. suffix
+            local prebuilt_mnt = cwd .. "/" .. base_build_path .. suffix
 
             if not mountpoints[mount_name] then
                 lfs.mkdir(mountpoint)
                 if os.execute("squashfuse " .. mnt .. " " .. mountpoint) then
                     mountpoints[mount_name] = mountpoint
-                else
-                    print("FAILED MOUNT: " .. mnt)
-                    if package.dev_dependencies and not prebuilt then
+                    if package.dev_dependencies then
                         prepare_mounts(overlay, package.dev_dependencies)
                     end
+                elseif not os.execute("squashfuse " .. prebuilt_mnt .. " " .. mountpoint) then
+                    print("FAILED MOUNT: " .. prebuilt_mnt)
                 end
             end
 
             if package.dependencies then
-                prepare_mounts(overlay, package.dependencies, prebuilt)
+                prepare_mounts(overlay, package.dependencies)
             end
         end
     end
@@ -102,20 +117,32 @@ function self.build(name, skip_dependencies)
     end
 
     if not skip_dependencies then
-        if stage ~= 1 and package.dev_dependencies then
-            for _, p in ipairs(package.dev_dependencies) do
-                local name = p.name
-                if not self.built_packages[name] then
+        local function install_package(p)
+            local name = p.name
+            if stage < 5 or not rootfs[name] then
+                if stage > 4
+                    and repos.available_packages[name] ~= nil
+                    and not lfs.attributes(cwd .. "/" .. config.repository .. "/" .. name .. "/" .. base_stage_path .. "/" .. tools.get_file(name, p.version)) then
+                    local old_cwd = lfs.currentdir()
+
+                    lfs.mkdir(cwd .. "/" .. base_build_path)
+                    lfs.chdir(cwd .. "/" .. base_build_path)
+                    repos.download(name)
+
+                    lfs.chdir(old_cwd)
+                elseif not self.built_packages[name] then
                     self.build(name)
                 end
             end
         end
+        if stage ~= 1 and package.dev_dependencies then
+            for _, p in ipairs(package.dev_dependencies) do
+                install_package(p)
+            end
+        end
         if package.dependencies then
             for _, p in ipairs(package.dependencies) do
-                local name = p.name
-                if not self.built_packages[name] then
-                    self.build(name)
-                end
+                install_package(p)
             end
         end
     end
@@ -123,8 +150,7 @@ function self.build(name, skip_dependencies)
     local overlay = {}
 
     if stage ~= 1 then
-        -- TODO: add support for variants
-        prepare_mounts(overlay, config.development, true)
+        prepare_mounts(overlay, config.development)
         if package.dev_dependencies then
             prepare_mounts(overlay, package.dev_dependencies)
         end
