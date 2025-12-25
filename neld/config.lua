@@ -67,7 +67,6 @@ local self = {
 
         -- TODO: package pkh itself
         "lullaby",
-        "libfuse",
         "squashfuse",
         "fuse-overlayfs",
     },
