@@ -7,7 +7,7 @@ local tools = require "tools"
 local config = require "neld.config"
 local repos = require "repos"
 
-local self = { built_packages = {} }
+local self = {}
 
 local rootfs = {}
 for _, package in ipairs(config.bootstrap) do
@@ -90,13 +90,6 @@ function self.build(name, skip_dependencies)
 
     local package, process_main, build_suffix = pkg(name), true, config.repository .. "/" .. name
 
-    if package.variants then
-        for index, _ in pairs(package.variants) do
-            self.built_packages[name .. "-" .. index] = true
-        end
-    end
-    self.built_packages[name] = true
-
     if lfs.attributes(cwd .. "/" .. build_suffix .. "/" .. base_stage_path .. "/" .. tools.get_file(name, package.version)) then
         if not package.variants then
             return
@@ -105,7 +98,7 @@ function self.build(name, skip_dependencies)
     end
 
     if not skip_dependencies then
-        local function install_package(package)
+        local function prepare_package(package)
             local name = package.name
             if stage < 5 or not rootfs[name] then
                 if stage > 4
@@ -118,19 +111,19 @@ function self.build(name, skip_dependencies)
                     repos.download(name)
 
                     lfs.chdir(old_cwd)
-                elseif not self.built_packages[name] then
+                else
                     self.build(name)
                 end
             end
         end
         if stage ~= 1 and package.dev_dependencies then
             for _, package in ipairs(package.dev_dependencies) do
-                install_package(package)
+                prepare_package(package)
             end
         end
         if package.dependencies then
             for _, package in ipairs(package.dependencies) do
-                install_package(package)
+                prepare_package(package)
             end
         end
     end
@@ -212,12 +205,10 @@ function self.build(name, skip_dependencies)
 
     os.execute(
         "bwrap --unshare-ipc --unshare-pid --unshare-net --unshare-uts --unshare-cgroup-try --clearenv --setenv PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --setenv C_INCLUDE_PATH /include --setenv CPLUS_INCLUDE_PATH /include" ..
-        cpp_paths ..
-        " --setenv TARGET " ..
-        system.target .. " --chdir /root --ro-bind " ..
+        cpp_paths .. " --chdir /root --ro-bind " ..
         root_path .. " / --dev /dev --tmpfs /tmp " ..
         "--ro-bind " .. cwd .. " /root --bind " .. build_path .. " /root/" .. build_suffix ..
-        " /bin/lua untrusted_build.lua " .. name .. process_main_option .. " " .. stage)
+        " /bin/env lua untrusted_build.lua " .. name .. process_main_option .. " " .. stage)
 
     if stage ~= 1 then
         os.execute("umount " .. overlay_path)

@@ -34,11 +34,6 @@ local self = {
         "diffutils",
         "util-linux",
         "xz",
-
-        "lua",
-
-        -- TODO: remove this once we figured out how to add it to stage4
-        "gmp"
     },
     rootfs = {
         "gcc.libs",
@@ -80,7 +75,8 @@ local self = {
         -- for pkh
         "luafilesystem",
         "squashfs-tools",
-        "bubblewrap"
+        "bubblewrap",
+        "lua",
     },
     sdk = {
         "nano",

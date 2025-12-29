@@ -2,67 +2,30 @@ stage = 1
 require "global"
 pcall(require, "luarocks.loader")
 
-local tools = require "tools"
 local lfs = require "lfs"
 local config = require "neld.config"
 local pkh = require "main"
+local repos = require "repos"
 
-local BASE = "neld/"
-local ROOTFS_CACHE = BASE .. ".rootfs/"
-local BUILD_CACHE = BASE .. ".build/"
+os.execute("rm -rf " .. repos.BUILD_CACHE)
+lfs.mkdir(repos.BUILD_CACHE)
+lfs.mkdir(repos.BUILD_CACHE .. "work")
 
-local built_packages = {}
-local function copy(name, path)
-    local package
+lfs.link("../../.rootfs/work/rootfs.sqsh", repos.BUILD_CACHE .. "work/rootfs.sqsh", true)
 
-    local i = name:find("%.")
-    if i then
-        package = pkg(name:sub(1, i - 1))
-    else
-        package = pkg(name)
-    end
-
-    os.execute("cp " .. config.repository .. "/" ..
-        package.name .. "/.stage1/" .. tools.get_file(name, package.version) .. " " .. path)
-
-    return package
-end
-local function build(package, path)
-    if built_packages[package] then
-        return
-    else
-        built_packages[package] = true
-    end
-
-    pkh.build(package)
-
-    if path then
-        package = copy(package, path)
-        if package.dependencies then
-            for _, dep in ipairs(package.dependencies) do
-                copy(dep.name, path)
-            end
-        end
-    end
-end
-
-os.execute("rm -rf " .. BUILD_CACHE)
-lfs.mkdir(BUILD_CACHE)
-lfs.mkdir(BUILD_CACHE .. "work")
-
-lfs.link("../../../" .. ROOTFS_CACHE .. "work/rootfs.sqsh", BUILD_CACHE .. "work/rootfs.sqsh", true)
+os.execute("rm -rf " .. repos.ROOTFS_CACHE)
+lfs.mkdir(repos.ROOTFS_CACHE)
 
 for _, package in ipairs(config.development) do
-    build(package, BUILD_CACHE)
+    pkh.build(package)
+    repos.copy(package, repos.BUILD_CACHE)
 end
-
-os.execute("rm -rf " .. ROOTFS_CACHE)
-lfs.mkdir(ROOTFS_CACHE)
 
 for _, package in ipairs(config.bootstrap) do
-    build(package, ROOTFS_CACHE)
+    pkh.build(package)
+    repos.copy(package, repos.ROOTFS_CACHE)
 end
 
-os.execute("./pack_rootfs.sh 1")
-
 pkh.close()
+
+os.execute("./pack_rootfs.sh 1")

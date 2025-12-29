@@ -14,6 +14,7 @@ mount disk mnt
 cd mnt
 
 mkdir -p boot/usr root home
+pwd
 cp ../rootfs.sqsh boot
 cp ../../*.sqsh boot/usr
 
