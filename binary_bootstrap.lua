@@ -23,7 +23,7 @@ lfs.mkdir("work")
 lfs.chdir("work")
 
 print("DOWNLOADING ROOTFS")
-os.execute("curl -Lo rootfs.sqsh " .. config.binhost .. "/rootfs.sqsh")
+os.execute("curl -sSLo rootfs.sqsh " .. config.binhost .. "/rootfs.sqsh")
 
 print("EXTRACTING KERNEL")
 lfs.mkdir("linux")
